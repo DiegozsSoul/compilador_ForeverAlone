@@ -15,6 +15,11 @@ class tablaVariables(object):
     def busca(self, query ):
         return query in self.arreglo
 
+    def getvar(self,vname):
+        if self.busca(vname): 
+            return self.arreglo[vname] 
+        else:
+            return None
 
     def setTipo(self, tipo):
         self.tipo = tipo
