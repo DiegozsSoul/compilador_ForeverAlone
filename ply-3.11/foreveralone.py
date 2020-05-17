@@ -11,7 +11,9 @@ tipoVar = ''
 varId   = ''
 tipoFun = ''
 idFun   = ''
+contLine= 0
 funcionActual = []
+cuadruplo = []
 
 class AVAIL(object):
 	def __init__(self):
@@ -23,10 +25,12 @@ class AVAIL(object):
 		return self.Temp + str(self.AvailC)
 
 #Pilas para cuadroplus
-POper = []
-PilaO = []
-PTipo = []
+POper  = []
+PilaO  = []
+PTipo  = []
+PSalto = []
 Avail = AVAIL()
+
 
 #Reads the document
  
@@ -190,7 +194,7 @@ def p_agregarfuncmain(p):
 def p_id(p):
     '''
     id : ID agregavar
-    | ID agregavar LBRACK NUMBER RBRACK
+    | ID agregavar LBRACK cte RBRACK
     '''
 def p_tipovar(p):
     '''
@@ -291,8 +295,6 @@ def p_asignacion(p):
     asignacion : ID EQUAL asignacionb
     | ID asign EQUAL asignacionb	
     '''
-  
-
 
 def p_asignacionb(p):
     '''
@@ -303,22 +305,53 @@ def p_asignacionb(p):
         POper.append('=')
     #print("it this z ? ", p[-2])
     #proc.testerVariable('fact')
-    
-    PilaO.append(p[-2])
+    if(p[-2]!= None):
+        PilaO.append(p[-2])
+    #print("LOOKIN 4 ERROR ", PilaO[-1])
     if type(p[-2]) is int or type(p[-2]) is float:
         PTipo.append(type(p[-2]))
     else:
-        buscador=proc.getDir(funcionActual[-1])
-        varfinder=buscador['tvar'].getvar(p[-2])
-
-        if varfinder == None:
-            buscador=proc.getDir(funcionActual[0])
-            varfinder=buscador['tvar'].getvar(p[1])
-        if varfinder == None:
-            print("Vairable no declarada")
+        #print("######## ", p[-3],p[-2] ,p[-1], p[0],p[1])
+        #Checa si es un arreglo o una variable normal
+        if( p[-2] == None):
+            PilaO.append(p[-3])
+            buscador = proc.buscador = proc.getDir(funcionActual[-1])
+            varfinder = buscador['tvar'].getvar(p[-3])
+            #print("RESULTS ", buscador, varfinder)
+            if varfinder == None:
+                buscador=proc.getDir(funcionActual[0])
+                varfinder=buscador['tvar'].getvar(p[-3])
+                #print("RESULTS ", buscador, varfinder)               
+            if varfinder == None:
+                print("Variable Arreglo asignacion no declarada ")
+            else:
+                varhelper = varfinder['tipo']
+                PTipo.append(varhelper)
+        #Si no es variable de arreglo entonces es normal
         else:
-            varhelper = varfinder['tipo']
-            PTipo.append(varhelper)
+            buscador=proc.getDir(funcionActual[-1])
+            varfinder=buscador['tvar'].getvar(p[-2])
+            #Si no se encuentra en la funcion actual se busca en global
+            if varfinder == None:
+                buscador=proc.getDir(funcionActual[0])
+                varfinder=buscador['tvar'].getvar(p[-2])
+            if varfinder == None:
+                print("Variable Normal asignacion no declarada", p[-2], funcionActual[-1])
+            else:
+                varhelper = varfinder['tipo']
+                PTipo.append(varhelper)
+        ##################
+        #buscador=proc.getDir(funcionActual[-1])
+        #varfinder=buscador['tvar'].getvar(p[-2])
+
+        #if varfinder == None:
+        #    buscador=proc.getDir(funcionActual[0])
+        #    varfinder=buscador['tvar'].getvar(p[1])
+        #if varfinder == None:
+        #    print("Vairable no declarada")
+        #else:
+        #    varhelper = varfinder['tipo']
+        #    PTipo.append(varhelper)
 
     #print("ESTOS SON TODOS LOS OPERADORES ", *POper)
     #print("ESTOS SON TODOS LOS OPERANDOS ", *PilaO)
@@ -332,9 +365,11 @@ def p_asignacionb(p):
         resultType    = sema.getTipo(left_type,right_type,operator)
         if(resultType != 'TypeError'):
             result = Avail.next()
+            quad= (operator, left_operand, None, right_operand)
+            cuadruplo.append(quad)
             PilaO.append(result)
             PTipo.append(resultType)
-            print(operator, left_operand, None ,right_operand)
+            #print(operator, left_operand, None ,right_operand)
         else:
             print("Type mismatch")
             
@@ -368,13 +403,48 @@ def p_escriturab(p):
     '''
 def p_decision(p):
     '''
-    decision : SI LPAREN expresion RPAREN ENTONCES decisionb
+    decision : SI LPAREN expresion pn1 RPAREN ENTONCES decisionb
     '''
+    print("DECISION ", p[-1],p[-2])
+
+def p_pn1(p):
+    '''
+    pn1 : empty
+    '''
+    global contLine
+    expTipo = PTipo.pop()
+    contLine += 1
+    if(expTipo != "bool"):
+        print("Type mismatch")
+    else:
+        result = PilaO.pop()
+        quad = ("GotoF", result,None,contLine)
+        cuadruplo.append(quad)
+        PSalto.append(contLine)
+
 def p_decisionb(p):
     '''
-    decisionb : bloque
-    | bloque SINO bloque
+    decisionb : bloque pn2
+    | bloque SINO pn3 bloque pn2
     '''
+    print("DECISION 2", p[-1],p[-2])
+
+def p_pn2(p):
+    '''
+    pn2 : empty
+    '''
+    #end = PSalto.pop()
+    #FILL(end, contLine)
+def p_pn3(p):
+    '''
+    pn3 : empty
+    '''
+    quad = ("GOTO",None,None,contLine)
+    cuadruplo.append(quad)
+    #false = PSalto.pop()
+    PSalto.append(contLine-1)
+    #FILL(false, contLine)
+
 def p_repeticioncond(p):
     '''
     repeticioncond : MIENTRAS LPAREN expresion RPAREN HAZ bloque
@@ -393,30 +463,40 @@ def p_cte(p):
     '''
     PilaO.append(p[1])
     #proc.testerVariable('fact')
+    #print("Lookin for array ", p[-2]) ##Nombre de la variable array p[-1] es el [
     #print("ESTA ES pilaO", PilaO[-1])
     if( type(p[1]) is int or type(p[1]) is float):
         PTipo.append(type(p[1]).__name__)
 
-    #elif (type(p[1]) is str):
     else:
-        #PTipo.append("string")
-        print("Funcion Actual ", funcionActual[-1] )
-        #proc.testerVariable(funcionActual[-1])
-        #proc.arref()
-        buscador = proc.getDir(funcionActual[-1])
-        #print("buscador ", buscador)
-        varfinder = buscador['tvar'].getvar(p[1])
-        #print("varfinder ", varfinder)
-        if varfinder == None:
-            buscador=proc.getDir(funcionActual[0])
-            varfinder=buscador['tvar'].getvar(p[1])
-        
-        if varfinder == None:
-            print("Variable no declarada")
-
+        #print("Funcion Actual ", funcionActual[-1] )
+        #Se busca si la variable es arreglo y si ya fue declarada en la funcion actual 
+        if( p[-1] == '['):
+            #print("NOMBRE DE ARREGLO ", p[-2])
+            #proc.testerVariable(funcionActual[0])
+            buscador = proc.buscador = proc.getDir(funcionActual[-1])
+            varfinder = buscador['tvar'].getvar(p[-2])
+            #print("RESULTS ", buscador, varfinder)
+            if varfinder == None:
+                buscador=proc.getDir(funcionActual[0])
+                varfinder=buscador['tvar'].getvar(p[-2])
+            if varfinder == None:
+                print("Variable Arreglo no declarada ")
+            else:
+                varhelper = varfinder['tipo']
+                PTipo.append(varhelper)
         else:
-            varhelper = varfinder['tipo']
-            PTipo.append(varhelper)
+            buscador = proc.getDir(funcionActual[-1])
+            varfinder = buscador['tvar'].getvar(p[1])
+            #Si no se encuentra en la funcion actual se busca en global
+            if varfinder == None:
+                buscador=proc.getDir(funcionActual[0])
+                varfinder=buscador['tvar'].getvar(p[1])
+            if varfinder == None:
+                print("Variable Normal no declarada")
+            else:
+                varhelper = varfinder['tipo']
+                PTipo.append(varhelper)
 
 def p_expresion(p):
     '''
@@ -444,9 +524,11 @@ def p_exp(p):
         resultType    = sema.getTipo(left_type,right_type,operator)
         if(resultType != 'TypeError'):
             result = Avail.next()
+            quad = (operator, left_operand, right_operand, result)
+            cuadruplo.append(quad)
             PilaO.append(result)
             PTipo.append(resultType)
-            print(operator, left_operand, right_operand, result)
+            #print(operator, left_operand, right_operand, result)
         else:
             print("Type mismatch")
 
@@ -460,7 +542,7 @@ def p_expb(p):
         POper.append('+')
     else:
         POper.append('-')
-    #print("ESTOS SON TODOS LOS OPERADORES ", *POper)
+    print("ESTOS SON TODOS LOS OPERADORES ", *POper)
     #print("ESTOS SON TODOS LOS OPERANDOS ", *PilaO)
     #print("ESTOS SON TODOS LOS TIPOS ", *PTipo)
     
@@ -476,9 +558,11 @@ def p_expb(p):
         #print("Tipo Res ", resultType)
         if(resultType != 'TypeError'):
             result = Avail.next()
+            quad = (operator, left_operand,right_operand,result)
+            cuadruplo.append(quad)
             PilaO.append(result)
             PTipo.append(resultType)
-            print(operator, left_operand, right_operand,result)
+            #print(operator, left_operand, right_operand,result)
         else:
             print("Type mismatch")
 
@@ -489,13 +573,14 @@ def p_termino(p):
     '''
 def p_terminob(p):
     '''
-    terminob : TIMES exp
-    | DIVIDE exp
+    terminob : TIMES termino
+    | DIVIDE termino
     '''
     if(p[1]== '*'):
         POper.append('*')
     else:
         POper.append('/')
+    print("ESTOS SON TODOS LOS OPERADORES ", *POper)
 
     if(POper[-1]=='*' or POper[-1]=='/'):
         right_operand = PilaO.pop()
@@ -509,9 +594,11 @@ def p_terminob(p):
         #print("Tipo Res ", resultType)
         if(resultType != 'TypeError'):
             result = Avail.next()
+            quad = (operator, left_operand, right_operand,result)
+            cuadruplo.append(quad)
             PilaO.append(result)
             PTipo.append(resultType)
-            print(operator, left_operand, right_operand,result)
+            #print(operator, left_operand, right_operand,result)
             
         else: 
             print("Type mismatch")
@@ -551,6 +638,11 @@ def p_agregavar(p):
     else:
         print("La funcion no esta declarada")
 
+def despliegaQuad():
+    print("----Desplegando Cuadruplos----")
+    for elem in cuadruplo:
+        print(elem)
+
 def p_error(p):
     if p == None:
         token = "end of file"
@@ -563,4 +655,5 @@ def p_error(p):
 # Build the parser
 parser = yacc.yacc()
 result = parser.parse(data)
+despliegaQuad()
 print("DONE")

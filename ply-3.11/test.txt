@@ -24,17 +24,20 @@ funcion void inicia(int y)
 principal()
 {lee(p); j = p * 2;
  inicia(p * j - 5);
- desde z=0 hasta 9 hacer
-      {Arreglo[z] = Arreglo[z] * fact(Arreglo[z] -p);}
- desde z=0 hasta 9 hacer 
-       {OtroArreglo[z] = Arreglo[z] - p;}
-  mientras(z>=0) haz
-     {escribe ("resultado", Arreglo[z], fact(z+2)*valor);
-       z=z-1;
+ desde i=0 hasta 9 hacer
+      {Arreglo[i] = Arreglo[i] * fact(Arreglo[i] -p);}
+ desde i=0 hasta 9 hacer 
+       {OtroArreglo[i] = Arreglo[i] - p;}
+  mientras(i>=0) haz
+     {escribe ("resultado", Arreglo[i], fact(i+2)*valor);
+       i=i-1;
      }
-
-  mientras(z<10) haz
-     {escribe ("Otros datos", OtroArreglo[z], p, z + OtroArreglo[z]);
-       z = z + 1;
+  mientras(i<10) haz
+     {escribe ("Otros datos", OtroArreglo[i], p, i + OtroArreglo[i]);
+       i = i + 1;
      }
+  si(i<5) entonces 
+      {j = j * 2 + i;}
+  sino 
+      {i = i / 2 - i;}
 }
