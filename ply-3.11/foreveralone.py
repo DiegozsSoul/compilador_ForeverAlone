@@ -12,6 +12,7 @@ varId   = ''
 tipoFun = ''
 idFun   = ''
 contLine= 0
+expTipo = ''
 funcionActual = []
 cuadruplo = []
 
@@ -365,10 +366,13 @@ def p_asignacionb(p):
         resultType    = sema.getTipo(left_type,right_type,operator)
         if(resultType != 'TypeError'):
             result = Avail.next()
-            quad= (operator, left_operand, None, right_operand)
+            global contLine
+            contLine += 1 #TEST
+            quad= (operator, left_operand, None, right_operand,contLine)
             cuadruplo.append(quad)
             PilaO.append(result)
             PTipo.append(resultType)
+            
             #print(operator, left_operand, None ,right_operand)
         else:
             print("Type mismatch")
@@ -405,7 +409,7 @@ def p_decision(p):
     '''
     decision : SI LPAREN expresion pn1 RPAREN ENTONCES decisionb
     '''
-    print("DECISION ", p[-1],p[-2])
+    #print("DECISION ", p[-1],p[-2])
 
 def p_pn1(p):
     '''
@@ -418,37 +422,76 @@ def p_pn1(p):
         print("Type mismatch")
     else:
         result = PilaO.pop()
-        quad = ("GotoF", result,None,contLine)
+       #quad = ("GotoF", result, None, contLine) 
+        quad = ("GotoF", result, None, contLine)
         cuadruplo.append(quad)
         PSalto.append(contLine)
+        print("PSalto", *PSalto)
 
 def p_decisionb(p):
     '''
     decisionb : bloque pn2
     | bloque SINO pn3 bloque pn2
     '''
-    print("DECISION 2", p[-1],p[-2])
+    #print("DECISION 2", p[-1],p[-2])
 
 def p_pn2(p):
     '''
     pn2 : empty
     '''
-    #end = PSalto.pop()
-    #FILL(end, contLine)
+    end = PSalto.pop()
+    FILL(end, contLine+1)
 def p_pn3(p):
     '''
     pn3 : empty
     '''
+    global contLine
+    contLine += 1
     quad = ("GOTO",None,None,contLine)
     cuadruplo.append(quad)
-    #false = PSalto.pop()
-    PSalto.append(contLine-1)
-    #FILL(false, contLine)
+    false = PSalto.pop()
+    PSalto.append(contLine)
+    print("Pila Salto", *PSalto)
+    FILL(false, contLine+1)
 
 def p_repeticioncond(p):
     '''
-    repeticioncond : MIENTRAS LPAREN expresion RPAREN HAZ bloque
+    repeticioncond : MIENTRAS rcn1 LPAREN expresion RPAREN HAZ rcn2 bloque rcn3
     '''
+
+def p_rcn1(p):
+    '''
+    rcn1 : empty
+    '''
+    PSalto.append(contLine)
+
+def p_rcn2(p):
+    '''
+    rcn2 : empty 
+    '''
+    exp_tipo = PTipo.pop()
+    if(exp_tipo != "bool"):
+        print("Type mismatch")
+    else:
+        result = PilaO.pop()
+        global contLine
+        contLine += 1
+        quad = ("GotoF", result, None, contLine)
+        cuadruplo.append(quad)
+        PSalto.append(contLine)
+
+def p_rcn3(p):
+    '''
+    rcn3 : empty
+    '''
+    end = PSalto.pop()
+    regresa = PSalto.pop()
+    global contLine
+    contLine += 1
+    quad = ("GOTO", None, None, regresa+1)
+    cuadruplo.append(quad)
+    FILL(end,contLine+1)
+
 def p_repeticionnocond(p):
     '''
     repeticionnocond : DESDE id EQUAL exp HASTA exp HACER bloque
@@ -524,7 +567,9 @@ def p_exp(p):
         resultType    = sema.getTipo(left_type,right_type,operator)
         if(resultType != 'TypeError'):
             result = Avail.next()
-            quad = (operator, left_operand, right_operand, result)
+            global contLine
+            contLine += 1
+            quad = (operator, left_operand, right_operand, result, contLine)
             cuadruplo.append(quad)
             PilaO.append(result)
             PTipo.append(resultType)
@@ -542,7 +587,7 @@ def p_expb(p):
         POper.append('+')
     else:
         POper.append('-')
-    print("ESTOS SON TODOS LOS OPERADORES ", *POper)
+    #print("ESTOS SON TODOS LOS OPERADORES ", *POper)
     #print("ESTOS SON TODOS LOS OPERANDOS ", *PilaO)
     #print("ESTOS SON TODOS LOS TIPOS ", *PTipo)
     
@@ -558,7 +603,9 @@ def p_expb(p):
         #print("Tipo Res ", resultType)
         if(resultType != 'TypeError'):
             result = Avail.next()
-            quad = (operator, left_operand,right_operand,result)
+            global contLine
+            contLine += 1
+            quad = (operator, left_operand,right_operand,result, contLine)
             cuadruplo.append(quad)
             PilaO.append(result)
             PTipo.append(resultType)
@@ -580,7 +627,7 @@ def p_terminob(p):
         POper.append('*')
     else:
         POper.append('/')
-    print("ESTOS SON TODOS LOS OPERADORES ", *POper)
+    #print("ESTOS SON TODOS LOS OPERADORES ", *POper)
 
     if(POper[-1]=='*' or POper[-1]=='/'):
         right_operand = PilaO.pop()
@@ -594,7 +641,9 @@ def p_terminob(p):
         #print("Tipo Res ", resultType)
         if(resultType != 'TypeError'):
             result = Avail.next()
-            quad = (operator, left_operand, right_operand,result)
+            global contLine
+            contLine += 1
+            quad = (operator, left_operand, right_operand,result, contLine)
             cuadruplo.append(quad)
             PilaO.append(result)
             PTipo.append(resultType)
@@ -642,6 +691,16 @@ def despliegaQuad():
     print("----Desplegando Cuadruplos----")
     for elem in cuadruplo:
         print(elem)
+
+def FILL(input1, input2):
+    for i in range(0, len(cuadruplo)):
+        if(input1 == cuadruplo[i][3]):
+            aux1 = cuadruplo[i][0]
+            aux2 = cuadruplo[i][1]
+            aux3 = cuadruplo[i][2]
+            quad = (aux1, aux2, aux3, input2)
+            cuadruplo[i] = quad
+            #print("AKI ESTOY" ,i , cuadruplo[i])
 
 def p_error(p):
     if p == None:

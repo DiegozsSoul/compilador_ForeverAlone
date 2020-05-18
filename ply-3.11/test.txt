@@ -8,7 +8,9 @@ funcion int fact(int j)
 var int z;
 {z = j + (p - j * 2 + j);
 si(j == 1) entonces
- {regresa(j);}
+ {regresa(j);
+ j = z*1; 
+}
  sino
  {regresa(j*fact(j-1) );}
 }
@@ -19,6 +21,7 @@ funcion void inicia(int y)
   mientras(x < 11) haz
  {Arreglo[x] = y * x;
   x = x + 1;}
+ j = 13;
 }
 
 principal()
@@ -40,4 +43,5 @@ principal()
       {j = j * 2 + i;}
   sino 
       {i = i / 2 - i;}
+  i = p * 2;
 }
