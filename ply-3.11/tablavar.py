@@ -3,10 +3,11 @@ class tablaVariables(object):
         self.arreglo = {}
 
     
-    def agrega(self, nombre, tipo):
+    def agrega(self, nombre, tipo, locmem):
         self.arreglo[nombre] = {
             'nombre' : nombre,
-            'tipo' : tipo
+            'tipo' : tipo,
+            'locmem' : locmem
         }
 	  
     def getNombre(self):
@@ -26,6 +27,9 @@ class tablaVariables(object):
 
     def getTipo(self):
         return self.tipo
+    
+    def getLocacionMemoria(self,vname):
+        return self.arreglo[vname]['locmem']
 
     def imprimiArreglo(self):
         print(self.arreglo.items())

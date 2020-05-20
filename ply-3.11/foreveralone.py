@@ -12,9 +12,15 @@ varId   = ''
 tipoFun = ''
 idFun   = ''
 contLine= 0
+contPara= 0
+contVarL= 0
 expTipo = ''
 funcionActual = []
 cuadruplo = []
+paramTable = []
+paramType = []
+nuevaFunc = False
+nuevaFunc2 = False
 
 class AVAIL(object):
 	def __init__(self):
@@ -31,8 +37,22 @@ PilaO  = []
 PTipo  = []
 PSalto = []
 Avail = AVAIL()
-
-
+#Memoria Virtual
+# APUNTADORES A MEMORIA
+MemoriaVirtual = {
+    'gint'   :1000,
+    'gfloat' :2000,
+    'gstring':3000,
+    'gbool'  :4000,
+    'lint'   :5000,
+    'lfloat' :6000,
+    'lstring':7000,
+    'lbool'  :8000,
+    'tint'   :9000,
+    'tfloat' :10000,
+    'tstring':11000,
+    'tbool'  :12000,
+}
 #Reads the document
  
 Info= open("test.txt", "r") 
@@ -114,7 +134,7 @@ t_LEQUAL    = r'\<='
 t_EQLOP     = r'\=='
 t_ABRACKET  = r'\<>'
 t_COMMA     = r'\,'
-t_STRING    = r'\".*\"'
+t_STRING    = r'\'.*\''
 t_CTEC      = r'[a-zA-Z]'
      
  
@@ -177,8 +197,24 @@ def p_programab(p):
     '''
 def p_programac(p):
     '''
-    programac : PRINCIPAL LPAREN RPAREN bloque
+    programac : PRINCIPAL agregarfuncmain2 LPAREN RPAREN bloque
     '''
+
+def p_agregafuncmain2(p):
+    '''
+    agregarfuncmain2 : 
+    '''
+    global idFun
+    global tipoFun
+    global proc
+    global contVarL
+    idFun= 'principal'
+    tipofun ='void'
+    proc.agregaf(idFun,tipoFun,None,None,contVarL)
+    #print("AKIIII ", p[-1])
+    funcionActual.append(p[-1])
+
+
 def p_agregarfuncmain(p):
     '''
     agregarfuncmain : 
@@ -188,7 +224,7 @@ def p_agregarfuncmain(p):
     global proc
     idFun = 'programa'
     tipoFun = 'void'
-    proc.agregaf(idFun, tipoFun)
+    proc.agregaf(idFun, tipoFun, None,None,None)
     #print("aki merongo " , p[-1])
     funcionActual.append(p[-1])
 
@@ -197,12 +233,32 @@ def p_id(p):
     id : ID agregavar
     | ID agregavar LBRACK cte RBRACK
     '''
+    global nuevaFunc2
+    global contVarL
+    global funcionActual
+    contVarL += 1
+    print("CHECKER",contVarL)
+
 def p_tipovar(p):
     '''
     tipovar : INT agregatipo
     | FLOAT agregatipo
     | CHAR agregatipo
     '''
+def p_tipovarfunc(p):
+    '''
+    tipovarfunc : INT agregatipo
+    | FLOAT agregatipo
+    | CHAR agregatipo
+    '''
+    global nuevaFunc2
+    global contPara
+    global paramType
+    global funcionActual
+    if(nuevaFunc2):
+        paramType.append(p[1])
+        contPara += 1
+
 def p_tipofun(p):
     '''
     tipofun : INT 
@@ -211,7 +267,7 @@ def p_tipofun(p):
     | VOID
     '''
     global tipoFun
-    tipoFun[0]
+    tipoFun=p[1]
 
 def p_agregatipo(p):
     '''
@@ -228,53 +284,101 @@ def p_vars(p):
 def p_varsb(p):
     '''
     varsb : tipovar varsc
-    |  empty
+    |  contVReset empty
     '''
+
 def p_varsc(p):
     '''
     varsc : id COMMA varsc
     |  id SEMICOL varsb
     |  empty
     '''
+def p_contVReset(p):
+    '''
+    contVReset : empty
+    '''
+    global contVarL
+    print("IM IN")
+    contVarL = 0
+
 def p_varsfunc(p):
     '''
-    varsfunc :  tipovar varsfuncb
+    varsfunc :  tipovarfunc varsfuncb
     '''
+
 def p_varsfuncb(p):
     '''
     varsfuncb : id COMMA varsfuncb
+    | varsfunc
     |  id
     '''
 
 def p_funcion(p):
     '''
-    funcion : FUNCION ID LPAREN funcionb
-    | FUNCION tipofun ID agregafunc LPAREN funcionb
+    funcion : FUNCION aux2 ID LPAREN funcionb
+    | FUNCION aux2 tipofun ID agregafunc LPAREN funcionb
     | empty
     '''
+def p_aux2(p):
+    '''
+    aux2 : empty
+    '''    
+    global nuevaFunc2
+    global paramType
+    global contPara
+    global contVarL
+    global proc
+    global funcionActual
+    nuevaFunc2 = True
+    print("Cantidad",funcionActual[-1],contVarL,contPara)
+    proc.agregaCantidadVarLoc(funcionActual[-1],contVarL+contPara)
+    contPara = 0
 
 def p_agregafunc(p):
     '''
-    agregafunc : 
+    agregafunc : empty
     '''
     global idFun
     global proc
+    global nuevaFunc
+    
     idFun = p[-1]
-    proc.agregaf(idFun, tipoFun)
+    proc.agregaf(idFun, tipoFun,None,None,None)
     #print("ESTA FUNCION ES ", idFun)
     funcionActual.append(idFun)
+    nuevaFunc = True
+    
+    
 
 def p_funcionb(p):
     '''
-    funcionb : RPAREN funcionc
-    | varsfunc RPAREN funcionc
+    funcionb : RPAREN testeru funcionc
+    | varsfunc RPAREN testeru funcionc
     '''
+
+def p_testeru(p):
+    '''
+    testeru : empty 
+    '''   
+    global paramType
+    global contPara
+    global proc
+    global nuevaFunc2 
+    global funcionActual
+
+    if(funcionActual[-1]!='programa' ):
+        proc.agregaTablaTipoParam(funcionActual[-1], paramType, len(paramType))
+        #print("TEST GOOD",proc.getDir(funcionActual[-1]))
+        paramType = []
+
+
 def p_funcionc(p):
     '''
-    funcionc : vars bloque funcion
-    | bloque funcion
+    funcionc : vars  bloque funcion
+    | bloque  funcion
     | empty
     '''
+
 def p_bloque(p):
     '''
     bloque : LBRACKET estatuto bloqueb
@@ -282,9 +386,16 @@ def p_bloque(p):
     '''
 def p_bloqueb(p):
     '''
-    bloqueb : RBRACKET
+    bloqueb : RBRACKET helper
     | estatuto bloqueb
     '''
+def p_helper(p):
+    '''
+    helper : empty
+    '''
+    global nuevaFunc2
+    nuevaFunc2 = False
+
 def p_asign(p):
     '''
     asign : LBRACK expresion RBRACK
@@ -394,17 +505,29 @@ def p_leeb(p):
     leeb : RPAREN SEMICOL
     | COMMA id leeb
     ''' 
+
+#Checar si la expresion ESCRIBE LPAREN STRING sirve, creo que la primera ya viene eso incluido
 def p_escritura(p):
     '''
-    escritura : ESCRIBE LPAREN expresion escriturab
-    | ESCRIBE LPAREN STRING escriturab
+    escritura : ESCRIBE LPAREN expresion prin1 escriturab
     '''
 def p_escriturab(p):
     '''
-    escriturab : COMMA STRING  escriturab
-    | COMMA expresion escriturab
+    escriturab : COMMA expresion prin1 escriturab
     | RPAREN SEMICOL
     '''
+
+
+def p_prin1(p):
+    '''
+    prin1 : empty 
+    '''
+    test = PilaO.pop()
+    global contLine
+    contLine += 1
+    quad = ("Escritura", None, None, test)
+    cuadruplo.append(quad)
+
 def p_decision(p):
     '''
     decision : SI LPAREN expresion pn1 RPAREN ENTONCES decisionb
@@ -426,7 +549,7 @@ def p_pn1(p):
         quad = ("GotoF", result, None, contLine)
         cuadruplo.append(quad)
         PSalto.append(contLine)
-        print("PSalto", *PSalto)
+        #print("PSalto", *PSalto)
 
 def p_decisionb(p):
     '''
@@ -451,7 +574,7 @@ def p_pn3(p):
     cuadruplo.append(quad)
     false = PSalto.pop()
     PSalto.append(contLine)
-    print("Pila Salto", *PSalto)
+    #print("Pila Salto", *PSalto)
     FILL(false, contLine+1)
 
 def p_repeticioncond(p):
@@ -513,7 +636,7 @@ def p_cte(p):
 
     else:
         #print("Funcion Actual ", funcionActual[-1] )
-        #Se busca si la variable es arreglo y si ya fue declarada en la funcion actual 
+        #Se busca si la variable es arreglo y si ya fue declarada en la funcion actual
         if( p[-1] == '['):
             #print("NOMBRE DE ARREGLO ", p[-2])
             #proc.testerVariable(funcionActual[0])
@@ -528,6 +651,9 @@ def p_cte(p):
             else:
                 varhelper = varfinder['tipo']
                 PTipo.append(varhelper)
+        elif(p[1][0]== "'"):
+            filler=True
+
         else:
             buscador = proc.getDir(funcionActual[-1])
             varfinder = buscador['tvar'].getvar(p[1])
@@ -536,7 +662,7 @@ def p_cte(p):
                 buscador=proc.getDir(funcionActual[0])
                 varfinder=buscador['tvar'].getvar(p[1])
             if varfinder == None:
-                print("Variable Normal no declarada")
+                print("Variable Normal no declarada aki")
             else:
                 varhelper = varfinder['tipo']
                 PTipo.append(varhelper)
@@ -681,11 +807,30 @@ def p_agregavar(p):
     '''agregavar : '''
     global proc
     global varId
+    global paramTable
     varId = p[-1]
     if(proc.busca(idFun) == True):
-        proc.agregav(idFun, varId, tipoVar)
+        if(idFun == "programa"):
+            proc.agregav(idFun,varId,tipoVar,MemoriaVirtual['g'+tipoVar])
+            MemoriaVirtual['g'+tipoVar] += 1 
+            
+        else:
+            proc.agregav(idFun,varId,tipoVar,MemoriaVirtual['l'+tipoVar])
+            MemoriaVirtual['l'+tipoVar] += 1
+            #print("VARIABLE AGREGANDOSE ",varId)
+            #print("TEST", paramType)
+            #paramTable.append(paramType)
+       # if(nuevaFunc):
+
+        #paramTable.append(tipoVar)
+
     else:
         print("La funcion no esta declarada")
+    #print(idFun)
+    #print("TABLA DE FUNCION")
+    #print(proc.getDir(funcionActual[-1]))
+    #proc.testerVariable(idFun)
+    #print("PARAM TYPE",*paramTable)
 
 def despliegaQuad():
     print("----Desplegando Cuadruplos----")
@@ -714,5 +859,10 @@ def p_error(p):
 # Build the parser
 parser = yacc.yacc()
 result = parser.parse(data)
+#print("TABLA DE FUNCION")
+#print("TEST",proc.getDir('fact'))
+#print("TEST",proc.getDir('inicia')) 
+proc.arref()
+print("C")
 despliegaQuad()
 print("DONE")
