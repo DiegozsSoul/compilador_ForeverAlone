@@ -17,7 +17,7 @@ class tablaVariables(object):
         return query in self.arreglo
 
     def getvar(self,vname):
-        if self.busca(vname): 
+        if (self.busca(vname)): 
             return self.arreglo[vname] 
         else:
             return None
@@ -25,8 +25,11 @@ class tablaVariables(object):
     def setTipo(self, tipo):
         self.tipo = tipo
 
-    def getTipo(self):
-        return self.tipo
+    def getTipoVar(self,vname):
+        if(self.busca(vname)):
+            return self.arreglo[vname]['tipo']
+        else:
+            print("variable no delcarada")
     
     def getLocacionMemoria(self,vname):
         return self.arreglo[vname]['locmem']

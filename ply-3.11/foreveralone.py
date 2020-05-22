@@ -19,6 +19,7 @@ funcionActual = []
 cuadruplo = []
 paramTable = []
 paramType = []
+constTable = []
 nuevaFunc = False
 nuevaFunc2 = False
 
@@ -52,6 +53,7 @@ MemoriaVirtual = {
     'tfloat' :10000,
     'tstring':11000,
     'tbool'  :12000,
+    'const'  :13000,
 }
 #Reads the document
  
@@ -197,8 +199,16 @@ def p_programab(p):
     '''
 def p_programac(p):
     '''
-    programac : PRINCIPAL agregarfuncmain2 LPAREN RPAREN bloque
+    programac : PRINCIPAL  agregarfuncmain2  LPAREN RPAREN prinn bloque
     '''
+def p_prinn(p):
+    '''
+    prinn : empty
+    '''
+    global contLine
+    false = PSalto.pop()
+    PSalto.append(contLine)
+    FILL(false, contLine+1)
 
 def p_agregafuncmain2(p):
     '''
@@ -222,11 +232,18 @@ def p_agregarfuncmain(p):
     global idFun
     global tipoFun
     global proc
+    global contLine
     idFun = 'programa'
     tipoFun = 'void'
     proc.agregaf(idFun, tipoFun, None,None,None)
     #print("aki merongo " , p[-1])
     funcionActual.append(p[-1])
+    contLine += 1
+    quad = ("GOTO",None,None,contLine)
+    cuadruplo.append(quad)
+    PSalto.append(contLine)
+
+
 
 def p_id(p):
     '''
@@ -374,10 +391,21 @@ def p_testeru(p):
 
 def p_funcionc(p):
     '''
-    funcionc : vars  bloque funcion
-    | bloque  funcion
+    funcionc : vars  bloque reinicio funcion
+    | bloque reinicio funcion
     | empty
     '''
+def p_reinicioMemoriaVariable(p):
+    '''
+    reinicio : empty
+    '''
+    global MemoriaVirtual
+    global contLine
+    contLine += 1
+    MemoriaVirtual['lint'] = 5000 
+    quad = ('ENDFUNC',None,None,None,contLine)
+    cuadruplo.append(quad)   
+    #AQUI VOY
 
 def p_bloque(p):
     '''
@@ -490,8 +518,25 @@ def p_asignacionb(p):
             
 def p_retorno(p):
     '''
-    retorno : REGRESA LPAREN expresion RPAREN SEMICOL
+    retorno : REGRESA LPAREN expresion retn RPAREN SEMICOL
     '''
+def p_retn(p):
+    '''
+    retn : empty
+    ''' 
+    global proc
+    global contLine
+    validaTipoF = proc.getTipoFunc(funcionActual[-1])
+    helper = proc.getDir(funcionActual[-1])
+    variable = PilaO.pop()
+    validaTipoV = helper['tvar'].getTipoVar(variable)
+    print("VALIDACION", validaTipoF,validaTipoV)
+    if(validaTipoF==validaTipoF):
+        contLine += 1
+        quad = ("Regresa",None,None,variable,contLine)
+        cuadruplo.append(quad)
+    #AQUI VOY
+
 def p_funcionvoid(p):
     '''
     funcionvoid : ID LPAREN expresion RPAREN SEMICOL
@@ -622,7 +667,7 @@ def p_repeticionnocond(p):
 def p_cte(p):
     '''
     cte : ID 
-    | NUMBER
+    | NUMBER saveconst
     | CTEF 
     | CTEC
     | STRING
@@ -666,6 +711,18 @@ def p_cte(p):
             else:
                 varhelper = varfinder['tipo']
                 PTipo.append(varhelper)
+
+def p_saveconst(p):
+    '''
+    saveconst : empty
+    '''
+    global constTable
+  
+    if(p[-1] not in dict(constTable)):
+        constante = (p[-1],MemoriaVirtual['const'])
+        constTable.append(constante)
+        MemoriaVirtual['const'] += 1    
+    #print("LISTA DE CONSTANTES",*constTable)
 
 def p_expresion(p):
     '''
@@ -810,7 +867,7 @@ def p_agregavar(p):
     global paramTable
     varId = p[-1]
     if(proc.busca(idFun) == True):
-        if(idFun == "programa"):
+        if(idFun == "foreveralone"):
             proc.agregav(idFun,varId,tipoVar,MemoriaVirtual['g'+tipoVar])
             MemoriaVirtual['g'+tipoVar] += 1 
             
@@ -862,7 +919,10 @@ result = parser.parse(data)
 #print("TABLA DE FUNCION")
 #print("TEST",proc.getDir('fact'))
 #print("TEST",proc.getDir('inicia')) 
+print("TABLA DE Funciones")
 proc.arref()
-print("C")
+print("XXXXXXXXXXXXXXXXXXXXX")
+print("TABLA DE VARIABLES",proc.testerVariable('fact'))
+print("TABLA DE VARIABLES2", proc.testerVariable('inicia'))
 despliegaQuad()
 print("DONE")

@@ -49,6 +49,9 @@ class tablaFunciones(object):
             else:
                 print("variable no existe")
 
+    def getTipoFunc(self,nombref):
+        if(nombref in self.arreglo):
+            return self.arreglo[nombref]['tipo']
 
     def busca(self, query):
         return query in self.arreglo

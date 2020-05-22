@@ -12,7 +12,7 @@ si(j == 1) entonces
  j = z*1; 
 }
  sino
- {regresa(j*fact(j-1) );}
+ {regresa(j*fact(j-1));}
 }
 
 funcion void inicia(int y, float l)
