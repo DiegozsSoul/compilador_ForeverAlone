@@ -5,7 +5,7 @@ class tablaFunciones(object):
     def __init__(self):
         self.arreglo = {}
 
-    def agregaf(self, nombre, tipo, tipoParam, cantParam, cantVarLoc, iniciaCuadru, contTemp):
+    def agregaf(self, nombre, tipo, tipoParam, cantParam, pilaParam, cantVarLoc, iniciaCuadru, contTemp):
         if(nombre not in self.arreglo.keys()):
             self.arreglo[nombre] ={
             'nombre' : nombre,
@@ -13,6 +13,7 @@ class tablaFunciones(object):
             'tvar' : tablaVariables(),
             'tparam' : tipoParam,
             'tcantparam' : cantParam,
+            'pilaParam'  : pilaParam,
             'cantVarLoc' : cantVarLoc,
             'iniciaCuadru' : iniciaCuadru,
             'contTemp'   : contTemp
@@ -50,6 +51,15 @@ class tablaFunciones(object):
             tabVar['contTemp'] = contTemp
         else:
             print("Funcion no existe")
+            
+    def agregaPilaParam(self,nombref,pilaParam):
+        if(nombref in self.arreglo):
+            tabVar = self.arreglo[nombref]
+            tabVar['pilaParam'] = pilaParam
+
+    def getPilaTemp(self,nombref):
+        if(nombref in self.arreglo):
+           return self.arreglo[nombref]['pilaParam']
 
     def getLocMem(self,nombref, nombrev):
         if (nombref in self.arreglo):
@@ -71,9 +81,18 @@ class tablaFunciones(object):
         if(nombref in self.arreglo):
             return self.arreglo[nombref]['tipo']
 
+    def getTipoParam(self,nombref):
+            return self.arreglo[nombref]['tparam']
+    def getPilaParam(self,nombref):
+            return self.arreglo[nombref]['pilaParam']
     def busca(self, query):
         return query in self.arreglo
 
+    def funcionExiste(self,nombref):
+        if(nombref in self.arreglo):
+            return True
+        else:
+            return False
 
     def testerVariable(self, nombref):
         if nombref in self.arreglo:

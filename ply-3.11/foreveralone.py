@@ -23,6 +23,10 @@ constTable = []
 arrVarL = []
 nuevaFunc = False
 nuevaFunc2 = False
+temp = []
+auxPilaParam = []
+auxTipoParam = []
+k = 0
 
 class AVAIL(object):
 
@@ -223,7 +227,7 @@ def p_agregafuncmain2(p):
     global contVarL
     idFun= 'principal'
     tipofun ='void'
-    proc.agregaf(idFun,tipoFun,None,None,contVarL,None,None)
+    proc.agregaf(idFun,tipoFun,None,None,None,contVarL,None,None)
     #print("AKIIII ", p[-1])
     funcionActual.append(p[-1])
 
@@ -238,7 +242,7 @@ def p_agregarfuncmain(p):
     global contLine
     idFun = 'programa'
     tipoFun = 'void'
-    proc.agregaf(idFun, tipoFun, None,None,None,None,None)
+    proc.agregaf(idFun, tipoFun, None,None,None,None,None,None)
     #print("aki merongo " , p[-1])
     funcionActual.append(p[-1])
     contLine += 1
@@ -257,10 +261,14 @@ def p_id(p):
     global contVarL
     global funcionActual
     global arrVarL
+    global paramTable
     if(funcionActual[-1]!='principal'):
         contVarL += 1
-        #print("CHECKER",funcionActual[-1],*arrVarL,p[1])
-        #AQUIVOY
+        print("TESTERUUUU",p[-2],p[-1],p[0],p[1],p[2])
+        if(funcionActual[-1]!='programa'):
+            if(p[-2]=='(' or p[-2]==','):
+                paramTable.append(p[1])
+                proc.agregaPilaParam(funcionActual[-1],paramTable)
 
 def p_tipovar(p):
     '''
@@ -353,10 +361,14 @@ def p_aux2(p):
     global proc
     global funcionActual
     global arrVarL
+    global paramTable
+
     nuevaFunc2 = True
     #print("Cantidad",funcionActual[-1],arrVarL[-1],contPara)
     proc.agregaCantidadVarLoc(funcionActual[-1],contVarL+contPara)
+    paramTable = []
     contPara = 0
+    #MARKER
 
 def p_agregafunc(p):
     '''
@@ -366,7 +378,7 @@ def p_agregafunc(p):
     global proc
     global nuevaFunc
     idFun = p[-1]
-    proc.agregaf(idFun, tipoFun,None,None,None,None,None)
+    proc.agregaf(idFun, tipoFun,None,None,None,None,None,None)
     #print("ESTA FUNCION ES ", idFun)
     funcionActual.append(idFun)
     nuevaFunc = True
@@ -433,6 +445,7 @@ def p_bloque(p):
     bloque : LBRACKET estatuto bloqueb
     | LBRACKET RBRACKET
     '''
+
 def p_bloqueb(p):
     '''
     bloqueb : RBRACKET helper
@@ -556,11 +569,59 @@ def p_retn(p):
         contLine += 1
         quad = ("Regresa",None,None,variable,contLine)
         cuadruplo.append(quad)
+        #AQUIESTOY
 
 def p_funcionvoid(p):
     '''
-    funcionvoid : ID LPAREN expresion RPAREN SEMICOL
+    funcionvoid : ID  LPAREN fnvn1 expresion fnvn2 RPAREN SEMICOL
     '''
+
+def p_fnvn1(p):
+    '''
+    fnvn1 : empty
+    '''
+    global proc
+    global contLine
+    global k
+    global auxTipoParam
+    global auxPilaParam
+
+    print("RESOLVE",p[-2])
+    if(proc.funcionExiste(p[-2])):
+        contLine += 1
+        quad = ("ERA",None,None,p[-2],contLine)
+        cuadruplo.append(quad)
+        auxTipoParam = proc.getTipoParam(p[-2])
+        auxPilaParam = proc.getPilaParam(p[-2])
+        #print("CHECK",auxTipoParam,auxPilaParam)
+
+    else:
+        print("LA FUNCION NO EXISTE")
+
+def p_fnvn2(p):
+    '''
+    fnvn2 : empty
+    '''
+    global proc
+    global k
+    global contLine
+    global auxTipoParam
+    global auxPilaParam
+
+    tempTipo = PTipo.pop()
+    tempOper = PilaO.pop()
+    tempAuxTipo = auxTipoParam
+    tempTipoPop = tempAuxTipo.pop()
+    
+    if(tempTipo == tempTipoPop):
+        k+=1
+        contLine+=1
+        tempParam = auxPilaParam.pop()
+        quad = ("Param",tempOper,tempParam,contLine )
+        cuadruplo.append(quad)
+    
+
+
 def p_lee(p):
     '''
     lee : LEE LPAREN id leeb
@@ -595,7 +656,7 @@ def p_prin1(p):
 
 def p_decision(p):
     '''
-    decision : SI LPAREN expresion pn1 RPAREN ENTONCES decisionb
+    decision : SI LPAREN expresion pn1 RPAREN  ENTONCES decisionb
     '''
     #print("DECISION ", p[-1],p[-2])
 
@@ -641,6 +702,7 @@ def p_pn3(p):
     PSalto.append(contLine)
     #print("Pila Salto", *PSalto)
     FILL(false, contLine+1)
+    #AQUIVOOOOY
 
 def p_repeticioncond(p):
     '''
@@ -858,12 +920,28 @@ def p_terminob(p):
 def p_factor(p):
     '''
     factor : LPAREN expresion RPAREN
-    | ID LPAREN expresion RPAREN
+    | ID LPAREN llamadafun expresion RPAREN
     | PLUS cte
     | MINUS cte
     | cte
     | ID asign
     '''
+
+def p_llamadafun(p):
+    '''
+    llamadafun : empty
+    '''    
+    global proc
+    global contLine
+    global k
+
+    if(proc.funcionExiste(p[-2])):
+        contLine += 1
+        quad = ("ERA",None,None,p[-2],contLine)
+        cuadruplo.append(quad)
+        k = 1
+        print("LA FUNCION EXISTE")
+    
 
 def p_estatuto(p):
     '''
