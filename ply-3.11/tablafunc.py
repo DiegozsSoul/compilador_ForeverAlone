@@ -5,7 +5,7 @@ class tablaFunciones(object):
     def __init__(self):
         self.arreglo = {}
 
-    def agregaf(self, nombre, tipo, tipoParam, cantParam, cantVarLoc):
+    def agregaf(self, nombre, tipo, tipoParam, cantParam, cantVarLoc, iniciaCuadru, contTemp):
         if(nombre not in self.arreglo.keys()):
             self.arreglo[nombre] ={
             'nombre' : nombre,
@@ -13,7 +13,9 @@ class tablaFunciones(object):
             'tvar' : tablaVariables(),
             'tparam' : tipoParam,
             'tcantparam' : cantParam,
-            'cantVarLoc' : cantVarLoc
+            'cantVarLoc' : cantVarLoc,
+            'iniciaCuadru' : iniciaCuadru,
+            'contTemp'   : contTemp
             }
             #print("added function " + nombre)
         else:
@@ -39,6 +41,15 @@ class tablaFunciones(object):
         if(nombref in self.arreglo):
             tabVar = self.arreglo[nombref]
             tabVar['cantVarLoc'] = cantVarLoc
+        else:
+            print("Funcion no existe")
+
+    def agregaContTemp(self,nombref,contTemp):
+        if(nombref in self.arreglo):
+            tabVar = self.arreglo[nombref]
+            tabVar['contTemp'] = contTemp
+        else:
+            print("Funcion no existe")
 
     def getLocMem(self,nombref, nombrev):
         if (nombref in self.arreglo):
@@ -48,6 +59,13 @@ class tablaFunciones(object):
                 return tabVar['tvar'].getLocMem(nombrev)
             else:
                 print("variable no existe")
+
+    def agregaContCuadruplo(self,nombref, iniciaCuadru):
+        if(nombref in self.arreglo):
+            tabVar = self.arreglo[nombref]
+            tabVar['iniciaCuadru'] = iniciaCuadru
+        else: 
+            print("Funcion no existe")
 
     def getTipoFunc(self,nombref):
         if(nombref in self.arreglo):

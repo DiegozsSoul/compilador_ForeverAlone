@@ -20,17 +20,20 @@ cuadruplo = []
 paramTable = []
 paramType = []
 constTable = []
+arrVarL = []
 nuevaFunc = False
 nuevaFunc2 = False
 
 class AVAIL(object):
+
 	def __init__(self):
 		self.AvailC = 0
 		self.Temp = "t"
-
 	def next(self):
 		self.AvailC+=1
 		return self.Temp + str(self.AvailC)
+	def reset(self):
+		self.AvailC = 0
 
 #Pilas para cuadroplus
 POper  = []
@@ -220,7 +223,7 @@ def p_agregafuncmain2(p):
     global contVarL
     idFun= 'principal'
     tipofun ='void'
-    proc.agregaf(idFun,tipoFun,None,None,contVarL)
+    proc.agregaf(idFun,tipoFun,None,None,contVarL,None,None)
     #print("AKIIII ", p[-1])
     funcionActual.append(p[-1])
 
@@ -235,7 +238,7 @@ def p_agregarfuncmain(p):
     global contLine
     idFun = 'programa'
     tipoFun = 'void'
-    proc.agregaf(idFun, tipoFun, None,None,None)
+    proc.agregaf(idFun, tipoFun, None,None,None,None,None)
     #print("aki merongo " , p[-1])
     funcionActual.append(p[-1])
     contLine += 1
@@ -253,8 +256,11 @@ def p_id(p):
     global nuevaFunc2
     global contVarL
     global funcionActual
-    contVarL += 1
-    print("CHECKER",contVarL)
+    global arrVarL
+    if(funcionActual[-1]!='principal'):
+        contVarL += 1
+        #print("CHECKER",funcionActual[-1],*arrVarL,p[1])
+        #AQUIVOY
 
 def p_tipovar(p):
     '''
@@ -315,7 +321,8 @@ def p_contVReset(p):
     contVReset : empty
     '''
     global contVarL
-    print("IM IN")
+    global arrVarL
+    arrVarL.append(contVarL)
     contVarL = 0
 
 def p_varsfunc(p):
@@ -341,13 +348,13 @@ def p_aux2(p):
     aux2 : empty
     '''    
     global nuevaFunc2
-    global paramType
     global contPara
     global contVarL
     global proc
     global funcionActual
+    global arrVarL
     nuevaFunc2 = True
-    print("Cantidad",funcionActual[-1],contVarL,contPara)
+    #print("Cantidad",funcionActual[-1],arrVarL[-1],contPara)
     proc.agregaCantidadVarLoc(funcionActual[-1],contVarL+contPara)
     contPara = 0
 
@@ -358,13 +365,12 @@ def p_agregafunc(p):
     global idFun
     global proc
     global nuevaFunc
-    
     idFun = p[-1]
-    proc.agregaf(idFun, tipoFun,None,None,None)
+    proc.agregaf(idFun, tipoFun,None,None,None,None,None)
     #print("ESTA FUNCION ES ", idFun)
     funcionActual.append(idFun)
     nuevaFunc = True
-    
+    #AQUIVOY
     
 
 def p_funcionb(p):
@@ -391,17 +397,32 @@ def p_testeru(p):
 
 def p_funcionc(p):
     '''
-    funcionc : vars  bloque reinicio funcion
-    | bloque reinicio funcion
+    funcionc : vars  agregacont bloque reinicio funcion
+    | agregacont bloque reinicio funcion
     | empty
     '''
+def p_agregacont(p):
+    '''
+    agregacont : empty
+    '''
+    global contLine
+    global proc
+    global funcionActual
+    proc.agregaContCuadruplo(funcionActual[-1],contLine+1)
+
 def p_reinicioMemoriaVariable(p):
     '''
     reinicio : empty
     '''
     global MemoriaVirtual
     global contLine
+    global funcionActual
+    global proc
     contLine += 1
+
+    #print("TEMP",funcionActual[-1],Avail.AvailC)
+    proc.agregaContTemp(funcionActual[-1],Avail.AvailC)
+    Avail.reset()
     MemoriaVirtual['lint'] = 5000 
     quad = ('ENDFUNC',None,None,None,contLine)
     cuadruplo.append(quad)   
@@ -504,12 +525,12 @@ def p_asignacionb(p):
         operator      = POper.pop()
         resultType    = sema.getTipo(left_type,right_type,operator)
         if(resultType != 'TypeError'):
-            result = Avail.next()
+            #result = Avail.next() ESTO RESUELVE ERROR EN TEMPORALES????
             global contLine
             contLine += 1 #TEST
             quad= (operator, left_operand, None, right_operand,contLine)
             cuadruplo.append(quad)
-            PilaO.append(result)
+            #PilaO.append(result) ESTO RESUELVE ERROR EN TEMPORALES????
             PTipo.append(resultType)
             
             #print(operator, left_operand, None ,right_operand)
@@ -535,7 +556,6 @@ def p_retn(p):
         contLine += 1
         quad = ("Regresa",None,None,variable,contLine)
         cuadruplo.append(quad)
-    #AQUI VOY
 
 def p_funcionvoid(p):
     '''
