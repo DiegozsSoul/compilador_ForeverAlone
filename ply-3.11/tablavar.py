@@ -32,7 +32,10 @@ class tablaVariables(object):
             print("variable no delcarada")
     
     def getLocacionMemoria(self,vname):
-        return self.arreglo[vname]['locmem']
+        if(self.busca(vname)):
+            return self.arreglo[vname]['locmem']
+        else:
+            print("Variable no se encontro")
 
     def imprimiArreglo(self):
         print(self.arreglo.items())

@@ -6,7 +6,7 @@ class tablaFunciones(object):
         self.arreglo = {}
 
     def agregaf(self, nombre, tipo, tipoParam, cantParam, pilaParam, cantVarLoc, iniciaCuadru, contTemp):
-        if(nombre not in self.arreglo.keys()):
+        if(nombre not in self.arreglo.values()):
             self.arreglo[nombre] ={
             'nombre' : nombre,
             'tipo' : tipo,
@@ -20,8 +20,10 @@ class tablaFunciones(object):
             }
             #print("added function " + nombre)
         else:
-            print("function " + nombre + "already declared")
+            print("function ",nombre," already declared")
+            
 
+    #Agrega variables a la tabla de variables
     def agregav(self, nombref, nombrev, tipov, locmemv):
         if (nombref in self.arreglo):
             tabVar = self.arreglo[nombref]
@@ -32,12 +34,14 @@ class tablaFunciones(object):
         else:
             print("La funcion no existe")
 
+    #Agrega los tipos de parametros a la tabla de funcion
     def agregaTablaTipoParam(self,nombref,tiposDeParam,cantParam):
         if(nombref in self.arreglo):
             tabVar = self.arreglo[nombref]
             tabVar['tparam'] = tiposDeParam
             tabVar['tcantparam'] = cantParam
 
+    #Agrega la cantidad de variables locales que declara la funcion
     def agregaCantidadVarLoc(self,nombref,cantVarLoc):
         if(nombref in self.arreglo):
             tabVar = self.arreglo[nombref]
@@ -45,22 +49,26 @@ class tablaFunciones(object):
         else:
             print("Funcion no existe")
 
+    #Agrega la cantidad de parametros que recibe la funcion
     def agregaContTemp(self,nombref,contTemp):
         if(nombref in self.arreglo):
             tabVar = self.arreglo[nombref]
             tabVar['contTemp'] = contTemp
         else:
             print("Funcion no existe")
-            
+
+    #Agrega los parametros a la tabla de funcion correspondiente
     def agregaPilaParam(self,nombref,pilaParam):
         if(nombref in self.arreglo):
             tabVar = self.arreglo[nombref]
             tabVar['pilaParam'] = pilaParam
 
+    #Regresa la pila de Param de la funcion correspondiente (REPETIDA, NO SE UTILIZA)
     def getPilaTemp(self,nombref):
         if(nombref in self.arreglo):
            return self.arreglo[nombref]['pilaParam']
 
+    #Regresa la locacion de memoria correspondiente a la variable que se busque
     def getLocMem(self,nombref, nombrev):
         if (nombref in self.arreglo):
             tabVar = self.arreglo[nombref]
@@ -70,6 +78,7 @@ class tablaFunciones(object):
             else:
                 print("variable no existe")
 
+    #Agrega el numero de cuadruplo en el que inicia la funcion
     def agregaContCuadruplo(self,nombref, iniciaCuadru):
         if(nombref in self.arreglo):
             tabVar = self.arreglo[nombref]
@@ -77,28 +86,51 @@ class tablaFunciones(object):
         else: 
             print("Funcion no existe")
 
+    def getInicioCuadruplo(self,nombref):
+        if(nombref in self.arreglo):
+            return self.arreglo[nombref]['iniciaCuadru']
+        else: 
+            print("Funcion no existe")   
+
+    #Agrega el tipo de funcion 
     def getTipoFunc(self,nombref):
         if(nombref in self.arreglo):
             return self.arreglo[nombref]['tipo']
-
+    
+    #Regresa el tipo del parametro a la funcion correspondiente
     def getTipoParam(self,nombref):
             return self.arreglo[nombref]['tparam']
+
+    #Regresa la pila de parametros de la funcion correspondiente(REPETIDA)
     def getPilaParam(self,nombref):
+        if(nombref in self.arreglo):
             return self.arreglo[nombref]['pilaParam']
+        else:
+            print("Funcion no existe")
+
+    def getContPilaParam(self,nombref):
+        if(nombref in self.arreglo):
+            return self.arreglo[nombref]['tcantparam']
+        else:
+            print("Funcion no existe")
+    #Busca si existe la funcion en la tabla de funciones
     def busca(self, query):
         return query in self.arreglo
 
+    #Regresa verdadero o falso, dependiendo de si la funcion existe en la tabla de funciones
     def funcionExiste(self,nombref):
         if(nombref in self.arreglo):
             return True
         else:
             return False
 
+    #Imprimi la tabla de variables de la funcion que se indique
     def testerVariable(self, nombref):
         if nombref in self.arreglo:
             testerino = self.arreglo[nombref]
             return testerino['tvar'].imprimiArreglo()
 
+    #Se utiliza para mostrar la tabla de funciones
     def getDir(self, query):
         if self.busca(query):
             #print("TESTERINO", self.arreglo[query] )

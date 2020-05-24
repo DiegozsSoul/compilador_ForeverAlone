@@ -64,7 +64,7 @@ MemoriaVirtual = {
 }
 #Reads the document
  
-Info= open("test.txt", "r") 
+Info= open("test3.txt", "r") 
 data=Info.read()
 
 # Reserved words
@@ -264,7 +264,6 @@ def p_id(p):
     global paramTable
     if(funcionActual[-1]!='principal'):
         contVarL += 1
-        print("TESTERUUUU",p[-2],p[-1],p[0],p[1],p[2])
         if(funcionActual[-1]!='programa'):
             if(p[-2]=='(' or p[-2]==','):
                 paramTable.append(p[1])
@@ -382,8 +381,11 @@ def p_agregafunc(p):
     #print("ESTA FUNCION ES ", idFun)
     funcionActual.append(idFun)
     nuevaFunc = True
-    #AQUIVOY
-    
+
+    if(tipoFun!='void'):
+        #print("TIPO DE FUN",tipoFun, idFun)
+        proc.agregav('programa', idFun, tipoFun, MemoriaVirtual['g'+ tipoFun])
+        MemoriaVirtual['g'+tipoFun] += 1    
 
 def p_funcionb(p):
     '''
@@ -573,7 +575,7 @@ def p_retn(p):
 
 def p_funcionvoid(p):
     '''
-    funcionvoid : ID  LPAREN fnvn1 expresion fnvn2 RPAREN SEMICOL
+    funcionvoid : ID  LPAREN fnvn1 expresion fnvn2 RPAREN fnvn3 SEMICOL
     '''
 
 def p_fnvn1(p):
@@ -582,7 +584,6 @@ def p_fnvn1(p):
     '''
     global proc
     global contLine
-    global k
     global auxTipoParam
     global auxPilaParam
 
@@ -610,17 +611,51 @@ def p_fnvn2(p):
 
     tempTipo = PTipo.pop()
     tempOper = PilaO.pop()
+
     tempAuxTipo = auxTipoParam
+    tempAuxPila = auxPilaParam
+
     tempTipoPop = tempAuxTipo.pop()
     
     if(tempTipo == tempTipoPop):
         k+=1
         contLine+=1
-        tempParam = auxPilaParam.pop()
-        quad = ("Param",tempOper,tempParam,contLine )
+        tempPilaPop = tempAuxPila[-1]
+        print("K1",k,contLine)
+        quad = ("Param",tempOper,k,contLine )
         cuadruplo.append(quad)
+    else:
+        print("Error")
     
+def p_fnvn3(p):
+    '''
+    fnvn3 : empty
+    '''    
+    global contLine
+    global k
+    global proc
+    print("MARKER",p[-6])
+    if(proc.getContPilaParam(p[-6]) != k ):
+        print("Numero de argumentos no coincide en la funcion",p[-6])
+    else:
+        contLine += 1
+        iniciocuadruplo = proc.getInicioCuadruplo(p[-6])
+        quad = ("GoSub",p[-6],None,iniciocuadruplo,contLine)
+        cuadruplo.append(quad)
 
+
+        aux = proc.getDir('programa')
+        auxVarSearch = aux['tvar'].getLocacionMemoria(p[-6])
+        auxTipoSearch = aux['tvar'].getTipoVar(p[-6])
+        if(auxTipoSearch != None):
+            #print("GUADALUPANO",aux,auxVarSearch, auxTipoSearch,p[-6])
+            contLine += 1
+            quad = ('=',auxVarSearch,None,MemoriaVirtual['t'+auxTipoSearch],contLine)
+            MemoriaVirtual['t'+auxTipoSearch] += 1
+            cuadruplo.append(quad)
+    k = 0
+
+    #MARKER
 
 def p_lee(p):
     '''
@@ -920,7 +955,7 @@ def p_terminob(p):
 def p_factor(p):
     '''
     factor : LPAREN expresion RPAREN
-    | ID LPAREN llamadafun expresion RPAREN
+    | ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
     | PLUS cte
     | MINUS cte
     | cte
@@ -933,15 +968,74 @@ def p_llamadafun(p):
     '''    
     global proc
     global contLine
-    global k
-
+    global auxPilaParam
+    global auxTipoParam
     if(proc.funcionExiste(p[-2])):
         contLine += 1
         quad = ("ERA",None,None,p[-2],contLine)
         cuadruplo.append(quad)
-        k = 1
-        print("LA FUNCION EXISTE")
+        auxTipoParam = proc.getTipoParam(p[-2])
+        auxPilaParam = proc.getPilaParam(p[-2])
+    else:
+        print("La funcion no existe")
+
+def p_llamadafun2(p):
+    '''
+    llamadafun2 : empty
+    '''    
+    global proc
+    global contLine
+    global k
+    global auxTipoParam
+    global auxPilaParam
+
+    tempTipo = PTipo.pop()
+    tempOper = PilaO.pop()
     
+    tempAuxTipo = auxTipoParam
+    tempAuxPila = auxPilaParam
+    print("DEBUG", *tempAuxTipo)
+ 
+    tempTipoPop = tempAuxTipo[-1]
+   
+    if(tempTipo == tempTipoPop):
+        k += 1 
+        contLine += 1
+        tempPilaPop = tempAuxPila[-1]
+        print("K",k,contLine)
+        kont = k
+        quad = ("Param",tempOper, kont, contLine)
+        cuadruplo.append(quad)
+    else:
+        print("Error")
+ 
+def p_llamadafun3(p):
+    '''
+    llamadafun3 : empty
+    '''    
+    global proc
+    global contLine
+    global k
+
+    print("MARKER2",p[-6])
+    if(proc.getContPilaParam(p[-6]) !=k):
+        print("Numero de argumentos no coincide en la funcion2",p[-6])
+    else:
+        contLine += 1
+        inicioCuadruplo = proc.getInicioCuadruplo(p[-6])
+        quad = ("GoSub",p[-6],None,inicioCuadruplo,contLine)
+        cuadruplo.append(quad)
+
+        aux = proc.getDir('programa')
+        auxVarSearch = aux['tvar'].getLocacionMemoria(p[-6])
+        auxTipoSearch = aux['tvar'].getTipoVar(p[-6])
+        if(auxTipoSearch != None):
+            print("GUADALUPANO2",aux,auxVarSearch, auxTipoSearch,p[-6])
+            contLine += 1
+            quad = ('=',auxVarSearch,None,MemoriaVirtual['t'+auxTipoSearch],contLine)
+            MemoriaVirtual['t'+auxTipoSearch] += 1
+            cuadruplo.append(quad)
+    k = 0
 
 def p_estatuto(p):
     '''
@@ -965,7 +1059,7 @@ def p_agregavar(p):
     global paramTable
     varId = p[-1]
     if(proc.busca(idFun) == True):
-        if(idFun == "foreveralone"):
+        if(idFun == "programa"):
             proc.agregav(idFun,varId,tipoVar,MemoriaVirtual['g'+tipoVar])
             MemoriaVirtual['g'+tipoVar] += 1 
             
@@ -1020,7 +1114,8 @@ result = parser.parse(data)
 print("TABLA DE Funciones")
 proc.arref()
 print("XXXXXXXXXXXXXXXXXXXXX")
-print("TABLA DE VARIABLES",proc.testerVariable('fact'))
-print("TABLA DE VARIABLES2", proc.testerVariable('inicia'))
+print("TABLA DE VARIABLES1",proc.testerVariable('programa'))
+print("TABLA DE VARIABLES2",proc.testerVariable('fact'))
+print("TABLA DE VARIABLES3", proc.testerVariable('inicia'))
 despliegaQuad()
 print("DONE")
