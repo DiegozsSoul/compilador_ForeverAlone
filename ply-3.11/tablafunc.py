@@ -24,13 +24,13 @@ class tablaFunciones(object):
             
 
     #Agrega variables a la tabla de variables
-    def agregav(self, nombref, nombrev, tipov, locmemv):
+    def agregav(self, nombref, nombrev, tipov, locmemv, tabArr):
         if (nombref in self.arreglo):
             tabVar = self.arreglo[nombref]
             if (tabVar['tvar'].busca(nombrev) == True):
                 print("Variable ya existe" )
             else:
-                tabVar['tvar'].agrega(nombrev, tipov, locmemv)
+                tabVar['tvar'].agrega(nombrev, tipov, locmemv,tabArr)
         else:
             print("La funcion no existe")
 

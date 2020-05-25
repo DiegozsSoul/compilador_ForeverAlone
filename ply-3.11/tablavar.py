@@ -3,11 +3,12 @@ class tablaVariables(object):
         self.arreglo = {}
 
     
-    def agrega(self, nombre, tipo, locmem):
+    def agrega(self, nombre, tipo, locmem,tabArr):
         self.arreglo[nombre] = {
             'nombre' : nombre,
             'tipo' : tipo,
-            'locmem' : locmem
+            'locmem' : locmem,
+            'tabArr' : tabArr
         }
 	  
     def getNombre(self):
@@ -21,7 +22,12 @@ class tablaVariables(object):
             return self.arreglo[vname] 
         else:
             return None
-
+    def agregaTabArr(self,vname,isArray):
+        if(self.busca(vname)):
+            self.arreglo[vname]['tabArr'] = isArray
+    def getTabArr(self,vname):
+        if(self.busca(vname)):
+            return self.arreglo[vname]['tabArr']
     def setTipo(self, tipo):
         self.tipo = tipo
 
@@ -29,13 +35,13 @@ class tablaVariables(object):
         if(self.busca(vname)):
             return self.arreglo[vname]['tipo']
         else:
-            print("variable no delcarada")
+            print("variable no delcarada",vname)
     
     def getLocacionMemoria(self,vname):
         if(self.busca(vname)):
             return self.arreglo[vname]['locmem']
         else:
-            print("Variable no se encontro")
+            print("Variable no se encontro",vname)
 
     def imprimiArreglo(self):
         print(self.arreglo.items())

@@ -27,7 +27,14 @@ temp = []
 auxPilaParam = []
 auxTipoParam = []
 k = 0
-
+pointerTable =[]
+#VARIABLES ARREGLOS
+arrId = ''
+limSup = 0
+isArray = False
+dim = 1
+pilaDim = []
+kArr = 0
 class AVAIL(object):
 
 	def __init__(self):
@@ -60,7 +67,8 @@ MemoriaVirtual = {
     'tfloat' :10000,
     'tstring':11000,
     'tbool'  :12000,
-    'const'  :13000,
+    'tpointer':13000,
+    'const'  :14000,
 }
 #Reads the document
  
@@ -255,7 +263,7 @@ def p_agregarfuncmain(p):
 def p_id(p):
     '''
     id : ID agregavar
-    | ID agregavar LBRACK cte RBRACK
+    | ID agregavar LBRACK arreglo cte RBRACK arreglo2
     '''
     global nuevaFunc2
     global contVarL
@@ -268,7 +276,49 @@ def p_id(p):
             if(p[-2]=='(' or p[-2]==','):
                 paramTable.append(p[1])
                 proc.agregaPilaParam(funcionActual[-1],paramTable)
+def p_arreglo(p):
+    '''
+    arreglo : empty
+    '''
+    global isArray
+    global arrId
+    #print("ARRAY",p[-3])
+    if(p[-1] =='['):
+        isArray = True
+        arrId = p[-3]
 
+def p_arreglo2(p):
+    '''
+    arreglo2 : empty
+    '''
+    global constTable
+    global arrId
+    #CHECO SI LA VARIABLE ES LOCAL
+    buscador = proc.getDir(funcionActual[-1])
+    varfinder = buscador['tvar'].getvar(arrId)
+    isGlobal = False
+
+    if varfinder == None:
+        #CHECO SI LA VARIABLE ES GLOBAL
+        isGlobal = True
+        buscador = proc.getDir(funcionActual[0])
+        varfinder = buscador['tvar'].getvar(arrId)
+    if varfinder == None:
+        print("Variable Arreglo no existe ",arrId)
+    else:
+        if(isGlobal):
+            buscador = proc.getDir(funcionActual[0])
+            getLocMem = buscador['tvar'].getLocacionMemoria(arrId)
+        else:
+            buscador = proc.getDir(funcionActual[-1])
+            getLocMem = buscador['tvar'].getLocacionMemoria(arrId)
+
+
+    if(getLocMem not in dict(constTable)):
+        constante = (getLocMem,MemoriaVirtual['const'])
+        constTable.append(constante)
+        MemoriaVirtual['const'] += 1
+    #SAVEPOINT
 def p_tipovar(p):
     '''
     tipovar : INT agregatipo
@@ -384,7 +434,7 @@ def p_agregafunc(p):
 
     if(tipoFun!='void'):
         #print("TIPO DE FUN",tipoFun, idFun)
-        proc.agregav('programa', idFun, tipoFun, MemoriaVirtual['g'+ tipoFun])
+        proc.agregav('programa', idFun, tipoFun, MemoriaVirtual['g'+ tipoFun],None)
         MemoriaVirtual['g'+tipoFun] += 1    
 
 def p_funcionb(p):
@@ -462,10 +512,132 @@ def p_helper(p):
 
 def p_asign(p):
     '''
-    asign : LBRACK expresion RBRACK
-    | LBRACK CTEI RBRACK
-    | LBRACK CTEC RBRACK
+    asign : LBRACK arrn expresion arrn2 RBRACK arrn3
+    | LBRACK arrn CTEI arrn2 RBRACK arrn3
+    | LBRACK arrn CTEC arrn2 RBRACK arrn3
     '''
+
+def p_arrn(p):
+    '''
+    arrn : empty
+    '''
+    global dim
+    global pilaDim
+    global PilaO
+    #CHECO SI LA VARIABLE ES LOCAL
+    buscador = proc.getDir(funcionActual[-1])
+    varfinder = buscador['tvar'].getvar(p[-2])
+    isGlobal = False
+
+    if varfinder == None:
+        #CHECO SI LA VARIABLE ES GLOBAL
+        #print("Variable Arreglo no existe en funcion",funcionActual[-1], "buscando globalmente")
+        isGlobal = True
+        buscador=proc.getDir(funcionActual[0])
+        varfinder=buscador['tvar'].getvar(p[-2])
+    if varfinder == None:
+        print("Variable Arreglo no existe ",arrId)
+    else:
+        if(isGlobal):
+            buscador = proc.getDir(funcionActual[0])
+            tipoArr = buscador['tvar'].getTipoVar(p[-2])
+            PilaO.append(p[-2])
+            PTipo.append(tipoArr)
+        else:
+            buscador = proc.getDir(funcionActual[-1])
+            tipoArr = buscador['tvar'].getTipoVar(p[-2])
+            PilaO.append(p[-2])
+            PTipo.append(tipoArr)
+    auxId = PilaO.pop()
+    auxTipo = PTipo.pop()
+    dim = 1
+    auxPilaDim = (p[-2],dim)
+    pilaDim.append(auxPilaDim)
+    POper.append("FakeBottom")
+
+def p_arrn2(p):
+    '''
+    arrn2 : empty
+    '''
+    #print("NAME ARR?",p[-4])
+    global contLine
+    global PilaO
+    buscador = proc.getDir(funcionActual[-1])
+    varfinder = buscador['tvar'].getvar(p[-4])
+    isGlobal = False
+    if varfinder == None:
+        #CHECO SI LA VARIABLE ES GLOBAL
+        #print("Variable Arreglo no existe en funcion",funcionActual[-1], "buscando globalmente")
+        isGlobal = True
+        buscador = proc.getDir(funcionActual[0])
+        varfinder = buscador['tvar'].getvar(p[-4])
+    if varfinder == None:
+        print("Variable Arreglo no existe ",arrId)
+    else:
+        if(isGlobal):
+            buscador = proc.getDir(funcionActual[0])
+            getTArr = buscador['tvar'].getTabArr(p[-4])
+            contLine += 1
+            quad = ("VER",PilaO[-1],getTArr[0], getTArr[1], contLine)
+            #print("QUIERO VER PILAO",*PilaO)
+            cuadruplo.append(quad)
+        else:
+            buscador = proc.getDir(funcionActual[-1])
+            getTArr = buscador['tvar'].getTabArr(p[-4])
+            contLine += 1
+            quad = ("VER",PilaO[-1],getTArr[0], getTArr[1], contLine)
+            #print("QUIERO VER PILAO",*PilaO)
+            cuadruplo.append(quad)
+
+def p_arrn3(p):
+    '''
+    arrn3 : empty
+    '''
+    global kArr
+    global contLine
+    global Avail
+    #print("ARRN3",p[-6])
+
+    #CHECO SI LA VARIABLE ES LOCAL
+    buscador = proc.getDir(funcionActual[-1])
+    varfinder = buscador['tvar'].getvar(p[-6])
+    isGlobal = False
+
+    if varfinder == None:
+        #CHECO SI LA VARIABLE ES GLOBAL
+        isGlobal = True
+        buscador = proc.getDir(funcionActual[0])
+        varfinder = buscador['tvar'].getvar(p[-6])
+    if varfinder == None:
+        print("Variable Arreglo no existe ",p[-6])
+    else:
+        if(isGlobal):
+            buscador = proc.getDir(funcionActual[0])
+            getLocMem = buscador['tvar'].getLocacionMemoria(p[-6])
+        else:
+            buscador = proc.getDir(funcionActual[-1])
+            getLocMem = buscador['tvar'].getLocacionMemoria(p[-6])
+
+    d = dict(constTable)
+    auxMem = d[getLocMem]
+
+
+    aux1 = PilaO.pop()
+    contLine += 1
+    result = Avail.next()
+    quad = ("+",aux1, kArr, result,contLine)
+    cuadruplo.append(quad)
+
+    contLine += 1
+    auxresult = result
+    result = Avail.next()
+    quad = ("+",auxresult , auxMem, result,contLine)
+    cuadruplo.append(quad)
+    PilaO.append((result))
+    POper.pop()
+
+    #print("ARRN3",aux1)
+
 def p_asignacion(p):
     '''
     asignacion : ID EQUAL asignacionb
@@ -796,15 +968,62 @@ def p_cte(p):
     if( type(p[1]) is int or type(p[1]) is float):
         PTipo.append(type(p[1]).__name__)
 
+        ####ARREGLO
+        global isArray
+        global arrId
+        global kArr
+        global sizeArr
+        if(isArray):
+            global limSup
+            limSup = p[1]
+            r = 1 * (limSup - (-1) + 1)
+            sizeArr = r
+            m0 = r
+            d1 = limSup - (-1) + 1
+            m1 = m0/d1
+            offs = 0 + m1 * (-1)
+            kArr = offs
+            isArray = False
+            #print("ESTA ES MI K",kArr)
+
+            #CHECO SI LA VARIABLE ES LOCAL
+            buscador = proc.getDir(funcionActual[-1])
+            varfinder = buscador['tvar'].getvar(arrId)
+            isGlobal = False
+
+            if varfinder == None:
+                #CHECO SI LA VARIABLE ES GLOBAL
+                print("Variable Arreglo no existe en contexto local, buscando globalmente")
+                isGlobal = True
+                buscador=proc.getDir(funcionActual[0])
+                varfinder=buscador['tvar'].getvar(arrId)
+            if varfinder == None:
+                print("Variable Arreglo no existe ",arrId)
+            else:
+                if(isGlobal):
+                    buscador = proc.getDir(funcionActual[0])
+                    datosArr = (-1,limSup,-(kArr))
+                    buscador['tvar'].agregaTabArr(arrId,datosArr)
+                else:
+                    buscador = proc.getDir(funcionActual[-1])
+                    datosArr = (-1,limSup,-(kArr))
+                    buscador['tvar'].agregaTabArr(arrId,datosArr)
+
+    
     else:
         #print("Funcion Actual ", funcionActual[-1] )
         #Se busca si la variable es arreglo y si ya fue declarada en la funcion actual
         if( p[-1] == '['):
             #print("NOMBRE DE ARREGLO ", p[-2])
             #proc.testerVariable(funcionActual[0])
-            buscador = proc.buscador = proc.getDir(funcionActual[-1])
+            #CHECO SI LA VARIABL ES LOCAL
+
+            #buscador = proc.buscador = proc.getDir(funcionActual[-1])
+            buscador = proc.getDir(funcionActual[-1])
             varfinder = buscador['tvar'].getvar(p[-2])
             #print("RESULTS ", buscador, varfinder)
+
+            #CHECO SI LA VARIABLE ES GLOBAL
             if varfinder == None:
                 buscador=proc.getDir(funcionActual[0])
                 varfinder=buscador['tvar'].getvar(p[-2])
@@ -813,6 +1032,23 @@ def p_cte(p):
             else:
                 varhelper = varfinder['tipo']
                 PTipo.append(varhelper)
+                
+                ####ARREGLO
+                """
+                global limSup
+                limSup = p[1]
+                print("DEBUGING ",limSup,p[1])
+                
+                r = 1 * (limSup - (-1) + 1)
+                m0 = r
+                d1 = limSup - (-1) + 1
+                m1 = m0/d1
+                offs = 0 + m1 * (-1)
+                kArr = offs
+                print("ESTA ES MI K",kArr)
+                """
+
+
         elif(p[1][0]== "'"):
             filler=True
 
@@ -834,11 +1070,15 @@ def p_saveconst(p):
     saveconst : empty
     '''
     global constTable
-  
     if(p[-1] not in dict(constTable)):
         constante = (p[-1],MemoriaVirtual['const'])
         constTable.append(constante)
-        MemoriaVirtual['const'] += 1    
+        MemoriaVirtual['const'] += 1
+    if(p[-2] == "-"):
+        if(-p[-1] not in dict(constTable)):
+            constante = (-p[-1],MemoriaVirtual['const'])
+            constTable.append(constante)
+            MemoriaVirtual['const'] += 1
     #print("LISTA DE CONSTANTES",*constTable)
 
 def p_expresion(p):
@@ -1030,7 +1270,7 @@ def p_llamadafun3(p):
         auxVarSearch = aux['tvar'].getLocacionMemoria(p[-6])
         auxTipoSearch = aux['tvar'].getTipoVar(p[-6])
         if(auxTipoSearch != None):
-            print("GUADALUPANO2",aux,auxVarSearch, auxTipoSearch,p[-6])
+            #print("GUADALUPANO2",aux,auxVarSearch, auxTipoSearch,p[-6])
             contLine += 1
             quad = ('=',auxVarSearch,None,MemoriaVirtual['t'+auxTipoSearch],contLine)
             MemoriaVirtual['t'+auxTipoSearch] += 1
@@ -1052,19 +1292,21 @@ def p_estatuto(p):
 def p_empty(p):
      'empty :'
      pass
+
 def p_agregavar(p):
     '''agregavar : '''
     global proc
     global varId
     global paramTable
     varId = p[-1]
+    
     if(proc.busca(idFun) == True):
         if(idFun == "programa"):
-            proc.agregav(idFun,varId,tipoVar,MemoriaVirtual['g'+tipoVar])
+            proc.agregav(idFun,varId,tipoVar,MemoriaVirtual['g'+tipoVar],None)
             MemoriaVirtual['g'+tipoVar] += 1 
             
         else:
-            proc.agregav(idFun,varId,tipoVar,MemoriaVirtual['l'+tipoVar])
+            proc.agregav(idFun,varId,tipoVar,MemoriaVirtual['l'+tipoVar],None)
             MemoriaVirtual['l'+tipoVar] += 1
             #print("VARIABLE AGREGANDOSE ",varId)
             #print("TEST", paramType)
@@ -1111,6 +1353,7 @@ result = parser.parse(data)
 #print("TABLA DE FUNCION")
 #print("TEST",proc.getDir('fact'))
 #print("TEST",proc.getDir('inicia')) 
+print("TABLA DE CONST",*constTable)
 print("TABLA DE Funciones")
 proc.arref()
 print("XXXXXXXXXXXXXXXXXXXXX")
