@@ -27,7 +27,10 @@ temp = []
 auxPilaParam = []
 auxTipoParam = []
 k = 0
+r = 0
 pointerTable =[]
+varLectura = []
+TempIntTable = []
 #VARIABLES ARREGLOS
 arrId = ''
 limSup = 0
@@ -55,20 +58,21 @@ Avail = AVAIL()
 #Memoria Virtual
 # APUNTADORES A MEMORIA
 MemoriaVirtual = {
-    'gint'   :1000,
-    'gfloat' :2000,
-    'gstring':3000,
-    'gbool'  :4000,
-    'lint'   :5000,
-    'lfloat' :6000,
-    'lstring':7000,
-    'lbool'  :8000,
-    'tint'   :9000,
-    'tfloat' :10000,
-    'tstring':11000,
-    'tbool'  :12000,
-    'tpointer':13000,
-    'const'  :14000,
+
+    'gint'   :5000,
+    'gfloat' :6000,
+    'gstring':7000,
+    'gbool'  :7500,
+    'lint'   :8000,
+    'lfloat' :9000,
+    'lstring':10000,
+    'lbool'  :11000,
+    'tint'   :13000,
+    'tfloat' :13500,
+    'tstring':13800,
+    'tbool'  :14000,
+    'tpointer':21000,
+    'const'  :12000,
 }
 #Reads the document
  
@@ -262,7 +266,7 @@ def p_agregarfuncmain(p):
 
 def p_id(p):
     '''
-    id : ID agregavar
+    id : ID agregavar 
     | ID agregavar LBRACK arreglo cte RBRACK arreglo2
     '''
     global nuevaFunc2
@@ -481,13 +485,23 @@ def p_reinicioMemoriaVariable(p):
     global MemoriaVirtual
     global contLine
     global funcionActual
+    global TempIntTable
     global proc
     contLine += 1
 
     #print("TEMP",funcionActual[-1],Avail.AvailC)
     proc.agregaContTemp(funcionActual[-1],Avail.AvailC)
     Avail.reset()
-    MemoriaVirtual['lint'] = 5000 
+    MemoriaVirtual['lint'] = 8000
+    MemoriaVirtual['lfloat'] = 9000
+    MemoriaVirtual['lstring'] = 10000
+    MemoriaVirtual['lbool'] = 11000
+    MemoriaVirtual['tint'] = 13000
+    MemoriaVirtual['tfloat'] = 13500
+    MemoriaVirtual['tstring'] = 13800
+    MemoriaVirtual['tbool'] = 14000
+
+    TempIntTable = []
     quad = ('ENDFUNC',None,None,None,contLine)
     cuadruplo.append(quad)   
     #AQUI VOY
@@ -596,6 +610,7 @@ def p_arrn3(p):
     global kArr
     global contLine
     global Avail
+    global pointerTable
     #print("ARRN3",p[-6])
 
     #CHECO SI LA VARIABLE ES LOCAL
@@ -624,16 +639,29 @@ def p_arrn3(p):
 
     aux1 = PilaO.pop()
     contLine += 1
-    result = Avail.next()
+
+    #result = Avail.next()
+    result = MemoriaVirtual['tint']
+    TempIntTable.append(MemoriaVirtual['tint'])
+
     quad = ("+",aux1, kArr, result,contLine)
     cuadruplo.append(quad)
-
     contLine += 1
+    MemoriaVirtual['tint'] += 1
     auxresult = result
-    result = Avail.next()
-    quad = ("+",auxresult , auxMem, result,contLine)
+
+    result = MemoriaVirtual['tint']
+    pointerAux = (MemoriaVirtual['tpointer'],result)
+    pointerTable.append(pointerAux)
+    TempIntTable.append(MemoriaVirtual['tint'])
+
+    #FALTA ARREGLAR EL SEGUNDO QUAD,RESULT DEBE LLEVAR A POINTER
+                                    #21000
+    quad = ("+",auxresult , auxMem, MemoriaVirtual['tpointer'], contLine)
+    #MemoriaVirtual['tint'] += 1
     cuadruplo.append(quad)
-    PilaO.append((result))
+    PilaO.append((MemoriaVirtual['tpointer']))
+
     POper.pop()
 
     #print("ARRN3",aux1)
@@ -715,6 +743,57 @@ def p_asignacionb(p):
             #result = Avail.next() ESTO RESUELVE ERROR EN TEMPORALES????
             global contLine
             contLine += 1 #TEST
+            arrAuxOp = []
+            arrAux = [right_operand,left_operand]
+            for i in range(len(arrAux)):
+                #CHECO SI LA VARIABLE ES LOCAL
+                buscador = proc.getDir(funcionActual[-1])
+                aux = arrAux.pop()
+               #print("TABLA INT TEMP",*TempIntTable)
+                if(aux in dict(constTable)):
+                    d = dict(constTable)
+                    auxMem = d[aux]
+                    arrAuxOp.append(auxMem)
+                elif(aux in TempIntTable):
+
+                    #print("ENTRE AL ELIF",aux)
+                    arrAuxOp.append(aux)
+                elif(aux in dict(pointerTable)):
+                    #print("ENTRE AL ELIF ASIGNACION",aux)
+                    c = dict(pointerTable)
+                    auxMem = c[aux]                    
+                    arrAuxOp.append(auxMem)
+                else:
+                    varfinder = buscador['tvar'].getvar(aux)
+                    isGlobal = False
+
+                    if varfinder == None:
+                        #CHECO SI LA VARIABLE ES GLOBAL
+                        #print("Variable Arreglo no existe en contexto local, buscando globalmente")
+                        isGlobal = True
+                        buscador=proc.getDir(funcionActual[0])
+                        varfinder=buscador['tvar'].getvar(aux)
+                    if varfinder == None:
+                        print("Variable Arreglo no existe ",aux)
+                    else:
+                        if(isGlobal):
+                            buscador = proc.getDir(funcionActual[0])
+                            arrAuxOp.append(buscador['tvar'].getLocacionMemoria(aux))
+                        else:
+                            buscador = proc.getDir(funcionActual[-1])
+                            arrAuxOp.append(buscador['tvar'].getLocacionMemoria(aux))
+            #print("XXXXXXXXXXXXXXXXXXXXXXXXXXX",*arrAuxOp)
+            right_operand = arrAuxOp.pop()
+            left_operand = arrAuxOp.pop()
+            if(resultType == 'int'):
+
+                quad = (operator, left_operand,right_operand,MemoriaVirtual['t'+resultType], contLine)
+                TempIntTable.append(MemoriaVirtual['t'+resultType])
+            else:
+                quad = (operator, left_operand,right_operand,MemoriaVirtual['t'+resultType], contLine)
+                TempIntTable.append(MemoriaVirtual['t'+resultType])
+
+
             quad= (operator, left_operand, None, right_operand,contLine)
             cuadruplo.append(quad)
             #PilaO.append(result) ESTO RESUELVE ERROR EN TEMPORALES????
@@ -723,6 +802,7 @@ def p_asignacionb(p):
             #print(operator, left_operand, None ,right_operand)
         else:
             print("Type mismatch")
+            
             
 def p_retorno(p):
     '''
@@ -759,7 +839,6 @@ def p_fnvn1(p):
     global auxTipoParam
     global auxPilaParam
 
-    print("RESOLVE",p[-2])
     if(proc.funcionExiste(p[-2])):
         contLine += 1
         quad = ("ERA",None,None,p[-2],contLine)
@@ -793,8 +872,8 @@ def p_fnvn2(p):
         k+=1
         contLine+=1
         tempPilaPop = tempAuxPila[-1]
-        print("K1",k,contLine)
-        quad = ("Param",tempOper,k,contLine )
+        #print("K1",k,contLine)
+        quad = ("Param",tempOper,"par1",contLine )
         cuadruplo.append(quad)
     else:
         print("Error")
@@ -806,7 +885,6 @@ def p_fnvn3(p):
     global contLine
     global k
     global proc
-    print("MARKER",p[-6])
     if(proc.getContPilaParam(p[-6]) != k ):
         print("Numero de argumentos no coincide en la funcion",p[-6])
     else:
@@ -835,9 +913,22 @@ def p_lee(p):
     '''
 def p_leeb(p):
     '''
-    leeb : RPAREN SEMICOL
-    | COMMA id leeb
+    leeb : RPAREN leen SEMICOL
+    | COMMA leen id  leeb
     ''' 
+
+def p_leen(p):
+    '''
+    leen : empty
+    ''' 
+    global varId
+    global contLine
+    global varLectura
+    varLectura.append(varId)
+    contLine += 1
+    aux = varLectura.pop()
+    quad=("LEE",None,None,aux,contLine)
+    cuadruplo.append(quad)
 
 #Checar si la expresion ESCRIBE LPAREN STRING sirve, creo que la primera ya viene eso incluido
 def p_escritura(p):
@@ -973,6 +1064,9 @@ def p_cte(p):
         global arrId
         global kArr
         global sizeArr
+        global r
+        global funcionActual
+        global MemoriaVirtual
         if(isArray):
             global limSup
             limSup = p[1]
@@ -985,6 +1079,14 @@ def p_cte(p):
             kArr = offs
             isArray = False
             #print("ESTA ES MI K",kArr)
+
+            if(proc.busca(funcionActual[-1]) == True):
+                if(funcionActual[-1] == "programa"):
+                    MemoriaVirtual['g'+tipoVar] += r-1
+                else:
+                    MemoriaVirtual['l'+tipoVar] += r-1
+            else:
+                print("La funcion no esta declarada")
 
             #CHECO SI LA VARIABLE ES LOCAL
             buscador = proc.getDir(funcionActual[-1])
@@ -1108,11 +1210,50 @@ def p_exp(p):
         if(resultType != 'TypeError'):
             result = Avail.next()
             global contLine
+            global TempIntTable
             contLine += 1
-            quad = (operator, left_operand, right_operand, result, contLine)
+            arrAuxOp = []
+            arrAux = [right_operand,left_operand]
+
+            for i in range(len(arrAux)):
+                #CHECO SI LA VARIABLE ES LOCAL
+                buscador = proc.getDir(funcionActual[-1])
+                aux = arrAux.pop()
+
+                if(aux in dict(constTable)):
+                    d = dict(constTable)
+                    auxMem = d[aux]
+                    arrAuxOp.append(auxMem)
+                elif(aux in TempIntTable):
+                   #print("ENTRE AL ELIF",aux)
+                    arrAuxOp.append(aux)
+                else:
+                    varfinder = buscador['tvar'].getvar(aux)
+                    isGlobal = False
+
+                    if varfinder == None:
+                        #CHECO SI LA VARIABLE ES GLOBAL
+                        print("Variable Arreglo no existe en contexto local, buscando globalmente")
+                        isGlobal = True
+                        buscador=proc.getDir(funcionActual[0])
+                        varfinder=buscador['tvar'].getvar(aux)
+                    if varfinder == None:
+                        print("Variable Arreglo no existe ",aux)
+                    else:
+                        if(isGlobal):
+                            buscador = proc.getDir(funcionActual[0])
+                            arrAuxOp.append(buscador['tvar'].getLocacionMemoria(aux))
+                        else:
+                            buscador = proc.getDir(funcionActual[-1])
+                            arrAuxOp.append(buscador['tvar'].getLocacionMemoria(aux))
+
+            right_operand = arrAuxOp.pop()
+            left_operand = arrAuxOp.pop()
+            quad = (operator, left_operand, right_operand, MemoriaVirtual['t'+resultType], contLine)
             cuadruplo.append(quad)
-            PilaO.append(result)
+            PilaO.append(MemoriaVirtual['t'+resultType])
             PTipo.append(resultType)
+            MemoriaVirtual['t'+resultType] += 1
             #print(operator, left_operand, right_operand, result)
         else:
             print("Type mismatch")
@@ -1139,16 +1280,68 @@ def p_expb(p):
         operator      = POper.pop()
         #print("Operandos " , right_operand, left_operand)
         resultType    = sema.getTipo(left_type,right_type,operator)
-        #print("Tipos ", left_type, right_type)
-        #print("Tipo Res ", resultType)
+
         if(resultType != 'TypeError'):
             result = Avail.next()
             global contLine
+            global TempIntTable
             contLine += 1
-            quad = (operator, left_operand,right_operand,result, contLine)
+            arrAuxOp = []
+            arrAux = [right_operand,left_operand]
+            #print("ARRAUX",*arrAux)
+            for i in range(len(arrAux)):
+                #CHECO SI LA VARIABLE ES LOCAL
+                buscador = proc.getDir(funcionActual[-1])
+                aux = arrAux.pop()
+                #print("TABLA INT TEMP",*TempIntTable)
+                if(aux in dict(constTable)):
+                    d = dict(constTable)
+                    auxMem = d[aux]
+                    arrAuxOp.append(auxMem)
+                elif(aux in TempIntTable):
+
+                    #print("ENTRE AL ELIF SUMA",aux)
+                    arrAuxOp.append(aux)
+                elif(aux in dict(pointerTable)):
+                    #print("ENTRE AL ELIF SUMA",aux)
+                    c = dict(pointerTable)
+                    auxMem = c[aux]                    
+                    arrAuxOp.append(auxMem)
+                else:
+                    varfinder = buscador['tvar'].getvar(aux)
+                    isGlobal = False
+
+                    if varfinder == None:
+                        #CHECO SI LA VARIABLE ES GLOBAL
+                        print("Variable Arreglo no existe en contexto local, buscando globalmente")
+                        isGlobal = True
+                        buscador=proc.getDir(funcionActual[0])
+                        varfinder=buscador['tvar'].getvar(aux)
+                    if varfinder == None:
+                        print("Variable Arreglo no existe ",aux)
+                    else:
+                        if(isGlobal):
+                            buscador = proc.getDir(funcionActual[0])
+                            arrAuxOp.append(buscador['tvar'].getLocacionMemoria(aux))
+                        else:
+                            buscador = proc.getDir(funcionActual[-1])
+                            arrAuxOp.append(buscador['tvar'].getLocacionMemoria(aux))
+            #print("XXXXXXXXXXXXXXXXXXXXXXXXXXX",*arrAuxOp)
+            right_operand = arrAuxOp.pop()
+            left_operand = arrAuxOp.pop()
+            if(resultType == 'int'):
+
+                quad = (operator, left_operand,right_operand,MemoriaVirtual['t'+resultType], contLine)
+                TempIntTable.append(MemoriaVirtual['t'+resultType])
+            else:
+                quad = (operator, left_operand,right_operand,MemoriaVirtual['t'+resultType], contLine)
+                TempIntTable.append(MemoriaVirtual['t'+resultType])
+
+
             cuadruplo.append(quad)
-            PilaO.append(result)
+            PilaO.append(MemoriaVirtual['t'+resultType])
             PTipo.append(resultType)
+            MemoriaVirtual['t'+resultType] += 1
             #print(operator, left_operand, right_operand,result)
         else:
             print("Type mismatch")
@@ -1182,11 +1375,64 @@ def p_terminob(p):
         if(resultType != 'TypeError'):
             result = Avail.next()
             global contLine
+            global TempIntTable
             contLine += 1
-            quad = (operator, left_operand, right_operand,result, contLine)
+            arrAuxOp = []
+            arrAux = [right_operand,left_operand]
+            for i in range(len(arrAux)):
+
+                #CHECO SI LA VARIABLE ES LOCAL
+                buscador = proc.getDir(funcionActual[-1])
+                aux = arrAux.pop()
+                #print("TABLA INT TEMP",*TempIntTable)
+                if(aux in dict(constTable)):
+                    d = dict(constTable)
+                    auxMem = d[aux]
+                    arrAuxOp.append(auxMem)
+                elif(aux in TempIntTable):
+
+                    #print("ENTRE AL ELIF MULT",aux)
+                    arrAuxOp.append(aux)
+                elif(aux in dict(pointerTable)):
+                    c = dict(pointerTable)
+                    auxMem = c[aux]                    
+                    arrAuxOp.append(auxMem)
+                else:
+                    varfinder = buscador['tvar'].getvar(aux)
+
+                    isGlobal = False
+                    if varfinder == None:
+                        #CHECO SI LA VARIABLE ES GLOBAL
+                        print("Variable Arreglo no existe en contexto local, buscando globalmente",aux)
+                        isGlobal = True
+                        buscador=proc.getDir(funcionActual[0])
+                        varfinder=buscador['tvar'].getvar(aux)
+                    if varfinder == None:
+                        print("Variable Arreglo no existe ",aux)
+                    else:
+                        if(isGlobal):
+                            buscador = proc.getDir(funcionActual[0])
+                            arrAuxOp.append(buscador['tvar'].getLocacionMemoria(aux))
+
+                        else:
+                            buscador = proc.getDir(funcionActual[-1])
+                            arrAuxOp.append(buscador['tvar'].getLocacionMemoria(aux))
+
+            right_operand = arrAuxOp.pop()
+            left_operand = arrAuxOp.pop()
+            if(resultType == 'int'):
+
+                quad = (operator, left_operand,right_operand,MemoriaVirtual['t'+resultType], contLine)
+                TempIntTable.append(MemoriaVirtual['t'+resultType])
+            else:
+                quad = (operator, left_operand,right_operand,MemoriaVirtual['t'+resultType], contLine)
+                TempIntTable.append(MemoriaVirtual['t'+resultType])
+
+                
             cuadruplo.append(quad)
-            PilaO.append(result)
+            PilaO.append(MemoriaVirtual['t'+resultType])
             PTipo.append(resultType)
+            MemoriaVirtual['t'+resultType] += 1
             #print(operator, left_operand, right_operand,result)
             
         else: 
@@ -1234,7 +1480,6 @@ def p_llamadafun2(p):
     
     tempAuxTipo = auxTipoParam
     tempAuxPila = auxPilaParam
-    print("DEBUG", *tempAuxTipo)
  
     tempTipoPop = tempAuxTipo[-1]
    
@@ -1242,9 +1487,9 @@ def p_llamadafun2(p):
         k += 1 
         contLine += 1
         tempPilaPop = tempAuxPila[-1]
-        print("K",k,contLine)
+        #print("K",k,contLine)
         kont = k
-        quad = ("Param",tempOper, kont, contLine)
+        quad = ("Param",tempOper, "para1", contLine)
         cuadruplo.append(quad)
     else:
         print("Error")
@@ -1257,7 +1502,6 @@ def p_llamadafun3(p):
     global contLine
     global k
 
-    print("MARKER2",p[-6])
     if(proc.getContPilaParam(p[-6]) !=k):
         print("Numero de argumentos no coincide en la funcion2",p[-6])
     else:
@@ -1273,8 +1517,17 @@ def p_llamadafun3(p):
             #print("GUADALUPANO2",aux,auxVarSearch, auxTipoSearch,p[-6])
             contLine += 1
             quad = ('=',auxVarSearch,None,MemoriaVirtual['t'+auxTipoSearch],contLine)
+            print("ESTA ES LA MEMORIA PERDIDA",MemoriaVirtual['t'+auxTipoSearch])
+            TempIntTable.append(MemoriaVirtual['t'+auxTipoSearch])
+            PilaO.append(MemoriaVirtual['t'+auxTipoSearch])
             MemoriaVirtual['t'+auxTipoSearch] += 1
+            #Sprint("TIPO DE ARREGLO ",auxTipoSearch)
+
+ 
+
+
             cuadruplo.append(quad)
+            #YEEEEEEET
     k = 0
 
 def p_estatuto(p):
@@ -1298,16 +1551,18 @@ def p_agregavar(p):
     global proc
     global varId
     global paramTable
+    global r
     varId = p[-1]
-    
     if(proc.busca(idFun) == True):
         if(idFun == "programa"):
+
             proc.agregav(idFun,varId,tipoVar,MemoriaVirtual['g'+tipoVar],None)
-            MemoriaVirtual['g'+tipoVar] += 1 
-            
-        else:
+            MemoriaVirtual['g'+tipoVar] += 1
+        elif(idFun!='principal'):
             proc.agregav(idFun,varId,tipoVar,MemoriaVirtual['l'+tipoVar],None)
             MemoriaVirtual['l'+tipoVar] += 1
+
+            #print("VARIABLES LOCALES ",varId, MemoriaVirtual['l'+tipoVar])          
             #print("VARIABLE AGREGANDOSE ",varId)
             #print("TEST", paramType)
             #paramTable.append(paramType)
@@ -1317,6 +1572,7 @@ def p_agregavar(p):
 
     else:
         print("La funcion no esta declarada")
+    r=0
     #print(idFun)
     #print("TABLA DE FUNCION")
     #print(proc.getDir(funcionActual[-1]))
@@ -1353,6 +1609,7 @@ result = parser.parse(data)
 #print("TABLA DE FUNCION")
 #print("TEST",proc.getDir('fact'))
 #print("TEST",proc.getDir('inicia')) 
+print("TABLA DE POINTER",*pointerTable)
 print("TABLA DE CONST",*constTable)
 print("TABLA DE Funciones")
 proc.arref()
@@ -1360,5 +1617,6 @@ print("XXXXXXXXXXXXXXXXXXXXX")
 print("TABLA DE VARIABLES1",proc.testerVariable('programa'))
 print("TABLA DE VARIABLES2",proc.testerVariable('fact'))
 print("TABLA DE VARIABLES3", proc.testerVariable('inicia'))
+print("TABLA DE VARIABLES3", proc.testerVariable('principal'))
 despliegaQuad()
 print("DONE")
