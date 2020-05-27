@@ -27,7 +27,7 @@ principal()
       {Arreglo[i] = Arreglo[i] * fact(Arreglo[i]-p);}
 
   mientras(i>=0) haz
-     {escribe ('resultado', Arreglo[i], fact(i+2));
+     {escribe ('resultado', Arreglo[i], fact(i+2),i+p);
      }
   mientras(i<10) haz
      {escribe ('Otros datos', OtroArreglo[i], p, i + OtroArreglo[i]);
