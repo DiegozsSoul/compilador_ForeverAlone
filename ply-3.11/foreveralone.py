@@ -30,6 +30,7 @@ r = 0
 pointerTable =[]
 varLectura = []
 TempIntTable = []
+TempFloatTable = []
 #VARIABLES ARREGLOS
 arrId = ''
 limSup = 0
@@ -159,15 +160,15 @@ t_CTEC      = r'[a-zA-Z]'
      
  
  # A regular expression rule with some action code
-def t_NUMBER(t):
-     r'\d+'
-     t.value = int(t.value)    
-     return t
-
 def t_CTEF(t):
-    r'\d+[eE][-+]?\d+|(\.\d+|\d+\.\d+)([eE][-+]?\d+)?'
+    r'[-+]?[0-9]+[.][0-9]+'
     t.value = float(t.value)              
     return t
+
+def t_NUMBER(t):
+     r'[0-9]+'
+     t.value = int(t.value)    
+     return t
 
  # Define a rule so we can track line numbers
 def t_newline(t):
@@ -273,6 +274,7 @@ def p_id(p):
     global funcionActual
     global arrVarL
     global paramTable
+    print("")
     if(funcionActual[-1]!='principal'):
         contVarL += 1
         if(funcionActual[-1]!='programa'):
@@ -485,6 +487,7 @@ def p_reinicioMemoriaVariable(p):
     global contLine
     global funcionActual
     global TempIntTable
+    global TempFloatTable
     global proc
     contLine += 1
 
@@ -499,8 +502,10 @@ def p_reinicioMemoriaVariable(p):
     MemoriaVirtual['tfloat'] = 13500
     MemoriaVirtual['tstring'] = 13800
     MemoriaVirtual['tbool'] = 14000
+    MemoriaVirtual['tpointer'] = 21000
 
     TempIntTable = []
+    TempFloatTable = []
     quad = ('ENDFUNC',None,None,None,contLine)
     cuadruplo.append(quad)   
     #AQUI VOY
@@ -747,11 +752,12 @@ def p_arrn3(p):
 
     result = MemoriaVirtual['tint']
 
+   
 
 
-
-    pointerAux = (MemoriaVirtual['tpointer'],result)
-    pointerTable.append(pointerAux)
+    #pointerAux = (MemoriaVirtual['tpointer'],result)
+    #pointerTable.append(pointerAux)
+    pointerTable.append(MemoriaVirtual['tpointer'])
     TempIntTable.append(MemoriaVirtual['tint'])
 
 
@@ -761,7 +767,7 @@ def p_arrn3(p):
     #MemoriaVirtual['tint'] += 1
     cuadruplo.append(quad)
     PilaO.append((MemoriaVirtual['tpointer']))
-
+    MemoriaVirtual['tpointer'] += 1
     POper.pop()
 
     #print("ARRN3",aux1)
@@ -790,7 +796,9 @@ def p_asignacionb(p):
         #print("######## ", p[-3],p[-2] ,p[-1], p[0],p[1])
         #Checa si es un arreglo o una variable normal
         if( p[-2] == None):
+            """
             PilaO.append(p[-3])
+            print("IS DIS ARREGLO?",p[-3])      
             buscador = proc.buscador = proc.getDir(funcionActual[-1])
             varfinder = buscador['tvar'].getvar(p[-3])
             #print("RESULTS ", buscador, varfinder)
@@ -803,6 +811,8 @@ def p_asignacionb(p):
             else:
                 varhelper = varfinder['tipo']
                 PTipo.append(varhelper)
+            """
+
         #Si no es variable de arreglo entonces es normal
         else:
             buscador=proc.getDir(funcionActual[-1])
@@ -816,18 +826,6 @@ def p_asignacionb(p):
             else:
                 varhelper = varfinder['tipo']
                 PTipo.append(varhelper)
-        ##################
-        #buscador=proc.getDir(funcionActual[-1])
-        #varfinder=buscador['tvar'].getvar(p[-2])
-
-        #if varfinder == None:
-        #    buscador=proc.getDir(funcionActual[0])
-        #    varfinder=buscador['tvar'].getvar(p[1])
-        #if varfinder == None:
-        #    print("Vairable no declarada")
-        #else:
-        #    varhelper = varfinder['tipo']
-        #    PTipo.append(varhelper)
 
     #print("ESTOS SON TODOS LOS OPERADORES ", *POper)
     #print("ESTOS SON TODOS LOS OPERANDOS ", *PilaO)
@@ -844,6 +842,7 @@ def p_asignacionb(p):
             global contLine
             contLine += 1 #TEST
             arrAuxOp = []
+            pointerFlag = False
             arrAux = [right_operand,left_operand]
             for i in range(len(arrAux)):
                 #CHECO SI LA VARIABLE ES LOCAL
@@ -858,11 +857,15 @@ def p_asignacionb(p):
 
                     #print("ENTRE AL ELIF",aux)
                     arrAuxOp.append(aux)
-                elif(aux in dict(pointerTable)):
+                elif(aux in pointerTable):
                     #print("ENTRE AL ELIF ASIGNACION",aux)
-                    c = dict(pointerTable)
-                    auxMem = c[aux]                    
-                    arrAuxOp.append(auxMem)
+                    #c = dict(pointerTable)
+                    #auxMem = c[aux] 
+                    #print("BUSCANDO POINTER",auxMem)             
+                    #arrAuxOp.append(auxMem)
+                    pointerFlag = True
+                    arrAuxOp.append(aux)
+
                 else:
                     varfinder = buscador['tvar'].getvar(aux)
                     isGlobal = False
@@ -883,23 +886,33 @@ def p_asignacionb(p):
                             buscador = proc.getDir(funcionActual[-1])
                             arrAuxOp.append(buscador['tvar'].getLocacionMemoria(aux))
             #print("XXXXXXXXXXXXXXXXXXXXXXXXXXX",*arrAuxOp)
-            right_operand = arrAuxOp.pop()
-            left_operand = arrAuxOp.pop()
+            if(pointerFlag):
+                right_operand = arrAuxOp.pop()
+                left_operand = arrAuxOp.pop()
+                quad= (operator, right_operand, None, left_operand,contLine)
+                cuadruplo.append(quad)
+                #PilaO.append(result) ESTO RESUELVE ERROR EN TEMPORALES????
+                PTipo.append(resultType)
+                pointerFlag = False
+            else:
+
+                right_operand = arrAuxOp.pop()
+                left_operand = arrAuxOp.pop()
+                quad= (operator, left_operand, None, right_operand,contLine)
+                cuadruplo.append(quad)
+                #PilaO.append(result) ESTO RESUELVE ERROR EN TEMPORALES????
+                PTipo.append(resultType)
+            """
             if(resultType == 'int'):
 
                 quad = (operator, left_operand,right_operand,MemoriaVirtual['t'+resultType], contLine)
+                print("OPERATOR T",quad)
                 TempIntTable.append(MemoriaVirtual['t'+resultType])
             else:
                 quad = (operator, left_operand,right_operand,MemoriaVirtual['t'+resultType], contLine)
+                print("OPERATOR F",quad)
                 TempIntTable.append(MemoriaVirtual['t'+resultType])
-
-
-            quad= (operator, left_operand, None, right_operand,contLine)
-            cuadruplo.append(quad)
-            #PilaO.append(result) ESTO RESUELVE ERROR EN TEMPORALES????
-            PTipo.append(resultType)
-            
-            #print(operator, left_operand, None ,right_operand)
+            """
         else:
             print("Type mismatch")
             
@@ -918,8 +931,34 @@ def p_retn(p):
     helper = proc.getDir(funcionActual[-1])
     variable = PilaO.pop()
     validaTipoV = helper['tvar'].getTipoVar(variable)
-    print("VALIDACION", validaTipoF,validaTipoV)
-    if(validaTipoF==validaTipoF):
+    if(validaTipoF=='void'):
+        print("Error, funcion tipo void")
+    elif(validaTipoV != None):
+        validaTipoV 
+ 
+    else:
+        #Int
+        if( (variable >= 5000 or variable <= 5999) or (variable >= 8000 or variable <= 8999) or (variable >= 13000 or variable <= 13499) ):
+            validaTipoV = 'int'
+        #Float
+        elif((variable >= 6000 or variable <= 6999) or (variable >= 9000 or variable <= 9999) or (variable >= 13500 or variable <= 13799) ):
+            validaTipoV = 'float'
+        #String
+        elif((variable >= 7000 or variable <= 7499) or (variable >= 10000 or variable <= 10999) or (variable >= 13800 or variable <= 13999)):
+            validaTipoV = 'string'
+        #Bool
+        elif((variable >= 7500 or variable <= 7999) or (variable >= 11000 or variable <= 11999) or (variable >= 14000 or variable <= 20999)):
+            validaTipoV = 'bool'
+        #Const
+        elif(variable >= 12000 or variable <=12999):
+            validaTipoV = 'int'
+
+
+
+    #validaTipoV = helper['tvar'].getTipoVar(variable)
+
+    #print("VALIDACION", validaTipoF,validaTipoV,variable)
+    if(validaTipoF==validaTipoV):
         contLine += 1
         quad = ("Regresa",None,None,variable,contLine)
         cuadruplo.append(quad)
@@ -1027,7 +1066,30 @@ def p_leen(p):
     varLectura.append(varId)
     contLine += 1
     aux = varLectura.pop()
-    quad=("LEE",None,None,aux,contLine)
+    ################
+    buscador = proc.getDir(funcionActual[-1])   
+    varfinder = buscador['tvar'].getvar(aux)
+    isGlobal = False
+    if varfinder == None:
+        #CHECO SI LA VARIABLE ES GLOBAL
+        isGlobal = True
+        buscador=proc.getDir(funcionActual[0])
+        varfinder=buscador['tvar'].getvar(aux)
+    if varfinder == None:
+        print("Variable Arreglo no existe ",aux)
+    else:
+        if(isGlobal):
+            buscador = proc.getDir(funcionActual[0])
+            auxLee = buscador['tvar'].getLocacionMemoria(aux)
+
+        else:
+            buscador = proc.getDir(funcionActual[-1])
+            auxLee = buscador['tvar'].getLocacionMemoria(aux)
+
+
+
+    ################
+    quad=("LEE",None,None,auxLee,contLine)
     cuadruplo.append(quad)
 
 #Checar si la expresion ESCRIBE LPAREN STRING sirve, creo que la primera ya viene eso incluido
@@ -1060,7 +1122,7 @@ def p_prin1(p):
     elif(test in TempIntTable):
         #print("ENTRE AL ELIF SUMA",aux)
         auxImprime = test
-    elif(test in dict(pointerTable)):
+    elif(test in pointerTable):
         #print("ENTRE AL ELIF SUMA",aux)
         auxImprime = test                   
     else:
@@ -1179,13 +1241,22 @@ def p_rcn3(p):
 
 def p_repeticionnocond(p):
     '''
-    repeticionnocond : DESDE id EQUAL exp HASTA exp HACER bloque
+    repeticionnocond : DESDE rncns id EQUAL exp rncn HASTA exp HACER bloque
     '''
+def p_rncns(p):
+    '''
+    rncns : empty
+    '''
+def p_rncn(p):
+    '''
+    rncn : empty
+    '''
+    print("FROM",p[1],p[-1],p[-2])
 def p_cte(p):
     '''
     cte : ID 
     | NUMBER saveconst
-    | CTEF 
+    | CTEF saveconst
     | CTEC
     | STRING savestringconst
     '''
@@ -1448,11 +1519,12 @@ def p_expb(p):
 
                     #print("ENTRE AL ELIF SUMA",aux)
                     arrAuxOp.append(aux)
-                elif(aux in dict(pointerTable)):
+                elif(aux in pointerTable):
                     #print("ENTRE AL ELIF SUMA",aux)
-                    c = dict(pointerTable)
-                    auxMem = c[aux]                    
-                    arrAuxOp.append(auxMem)
+                    #c = dict(pointerTable)
+                    #auxMem = c[aux]                    
+                    #arrAuxOp.append(auxMem)
+                    arrAuxOp.append(aux)
                 else:
                     varfinder = buscador['tvar'].getvar(aux)
                     isGlobal = False
@@ -1539,10 +1611,11 @@ def p_terminob(p):
 
                     #print("ENTRE AL ELIF MULT",aux)
                     arrAuxOp.append(aux)
-                elif(aux in dict(pointerTable)):
-                    c = dict(pointerTable)
-                    auxMem = c[aux]                    
-                    arrAuxOp.append(auxMem)
+                elif(aux in pointerTable):
+                    #c = dict(pointerTable)
+                    #auxMem = c[aux]                    
+                    #arrAuxOp.append(auxMem)
+                    arrAuxOp.append(aux)
                 else:
                     varfinder = buscador['tvar'].getvar(aux)
 

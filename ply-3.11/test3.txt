@@ -1,30 +1,30 @@
 programa foreveralone;
 var int i, j,p;
-int  Arreglo[10];
+float Arreglo[10];
 int  OtroArreglo[10];
 
 funcion int fact(int j)
 var int i;
-{i = j + (p - j * 2 + j);
+{  i = j + (p - j * 2 + j);
 si(j == 1) entonces
  {regresa(j);}
  sino
  {regresa(j*fact(j-1));}
 }
 
-funcion void inicia(int y)
+funcion void inicia(int y,int l)
  var int x;
 { x = -1;
-  mientras(x < 11) haz
+  mientras(x < 1) haz
  {Arreglo[x] = y * x;}
 }
 
 principal()
 {lee(p); j = p * 2; i = -1;
- inicia(p * j - 5);
+ inicia(p * j - 5,j);
 
  desde i=0 hasta 9 hacer
-      {Arreglo[i] = Arreglo[i] * fact(Arreglo[i]-p);}
+      {Arreglo[i] = Arreglo[i] * fact(Arreglo[i]*p*i);}
 
   mientras(i>=0) haz
      {escribe ('resultado', Arreglo[i], fact(i+2),i+p);
