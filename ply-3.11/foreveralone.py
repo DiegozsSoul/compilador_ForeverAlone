@@ -31,6 +31,7 @@ pointerTable =[]
 varLectura = []
 TempIntTable = []
 TempFloatTable = []
+auxPilaParamCont = 0
 #VARIABLES ARREGLOS
 arrId = ''
 limSup = 0
@@ -966,8 +967,13 @@ def p_retn(p):
 
 def p_funcionvoid(p):
     '''
-    funcionvoid : ID  LPAREN fnvn1 expresion fnvn2 RPAREN fnvn3 SEMICOL
+    funcionvoid : ID  LPAREN fnvn1 expresion fnvn2 funcionvoidb 
     '''
+def p_funcionvoidb(p):
+    '''
+    funcionvoidb : COMMA expresion fnvn2 funcionvoidb 
+    | RPAREN fnvn3 SEMICOL
+    '''   
 
 def p_fnvn1(p):
     '''
@@ -977,14 +983,15 @@ def p_fnvn1(p):
     global contLine
     global auxTipoParam
     global auxPilaParam
-
+    global auxPilaParamCont 
+    auxPilaParamCont = proc.getContPilaParam(p[-2])
     if(proc.funcionExiste(p[-2])):
         contLine += 1
         quad = ("ERA",None,None,p[-2],contLine)
         cuadruplo.append(quad)
         auxTipoParam = proc.getTipoParam(p[-2])
         auxPilaParam = proc.getPilaParam(p[-2])
-        #print("CHECK",auxTipoParam,auxPilaParam)
+        #print("CHECK",auxTipoParam,auxPilaParam, p[-2])
 
     else:
         print("LA FUNCION NO EXISTE")
@@ -998,24 +1005,68 @@ def p_fnvn2(p):
     global contLine
     global auxTipoParam
     global auxPilaParam
+    global auxPilaParamCont
 
+    #print("CHECK2",*PTipo,"SPACE",*PilaO)
     tempTipo = PTipo.pop()
     tempOper = PilaO.pop()
 
+    ##############################
+
+    buscador = proc.getDir(funcionActual[-1])
+    #print("TABLA INT TEMP",*TempIntTable)
+    if(tempOper in dict(constTable)):
+        d = dict(constTable)
+        auxMem = d[tempOper]
+        
+    elif(tempOper in TempIntTable):
+
+        #print("ENTRE AL ELIF SUMA",aux)
+        auxMem = tempOper
+
+    elif(tempOper in pointerTable):
+        #print("ENTRE AL ELIF SUMA",aux)
+        #c = dict(pointerTable)
+        #auxMem = c[aux]                    
+        #arrAuxOp.append(auxMem)
+        auxMem = tempOper
+    else:
+        varfinder = buscador['tvar'].getvar(tempOper)
+        isGlobal = False
+
+        if varfinder == None:
+            #CHECO SI LA VARIABLE ES GLOBAL
+            #print("Variable Arreglo no existe en contexto local, buscando globalmente")
+            isGlobal = True
+            buscador=proc.getDir(funcionActual[0])
+            varfinder=buscador['tvar'].getvar(tempOper)
+        if varfinder == None:
+            print("Variable Arreglo no existe ",tempOper)
+        else:
+            if(isGlobal):
+                buscador = proc.getDir(funcionActual[0])
+                auxMem = (buscador['tvar'].getLocacionMemoria(tempOper))
+            else:
+                buscador = proc.getDir(funcionActual[-1])
+                auxMem = (buscador['tvar'].getLocacionMemoria(tempOper))
+
+    ###############################
+
+
+    #print("CHECK3",tempTipo,tempOper)
     tempAuxTipo = auxTipoParam
     tempAuxPila = auxPilaParam
-
-    tempTipoPop = tempAuxTipo.pop()
-    
+    tempTipoPop = tempAuxTipo.pop(0)
     if(tempTipo == tempTipoPop):
         k+=1
         contLine+=1
         tempPilaPop = tempAuxPila[-1]
         #print("K1",k,contLine)
-        quad = ("Param",tempOper,"par1",contLine )
+        quad = ("Param",auxMem,"para"+str(auxPilaParamCont),contLine )
         cuadruplo.append(quad)
+        auxPilaParamCont-=1
     else:
-        print("Error")
+        print("Error no es el mismo tipo",tempTipo,tempTipoPop)
     
 def p_fnvn3(p):
     '''
@@ -1024,18 +1075,18 @@ def p_fnvn3(p):
     global contLine
     global k
     global proc
-    if(proc.getContPilaParam(p[-6]) != k ):
-        print("Numero de argumentos no coincide en la funcion",p[-6])
+    if(proc.getContPilaParam(p[-9]) != k ):
+        print("Numero de argumentos no coincide en la funcion",p[-9])
     else:
         contLine += 1
-        iniciocuadruplo = proc.getInicioCuadruplo(p[-6])
-        quad = ("GoSub",p[-6],None,iniciocuadruplo,contLine)
+        iniciocuadruplo = proc.getInicioCuadruplo(p[-9])
+        quad = ("GoSub",p[-9],None,iniciocuadruplo,contLine)
         cuadruplo.append(quad)
 
 
         aux = proc.getDir('programa')
-        auxVarSearch = aux['tvar'].getLocacionMemoria(p[-6])
-        auxTipoSearch = aux['tvar'].getTipoVar(p[-6])
+        auxVarSearch = aux['tvar'].getLocacionMemoria(p[-9])
+        auxTipoSearch = aux['tvar'].getTipoVar(p[-9])
         if(auxTipoSearch != None):
             #print("GUADALUPANO",aux,auxVarSearch, auxTipoSearch,p[-6])
             contLine += 1
