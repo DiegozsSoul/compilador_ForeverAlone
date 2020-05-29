@@ -9,11 +9,11 @@ var int i;
 si(j == 1) entonces
  {regresa(j);}
  sino
- {regresa(j*fact(j-1));}
+ {regresa(j * fact(j - 1));}
 }
 
 funcion void inicia(int y)
- var int x;
+ var float x;
 { x = -1;
   mientras(x < 1) haz
  {Arreglo[x] = y * x;}
@@ -23,8 +23,8 @@ principal()
 {lee(p); j = p * 2; i = -1;
  inicia(p * j - 5);
 
- desde i=0 hasta 9 hacer
-      {Arreglo[i] = Arreglo[i] * fact(Arreglo[i]*p*i);}
+ desde i=1 hasta Arreglo[i] hacer
+      {Arreglo[i] = Arreglo[i] * fact(Arreglo[i]-p);}
 
   mientras(i>=0) haz
      {escribe ('resultado', Arreglo[i], fact(i+2),i+p);

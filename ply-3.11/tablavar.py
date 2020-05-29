@@ -35,13 +35,13 @@ class tablaVariables(object):
         if(self.busca(vname)):
             return self.arreglo[vname]['tipo']
         else:
-            print("variable no delcarada",vname)
+            print("Tipo de Variable no se encontro, variable no delcarada",vname)
     
     def getLocacionMemoria(self,vname):
         if(self.busca(vname)):
             return self.arreglo[vname]['locmem']
         else:
-            print("Variable no se encontro",vname)
+            print("Locacion de Memoria no se encontro, Variable no se declarada",vname)
 
     def imprimiArreglo(self):
         print(self.arreglo.items())
