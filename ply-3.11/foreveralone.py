@@ -2164,11 +2164,24 @@ while(operador!='END'):
 
     if(operador == '+'):
         if(Memoria[operando1] == None):
-            Memoria[operando1] = operando1
+            #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
+            for key, value in constTable:
+                if value == operando1:
+                    nuevoOperando1 = key
+                    Memoria[operando1] = nuevoOperando1
+                else:
+                    Memoria[operando1] = operando1
+
         if(Memoria[operando2] == None):
-            Memoria[operando2] = operando2
+            #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
+            for key, value in constTable:
+                if value == operando2:
+                    nuevoOperando2 = key
+                    Memoria[operando2] = nuevoOperando2
+                else:
+                    Memoria[operando2] = operando2
+        #REALIZA LA OPERACION CON LOS VALORES NORMALES
         Memoria[resultado] = Memoria[operando1] + Memoria[operando2]
-        #print("DEBUG", Memoria[resultado])
 
     if(operador == '-'):
         if(Memoria[operando1] == None):
@@ -2176,7 +2189,6 @@ while(operador!='END'):
         if(Memoria[operando2] == None):
             Memoria[operando2] = operando2
         Memoria[resultado] = Memoria[operando1] - Memoria[operando2]
-        print("RESTA", Memoria[operando1], Memoria[operando2])
   
     if(operador == '='):
         if(Memoria[operando1] == None):

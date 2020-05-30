@@ -7,7 +7,7 @@ principal()
 { i = 27;
   j = 27;
  
-  p = i*j;
+  p = i+j+6;
   escribe(p); 
 }
 
