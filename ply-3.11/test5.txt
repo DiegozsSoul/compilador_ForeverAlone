@@ -1,0 +1,13 @@
+programa foreveralone;
+var int i, j,p;
+int Arreglo[10];
+int  OtroArreglo[10];
+
+principal()
+{ i = 27;
+  j = 27;
+ 
+  p = i*j;
+  escribe(p); 
+}
+

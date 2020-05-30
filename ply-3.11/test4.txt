@@ -1,0 +1,24 @@
+programa foreveralone;
+var int i, j,p;
+int Arreglo[10];
+int  OtroArreglo[10];
+
+
+funcion int inicia(int y)
+ var int x, z;
+{ x = 5;
+  z = 10;
+  x = x * z + y;
+  regresa(x);
+}
+
+principal()
+{ i = inicia(4);
+  j = 27;
+ 
+ si(i > 54) entonces
+ {escribe(i, 'es mayor que 54');}
+ sino
+ {escribe(i, 'es menor que 54');}
+}
+

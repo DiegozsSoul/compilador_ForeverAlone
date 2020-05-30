@@ -76,9 +76,11 @@ MemoriaVirtual = {
     'tpointer':21000,
     'const'  :12000,
 }
+Memoria =[None] * 25000
+
 #Reads the document
  
-Info= open("test3.txt", "r") 
+Info= open("test5.txt", "r") 
 data=Info.read()
 
 # Reserved words
@@ -220,8 +222,17 @@ def p_programab(p):
     '''
 def p_programac(p):
     '''
-    programac : PRINCIPAL  agregarfuncmain2  LPAREN RPAREN prinn bloque
+    programac : PRINCIPAL  agregarfuncmain2  LPAREN RPAREN prinn bloque endpro
     '''
+def p_endpro(p):
+    '''
+    endpro : empty
+    '''
+    global contLine
+    contLine += 1
+    quad = ("END", None, None,None, contLine)
+    cuadruplo.append(quad)
+
 def p_prinn(p):
     '''
     prinn : empty
@@ -1245,7 +1256,7 @@ def p_prin1(p):
 
 
     ###################
-    quad = ("Escritura", None, None, auxImprime)
+    quad = ("Escritura", None, None, auxImprime,contLine)
     cuadruplo.append(quad)
 
 def p_decision(p):
@@ -2119,8 +2130,78 @@ print("TABLA DE CONST",*constTable)
 print("TABLA DE Funciones")
 proc.arref()
 print("XXXXXXXXXXXXXXXXXXXXX")
-print("TABLA DE VARIABLES1",proc.testerVariable('programa'))
-print("TABLA DE VARIABLES2",proc.testerVariable('fact'))
+print("TABLA DE VARIABLES1", proc.testerVariable('programa'))
+print("TABLA DE VARIABLES2", proc.testerVariable('fact'))
 print("TABLA DE VARIABLES3", proc.testerVariable('inicia'))
 despliegaQuad()
 print("DONE")
+
+print("MAQUINA VIRTUAL")
+#SE METE TODA LA LISTA DE CUADRUPLOS PARA QUE SEAN PROCESADOS
+
+operador    = cuadruplo[0][0]
+operando1   = cuadruplo[0][1]
+operando2   = cuadruplo[0][2]
+resultado   = cuadruplo[0][3]
+#lineaConteo = cuadruplo[0][4]
+i = 1
+#print(operador,operando1,operando2,resultado)
+while(operador!='END'):
+    print(operador,operando1,operando2,resultado)
+    if(operador == '*'):
+        if(Memoria[operando1] == None):
+            Memoria[operando1] = operando1
+        if(Memoria[operando2] == None):
+            Memoria[operando2] = operando2
+        Memoria[resultado] = Memoria[operando1] * Memoria[operando2]
+
+    if(operador == '/'):
+        if(Memoria[operando1] == None):
+            Memoria[operando1] = operando1
+        if(Memoria[operando2] == None):
+            Memoria[operando2] = operando2
+        Memoria[resultado] = Memoria[operando1] / Memoria[operando2]
+
+    if(operador == '+'):
+        if(Memoria[operando1] == None):
+            Memoria[operando1] = operando1
+        if(Memoria[operando2] == None):
+            Memoria[operando2] = operando2
+        Memoria[resultado] = Memoria[operando1] + Memoria[operando2]
+        #print("DEBUG", Memoria[resultado])
+
+    if(operador == '-'):
+        if(Memoria[operando1] == None):
+            Memoria[operando1] = operando1
+        if(Memoria[operando2] == None):
+            Memoria[operando2] = operando2
+        Memoria[resultado] = Memoria[operando1] - Memoria[operando2]
+        print("RESTA", Memoria[operando1], Memoria[operando2])
+  
+    if(operador == '='):
+        if(Memoria[operando1] == None):
+            #BUSCA LA DIRECCION EN LA TABLA DE CONSTANTE PARA TRAER EL VALOR ORIGINAL
+            for key, value in constTable:
+                if value == operando1:
+                    nuevoOperando1 = key
+            Memoria[operando1] = nuevoOperando1
+
+        Memoria[resultado] = Memoria[operando1]
+
+    if(operador == 'Escritura'):
+        if(Memoria[resultado] == None):
+            print(resultado)
+        else:
+            print(Memoria[resultado])
+    
+    operador    = cuadruplo[i][0]
+    operando1   = cuadruplo[i][1]
+    operando2   = cuadruplo[i][2]
+    resultado   = cuadruplo[i][3]
+    i += 1
+    #print("DEBUGING", Memoria[5002])
+
+    
+    
+
+
