@@ -13,12 +13,14 @@ funcion int inicia(int y)
 }
 
 principal()
-{ i = inicia(4);
+{ 
+  i = inicia(3);
   j = 27;
- 
+ escribe('TEST');
  si(i > 54) entonces
  {escribe(i, 'es mayor que 54');}
  sino
  {escribe(i, 'es menor que 54');}
+
 }
 

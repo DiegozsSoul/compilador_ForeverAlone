@@ -80,7 +80,7 @@ Memoria =[None] * 25000
 
 #Reads the document
  
-Info= open("test5.txt", "r") 
+Info= open("test4.txt", "r") 
 data=Info.read()
 
 # Reserved words
@@ -1106,7 +1106,7 @@ def p_fnvn2(p):
 
 
     #print("CHECK3",tempTipo,tempOper)
-    tempAuxTipo = auxTipoParam
+    tempAuxTipo = auxTipoParam.copy()
     tempAuxPila = auxPilaParam
     tempTipoPop = tempAuxTipo.pop(0)
     if(tempTipo == tempTipoPop):
@@ -1972,12 +1972,16 @@ def p_llamadafun(p):
     global contLine
     global auxPilaParam
     global auxTipoParam
+    global auxPilaParamCont 
+    auxPilaParamCont = proc.getContPilaParam(p[-2])
     if(proc.funcionExiste(p[-2])):
         contLine += 1
         quad = ("ERA",None,None,p[-2],contLine)
         cuadruplo.append(quad)
         auxTipoParam = proc.getTipoParam(p[-2])
         auxPilaParam = proc.getPilaParam(p[-2])
+        print("AUX TIPO PARAM",auxTipoParam )
+        proc.testerVariable('programa')
     else:
         print("La funcion no existe")
 
@@ -1990,14 +1994,57 @@ def p_llamadafun2(p):
     global k
     global auxTipoParam
     global auxPilaParam
+    global auxPilaParamCont
 
     tempTipo = PTipo.pop()
     tempOper = PilaO.pop()
     
-    tempAuxTipo = auxTipoParam
+    ##############################
+
+    #print("TABLA INT TEMP",*TempIntTable)
+    if(tempOper in dict(constTable)):
+        d = dict(constTable)
+        auxMem = d[tempOper]
+        
+    elif(tempOper in TempIntTable):
+
+        #print("ENTRE AL ELIF SUMA",aux)
+        auxMem = tempOper
+
+    elif(tempOper in pointerTable):
+        #print("ENTRE AL ELIF SUMA",aux)
+        #c = dict(pointerTable)
+        #auxMem = c[aux]                    
+        #arrAuxOp.append(auxMem)
+        auxMem = tempOper
+    else:
+        buscador = proc.getDir(funcionActual[-1])
+        varfinder = buscador['tvar'].getvar(tempOper)
+        isGlobal = False
+
+        if varfinder == None:
+            #CHECO SI LA VARIABLE ES GLOBAL
+            #print("Variable Arreglo no existe en contexto local, buscando globalmente")
+            isGlobal = True
+            buscador=proc.getDir(funcionActual[0])
+            varfinder=buscador['tvar'].getvar(tempOper)
+        if varfinder == None:
+            print("Variable Arreglo no existe ",tempOper)
+        else:
+            if(isGlobal):
+                buscador = proc.getDir(funcionActual[0])
+                auxMem = (buscador['tvar'].getLocacionMemoria(tempOper))
+            else:
+                buscador = proc.getDir(funcionActual[-1])
+                auxMem = (buscador['tvar'].getLocacionMemoria(tempOper))
+
+    ###############################
+
+    tempAuxTipo = auxTipoParam.copy()
     tempAuxPila = auxPilaParam
+    tempTipoPop = tempAuxTipo.pop(0)
  
-    tempTipoPop = tempAuxTipo[-1]
+    #tempTipoPop = tempAuxTipo[-1]
    
     if(tempTipo == tempTipoPop):
         k += 1 
@@ -2005,8 +2052,9 @@ def p_llamadafun2(p):
         tempPilaPop = tempAuxPila[-1]
         #print("K",k,contLine)
         kont = k
-        quad = ("Param",tempOper, "para1", contLine)
+        quad = ("Param",auxMem, "para"+str(auxPilaParamCont), contLine)
         cuadruplo.append(quad)
+        auxPilaParamCont -= 1
     else:
         print("Error en llamadafun2")
  
@@ -2138,28 +2186,66 @@ print("DONE")
 
 print("MAQUINA VIRTUAL")
 #SE METE TODA LA LISTA DE CUADRUPLOS PARA QUE SEAN PROCESADOS
+i = 0
+operador    = cuadruplo[i][0]
+operando1   = cuadruplo[i][1]
+operando2   = cuadruplo[i][2]
+resultado   = cuadruplo[i][3]
 
-operador    = cuadruplo[0][0]
-operando1   = cuadruplo[0][1]
-operando2   = cuadruplo[0][2]
-resultado   = cuadruplo[0][3]
+saltoGoto = 0
+inicioNuevaFuncion = 0
+guardaCuadruplo = 0
+saltoGoSub = 0
 #lineaConteo = cuadruplo[0][4]
-i = 1
+
 #print(operador,operando1,operando2,resultado)
 while(operador!='END'):
-    print(operador,operando1,operando2,resultado)
+    print("CUADRUPLO ",operador,operando1,operando2,resultado)
+
+    #print(operador,operando1,operando2,resultado)
+    #CADA CUADRUPLO TIENE GUARDADO EL LA 4ta O 5ta POSICION EL NUMERO DE CUADRUPLO A MOVERSE O EL NUMERO DE CUADRUPLO QUE ES RESPECTIVAMENTE
+    if(len(cuadruplo[i])>4):
+        contadorLineas = cuadruplo[i][4]
+        #print(contadorLineas)
+    else:
+        contadorLineas = resultado
+
     if(operador == '*'):
         if(Memoria[operando1] == None):
-            Memoria[operando1] = operando1
+            #SI EN LA MULTIPLICACION LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
+            for key, value in constTable:
+                if value == operando1:
+                    nuevoOperando1 = key
+                    Memoria[operando1] = nuevoOperando1
+                else:
+                    Memoria[operando1] = operando1
         if(Memoria[operando2] == None):
-            Memoria[operando2] = operando2
+            #SI EN LA MULTIPLICACION LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
+            for key, value in constTable:
+                if value == operando2:
+                    nuevoOperando2 = key
+                    Memoria[operando2] = nuevoOperando2
+                else:
+                    Memoria[operando2] = operando2
         Memoria[resultado] = Memoria[operando1] * Memoria[operando2]
 
     if(operador == '/'):
         if(Memoria[operando1] == None):
-            Memoria[operando1] = operando1
+            #SI EN LA DIVISION LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
+            for key, value in constTable:
+                if value == operando1:
+                    nuevoOperando1 = key
+                    Memoria[operando1] = nuevoOperando1
+                else:
+                    Memoria[operando1] = operando1
         if(Memoria[operando2] == None):
-            Memoria[operando2] = operando2
+            #SI EN LA DIVISION LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
+            for key, value in constTable:
+                if value == operando2:
+                    nuevoOperando2 = key
+                    Memoria[operando2] = nuevoOperando2
+                else:
+                    Memoria[operando2] = operando2
         Memoria[resultado] = Memoria[operando1] / Memoria[operando2]
 
     if(operador == '+'):
@@ -2171,7 +2257,6 @@ while(operador!='END'):
                     Memoria[operando1] = nuevoOperando1
                 else:
                     Memoria[operando1] = operando1
-
         if(Memoria[operando2] == None):
             #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
@@ -2185,9 +2270,22 @@ while(operador!='END'):
 
     if(operador == '-'):
         if(Memoria[operando1] == None):
-            Memoria[operando1] = operando1
+            #SI EN LA RESTA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
+            for key, value in constTable:
+                if value == operando1:
+                    nuevoOperando1 = key
+                    Memoria[operando1] = nuevoOperando1
+                else:
+                    Memoria[operando1] = operando1
         if(Memoria[operando2] == None):
-            Memoria[operando2] = operando2
+            #SI EN LA RESTA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
+            for key, value in constTable:
+                if value == operando2:
+                    nuevoOperando2 = key
+                    Memoria[operando2] = nuevoOperando2
+                else:
+                    Memoria[operando2] = operando2
+        #REALIZA LA OPERACION CON LOS VALORES NORMALES
         Memoria[resultado] = Memoria[operando1] - Memoria[operando2]
   
     if(operador == '='):
@@ -2196,24 +2294,188 @@ while(operador!='END'):
             for key, value in constTable:
                 if value == operando1:
                     nuevoOperando1 = key
-            Memoria[operando1] = nuevoOperando1
+                    #print("ASIGNACION1",nuevoOperando1)
+                    Memoria[operando1] = nuevoOperando1
+                    break
+                else: 
+                    #print("ASIGNACION2",operando1)
+                    Memoria[operando1] = operando1
 
+        
+        #print("ASIGNACION3",Memoria[operando1],operando1)
         Memoria[resultado] = Memoria[operando1]
 
     if(operador == 'Escritura'):
         if(Memoria[resultado] == None):
-            print(resultado)
+            for key, value in constTable:
+                if value == resultado:
+                    nuevoResultado = key
+                    #print("ASIGNACION1",nuevoOperando1)
+                    Memoria[resultado] = nuevoResultado
+                    break
+                else: 
+                    #print("ASIGNACION2",operando1)
+                    Memoria[resultado] = resultado
+            print(Memoria[resultado])
         else:
             print(Memoria[resultado])
-    
+
+    if(operador == 'GOTO'):
+        i = resultado -2
+        #print("GOTO",i)
+
+    if(operador == 'ERA'):
+        funcionInvocada = resultado
+        #funcionInvocadaAux = proc.getDir(funcionInvocada)
+        # if(funcionInvocadaAux != None):
+        #     inicioNuevaFuncion = proc.getInicioCuadruplo(funcionInvocada)
+        #print("ERA", inicioNuevaFuncion)
+
+    if(operador == 'Param'):
+        numParam  = operando2[4]
+        auxParam  = proc.getPilaParam(funcionInvocada)
+        busqParam = auxParam[int(numParam)-1]
+        direccionParam = proc.getLocMem(funcionInvocada, busqParam)
+        #print("DIRECCION PARAM",direccionParam)
+        for key, value in constTable:
+            if value == operando1:  
+                variableAGuardar = key
+                Memoria[operando1] = variableAGuardar
+                #print("ENTRE TRUE", Memoria[operando1])
+                break
+            else:
+                Memoria[operando1] = operando1
+                #print("ENTRE FALSE", Memoria[operando1])
+
+        #print("SALI DEL FOR",Memoria[operando1])
+        Memoria[direccionParam] = Memoria[operando1]
+        #print("PARAM", Memoria[direccionParam])
+
+    if(operador == 'GoSub'):
+        guardaCuadruplo = i
+        i = resultado - 2 
+
+    if(operador == 'Regresa'):
+        #print("REGRESA",resultado,funcionInvocada)
+        memoriaFuncion = proc.getLocMem("programa",funcionInvocada)
+        Memoria[memoriaFuncion] = Memoria[resultado]
+        i = guardaCuadruplo
+        
+    if(operador == '>'):
+        if(Memoria[operando1] == None):
+        #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
+            for key, value in constTable:
+                if value == operando1:
+                    nuevoOperando1 = key
+                    Memoria[operando1] = nuevoOperando1
+                else:
+                    Memoria[operando1] = operando1
+        if(Memoria[operando2] == None):
+        #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
+            for key, value in constTable:
+                if value == operando2:
+                    nuevoOperando2 = key
+                    Memoria[operando2] = nuevoOperando2
+                else:
+                    Memoria[operando2] = operando2
+        #REALIZA LA OPERACION CON LOS VALORES NORMALES
+        Memoria[resultado] = Memoria[operando1] > Memoria[operando2]
+        print("MAYOR QUE",Memoria[resultado])
+
+    if(operador == '<'):
+        if(Memoria[operando1] == None):
+        #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
+            for key, value in constTable:
+                if value == operando1:
+                    nuevoOperando1 = key
+                    Memoria[operando1] = nuevoOperando1
+                else:
+                    Memoria[operando1] = operando1
+        if(Memoria[operando2] == None):
+        #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
+            for key, value in constTable:
+                if value == operando2:
+                    nuevoOperando2 = key
+                    Memoria[operando2] = nuevoOperando2
+                else:
+                    Memoria[operando2] = operando2
+        #REALIZA LA OPERACION CON LOS VALORES NORMALES
+        Memoria[resultado] = Memoria[operando1] < Memoria[operando2]
+        print("MENOR QUE",Memoria[resultado])
+
+    if(operador == '=='):
+        if(Memoria[operando1] == None):
+        #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
+            for key, value in constTable:
+                if value == operando1:
+                    nuevoOperando1 = key
+                    Memoria[operando1] = nuevoOperando1
+                else:
+                    Memoria[operando1] = operando1
+        if(Memoria[operando2] == None):
+        #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
+            for key, value in constTable:
+                if value == operando2:
+                    nuevoOperando2 = key
+                    Memoria[operando2] = nuevoOperando2
+                else:
+                    Memoria[operando2] = operando2
+        #REALIZA LA OPERACION CON LOS VALORES NORMALES
+        Memoria[resultado] = Memoria[operando1] == Memoria[operando2]
+
+    if(operador == '>='):
+        if(Memoria[operando1] == None):
+        #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
+            for key, value in constTable:
+                if value == operando1:
+                    nuevoOperando1 = key
+                    Memoria[operando1] = nuevoOperando1
+                else:
+                    Memoria[operando1] = operando1
+        if(Memoria[operando2] == None):
+        #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
+            for key, value in constTable:
+                if value == operando2:
+                    nuevoOperando2 = key
+                    Memoria[operando2] = nuevoOperando2
+                else:
+                    Memoria[operando2] = operando2
+        #REALIZA LA OPERACION CON LOS VALORES NORMALES
+        Memoria[resultado] = Memoria[operando1] >= Memoria[operando2]
+
+    if(operador == '<='):
+        if(Memoria[operando1] == None):
+        #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
+            for key, value in constTable:
+                if value == operando1:
+                    nuevoOperando1 = key
+                    Memoria[operando1] = nuevoOperando1
+                else:
+                    Memoria[operando1] = operando1
+        if(Memoria[operando2] == None):
+        #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
+            for key, value in constTable:
+                if value == operando2:
+                    nuevoOperando2 = key
+                    Memoria[operando2] = nuevoOperando2
+                else:
+                    Memoria[operando2] = operando2
+        #REALIZA LA OPERACION CON LOS VALORES NORMALES
+        Memoria[resultado] = Memoria[operando1] <= Memoria[operando2]
+
+    if(operador == 'GotoF'):
+        if( not(Memoria[operando1])):
+            i = resultado -2
+    #if(operador == '')
+
+    #print("BEFORE", i)
+    i += 1
+    #print("AFTER",i)
     operador    = cuadruplo[i][0]
     operando1   = cuadruplo[i][1]
     operando2   = cuadruplo[i][2]
     resultado   = cuadruplo[i][3]
-    i += 1
     #print("DEBUGING", Memoria[5002])
-
-    
     
 
 

@@ -74,7 +74,7 @@ class tablaFunciones(object):
             tabVar = self.arreglo[nombref]
             if(tabVar['tvar'].busca(nombrev) == True):
                 #variable viene de una funcion
-                return tabVar['tvar'].getLocMem(nombrev)
+                return tabVar['tvar'].getLocacionMemoria(nombrev)
             else:
                 print("variable no existe")
 
