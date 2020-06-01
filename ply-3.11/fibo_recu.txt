@@ -1,0 +1,23 @@
+programa foreveralone;
+var int i, j;
+
+funcion int fibo(int x)
+{ 
+  si( x <= 1) entonces
+  {
+
+   regresa(x);
+  }
+  sino
+  {
+   regresa(fibo(x - 1) + fibo(x - 2));
+  }
+}
+
+principal()
+{ lee(j);
+  i = fibo(j);
+  escribe(i);
+
+}
+

@@ -1,0 +1,39 @@
+programa foreveralone;
+var int i, j,p,l,k;
+int Arreglo[10];
+int  OtroArreglo[10];
+
+
+funcion int inicia(int y)
+ var int x, z;
+{ x = 5;
+  z = 1;
+  x = x * z + y;
+  regresa(x);
+  Arreglo[z] = x * z;
+}
+
+principal()
+{ lee(j);
+  i = inicia(j);
+  p = 1;
+ escribe('TEST');
+ si(i > j) entonces
+ {escribe(inicia(j) + inicia(j), 'es mayor que 54');}
+ sino
+ {escribe(i + 1 , 'es menor que 54');}
+
+ mientras(i>=0) haz
+ {escribe ('resultado',i);
+  i = i - 1;
+ }
+
+ desde l=1 hasta 3 hacer
+ {p = p + j * inicia(j) ;
+ escribe('Yeet',l);     
+ }
+
+ escribe('Este es p',p);
+ escribe('Este es Arreglo',Arreglo[1]);
+}
+

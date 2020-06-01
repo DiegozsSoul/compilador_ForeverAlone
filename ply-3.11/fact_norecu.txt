@@ -1,0 +1,13 @@
+programa foreveralone;
+var int i, n;
+
+principal()
+{ i = 1;
+  lee(n); 
+  mientras(n > 0) haz
+  {i = i * n;
+   n = n - 1;
+  }
+ escribe(i);
+}
+

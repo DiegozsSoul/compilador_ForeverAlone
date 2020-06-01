@@ -1,5 +1,5 @@
 programa foreveralone;
-var int i, j,p;
+var int i, j,p,l,k;
 int Arreglo[10];
 int  OtroArreglo[10];
 
@@ -7,20 +7,21 @@ int  OtroArreglo[10];
 funcion int inicia(int y)
  var int x, z;
 { x = 5;
-  z = 10;
+  z = 1;
   x = x * z + y;
+  escribe(x*z);
+  Arreglo[z] = x * y * 2;
   regresa(x);
 }
 
 principal()
-{ 
-  i = inicia(3);
-  j = 27;
+{ lee(j);
+  i = inicia(j);
+  p = 1;
  escribe('TEST');
- si(i > 54) entonces
- {escribe(i, 'es mayor que 54');}
- sino
- {escribe(i, 'es menor que 54');}
 
+
+ escribe('Este es p',p);
+ escribe('Este es arr',Arreglo[1]);
 }
 

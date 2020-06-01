@@ -610,6 +610,7 @@ def p_arrn2(p):
         if(isGlobal):
             buscador = proc.getDir(funcionActual[0])
             getTArr = buscador['tvar'].getTabArr(p[-4])
+            print("ARREGLO",getTArr)
             contLine += 1
             d = dict(constTable)
             limitInf = d[getTArr[0]]
@@ -756,7 +757,6 @@ def p_arrn3(p):
     if(-(int(kArr)) in dict(constTable)):
         d = dict(constTable)
         newkArr = d[-(int(kArr))]
-
     quad = ("+",valorMem, newkArr, result,contLine)
     cuadruplo.append(quad)
     contLine += 1
@@ -1378,6 +1378,28 @@ def p_repnoconn(p):
         #auxMem = c[aux]                    
         #arrAuxOp.append(auxMem)
         limiteSupAux = limiteSup
+    else:
+        buscador = proc.getDir(funcionActual[-1])   
+        varfinder = buscador['tvar'].getvar(limiteSup)
+        isGlobal = False
+        if varfinder == None:
+            #CHECO SI LA VARIABLE ES GLOBAL
+            isGlobal = True
+            buscador=proc.getDir(funcionActual[0])
+            varfinder=buscador['tvar'].getvar(limiteSup)
+        if varfinder == None:
+            print("Variable Arreglo no existe ",limiteSup)
+        else:
+            if(isGlobal):
+                buscador = proc.getDir(funcionActual[0])
+                limiteSupAux = buscador['tvar'].getLocacionMemoria(limiteSup)
+
+            else:
+                buscador = proc.getDir(funcionActual[-1])
+                limiteSupAux = buscador['tvar'].getLocacionMemoria(limiteSup)
+
+
+
 
     #print("FLEEEEEET",limiteSup,contador,tipoDatoContador)
     if(banderaGlobalNoCond):
@@ -1388,7 +1410,7 @@ def p_repnoconn(p):
         MemoriaVirtual['l'+tipoDatoContador] += 1
 
     contLine += 1
-    quad = (">=", contador, limiteSupAux, auxMem, contLine)
+    quad = ("<=", contador, limiteSupAux, auxMem, contLine)
     PilaO.append(contador)
     cuadruplo.append(quad)
     contLine+=1
@@ -1684,6 +1706,10 @@ def p_saveconst(p):
             constante = (-p[-1],MemoriaVirtual['const'])
             constTable.append(constante)
             MemoriaVirtual['const'] += 1
+    if(-1 not in dict(constTable)):
+        constante = (-1,MemoriaVirtual['const'])
+        constTable.append(constante)
+        MemoriaVirtual['const'] += 1
     #print("LISTA DE CONSTANTES",*constTable)
 def p_savestringconst(p):
     '''
@@ -1982,6 +2008,11 @@ def p_llamadafun(p):
         auxPilaParam = proc.getPilaParam(p[-2])
         print("AUX TIPO PARAM",auxTipoParam )
         proc.testerVariable('programa')
+
+        if(proc.getTipoFunc(p[-2]) != 'void'): ##########SEAGREGO
+            testeruni = proc.getTipoFunc(p[-2])
+            PTipo.append(testeruni)
+
     else:
         print("La funcion no existe")
 
@@ -2196,13 +2227,15 @@ saltoGoto = 0
 inicioNuevaFuncion = 0
 guardaCuadruplo = 0
 saltoGoSub = 0
+contRecursion = 0
+recursionAux = [None]*100
 #lineaConteo = cuadruplo[0][4]
 
 #print(operador,operando1,operando2,resultado)
 while(operador!='END'):
-    print("CUADRUPLO ",operador,operando1,operando2,resultado)
+    #print("NEW CUADRUPLO", i, "CUADRUPLO ",operador,operando1,operando2,resultado)
 
-    #print(operador,operando1,operando2,resultado)
+    #print("QUAD", operador,operando1,operando2,resultado)
     #CADA CUADRUPLO TIENE GUARDADO EL LA 4ta O 5ta POSICION EL NUMERO DE CUADRUPLO A MOVERSE O EL NUMERO DE CUADRUPLO QUE ES RESPECTIVAMENTE
     if(len(cuadruplo[i])>4):
         contadorLineas = cuadruplo[i][4]
@@ -2217,6 +2250,7 @@ while(operador!='END'):
                 if value == operando1:
                     nuevoOperando1 = key
                     Memoria[operando1] = nuevoOperando1
+                    break
                 else:
                     Memoria[operando1] = operando1
         if(Memoria[operando2] == None):
@@ -2225,8 +2259,10 @@ while(operador!='END'):
                 if value == operando2:
                     nuevoOperando2 = key
                     Memoria[operando2] = nuevoOperando2
+                    break
                 else:
                     Memoria[operando2] = operando2
+        print("MULTI", Memoria[operando1], Memoria[operando2])
         Memoria[resultado] = Memoria[operando1] * Memoria[operando2]
 
     if(operador == '/'):
@@ -2236,6 +2272,7 @@ while(operador!='END'):
                 if value == operando1:
                     nuevoOperando1 = key
                     Memoria[operando1] = nuevoOperando1
+                    break
                 else:
                     Memoria[operando1] = operando1
         if(Memoria[operando2] == None):
@@ -2244,28 +2281,36 @@ while(operador!='END'):
                 if value == operando2:
                     nuevoOperando2 = key
                     Memoria[operando2] = nuevoOperando2
+                    break
                 else:
                     Memoria[operando2] = operando2
         Memoria[resultado] = Memoria[operando1] / Memoria[operando2]
 
     if(operador == '+'):
+        print("Memoria",Memoria[operando1],Memoria[operando2])
         if(Memoria[operando1] == None):
             #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando1:
                     nuevoOperando1 = key
                     Memoria[operando1] = nuevoOperando1
+                    print("YEET?")
+                    break
                 else:
                     Memoria[operando1] = operando1
+                    print("YEET!")
         if(Memoria[operando2] == None):
             #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando2:
                     nuevoOperando2 = key
                     Memoria[operando2] = nuevoOperando2
+                    break
                 else:
                     Memoria[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
+        print("NO YEET")
+        print("SUMACION",Memoria[8002],Memoria[operando2])
         Memoria[resultado] = Memoria[operando1] + Memoria[operando2]
 
     if(operador == '-'):
@@ -2275,6 +2320,7 @@ while(operador!='END'):
                 if value == operando1:
                     nuevoOperando1 = key
                     Memoria[operando1] = nuevoOperando1
+                    break
                 else:
                     Memoria[operando1] = operando1
         if(Memoria[operando2] == None):
@@ -2283,9 +2329,11 @@ while(operador!='END'):
                 if value == operando2:
                     nuevoOperando2 = key
                     Memoria[operando2] = nuevoOperando2
+                    break
                 else:
                     Memoria[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
+        #print("RESTA", Memoria[resultado], Memoria[operando1],Memoria[operando2])
         Memoria[resultado] = Memoria[operando1] - Memoria[operando2]
   
     if(operador == '='):
@@ -2296,14 +2344,22 @@ while(operador!='END'):
                     nuevoOperando1 = key
                     #print("ASIGNACION1",nuevoOperando1)
                     Memoria[operando1] = nuevoOperando1
+                    print("ASIGNACION1",Memoria[operando1],operando1)
                     break
                 else: 
                     #print("ASIGNACION2",operando1)
                     Memoria[operando1] = operando1
-
-        
-        #print("ASIGNACION3",Memoria[operando1],operando1)
+                    print("ASIGNACION2",Memoria[operando1],operando1)
+        print("ASIGNACION3",Memoria[operando1],operando1)
         Memoria[resultado] = Memoria[operando1]
+        #print("ASIGNACION3",Memoria[resultado],Memoria[operando1],operando1)
+    
+    if(operador == 'GoSub'):
+        guardaCuadruplo = i
+        i = resultado - 2 
+        #print("CONT RECURSION",contRecursion)
+        recursionAux[contRecursion] = guardaCuadruplo
+        contRecursion += 1
 
     if(operador == 'Escritura'):
         if(Memoria[resultado] == None):
@@ -2344,23 +2400,23 @@ while(operador!='END'):
                 #print("ENTRE TRUE", Memoria[operando1])
                 break
             else:
-                Memoria[operando1] = operando1
-                #print("ENTRE FALSE", Memoria[operando1])
+                Memoria[operando1] = Memoria[operando1] #######SE CAMBIO ESTO Memoria[operando1] = operando1
+                #print("ENTRE FALSE", Memoria[operando1],operando1)
 
         #print("SALI DEL FOR",Memoria[operando1])
         Memoria[direccionParam] = Memoria[operando1]
         #print("PARAM", Memoria[direccionParam])
 
-    if(operador == 'GoSub'):
-        guardaCuadruplo = i
-        i = resultado - 2 
+
 
     if(operador == 'Regresa'):
         #print("REGRESA",resultado,funcionInvocada)
         memoriaFuncion = proc.getLocMem("programa",funcionInvocada)
+        #print("BUSCANDO RESPUESTA",Memoria[memoriaFuncion], Memoria[resultado] )
         Memoria[memoriaFuncion] = Memoria[resultado]
-        i = guardaCuadruplo
-        
+        contRecursion -= 1
+        i = recursionAux[contRecursion]
+
     if(operador == '>'):
         if(Memoria[operando1] == None):
         #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
@@ -2368,6 +2424,7 @@ while(operador!='END'):
                 if value == operando1:
                     nuevoOperando1 = key
                     Memoria[operando1] = nuevoOperando1
+                    break
                 else:
                     Memoria[operando1] = operando1
         if(Memoria[operando2] == None):
@@ -2376,11 +2433,12 @@ while(operador!='END'):
                 if value == operando2:
                     nuevoOperando2 = key
                     Memoria[operando2] = nuevoOperando2
+                    break
                 else:
                     Memoria[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
         Memoria[resultado] = Memoria[operando1] > Memoria[operando2]
-        print("MAYOR QUE",Memoria[resultado])
+        #print("MAYOR QUE",Memoria[resultado], Memoria[operando1],Memoria[operando2])
 
     if(operador == '<'):
         if(Memoria[operando1] == None):
@@ -2389,6 +2447,7 @@ while(operador!='END'):
                 if value == operando1:
                     nuevoOperando1 = key
                     Memoria[operando1] = nuevoOperando1
+                    break
                 else:
                     Memoria[operando1] = operando1
         if(Memoria[operando2] == None):
@@ -2397,11 +2456,12 @@ while(operador!='END'):
                 if value == operando2:
                     nuevoOperando2 = key
                     Memoria[operando2] = nuevoOperando2
+                    break
                 else:
                     Memoria[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
         Memoria[resultado] = Memoria[operando1] < Memoria[operando2]
-        print("MENOR QUE",Memoria[resultado])
+        #print("MENOR QUE",Memoria[resultado], Memoria[operando1],Memoria[operando2])
 
     if(operador == '=='):
         if(Memoria[operando1] == None):
@@ -2410,6 +2470,7 @@ while(operador!='END'):
                 if value == operando1:
                     nuevoOperando1 = key
                     Memoria[operando1] = nuevoOperando1
+                    break
                 else:
                     Memoria[operando1] = operando1
         if(Memoria[operando2] == None):
@@ -2418,6 +2479,7 @@ while(operador!='END'):
                 if value == operando2:
                     nuevoOperando2 = key
                     Memoria[operando2] = nuevoOperando2
+                    break
                 else:
                     Memoria[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
@@ -2430,6 +2492,7 @@ while(operador!='END'):
                 if value == operando1:
                     nuevoOperando1 = key
                     Memoria[operando1] = nuevoOperando1
+                    break
                 else:
                     Memoria[operando1] = operando1
         if(Memoria[operando2] == None):
@@ -2438,10 +2501,13 @@ while(operador!='END'):
                 if value == operando2:
                     nuevoOperando2 = key
                     Memoria[operando2] = nuevoOperando2
+                    break
                 else:
                     Memoria[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
         Memoria[resultado] = Memoria[operando1] >= Memoria[operando2]
+        #print("MAYOR O IGUAL QUE ", Memoria[resultado], Memoria[operando1], Memoria[operando2])
+
 
     if(operador == '<='):
         if(Memoria[operando1] == None):
@@ -2450,6 +2516,7 @@ while(operador!='END'):
                 if value == operando1:
                     nuevoOperando1 = key
                     Memoria[operando1] = nuevoOperando1
+                    break
                 else:
                     Memoria[operando1] = operando1
         if(Memoria[operando2] == None):
@@ -2458,6 +2525,7 @@ while(operador!='END'):
                 if value == operando2:
                     nuevoOperando2 = key
                     Memoria[operando2] = nuevoOperando2
+                    break
                 else:
                     Memoria[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
@@ -2466,8 +2534,43 @@ while(operador!='END'):
     if(operador == 'GotoF'):
         if( not(Memoria[operando1])):
             i = resultado -2
-    #if(operador == '')
+    if(operador == 'LEE'):
 
+        """
+        if(Memoria[resultado] == None):
+            #BUSCA LA DIRECCION EN LA TABLA DE CONSTANTE PARA TRAER EL VALOR ORIGINAL
+            for key, value in constTable:
+                if value == resultado:
+                    nuevoOperando1 = key
+                    #print("ASIGNACION1",nuevoOperando1)
+                    Memoria[resultado] = nuevoOperando1
+                    break
+                else: 
+                    #print("ASIGNACION2",operando1)
+                    Memoria[resultado] = operando1
+        """
+        inputeado = input("Ingresa tu dato: ")
+        Memoria[resultado] = int(inputeado)
+    if(operador == 'VER'):
+        for key, value in constTable:
+            if value == operando1:
+                nuevoOperando1 = key
+                Memoria[operando1] = nuevoOperando1
+                break
+            else:
+                Memoria[operando1] = operando1
+        for key, value in constTable:
+            if value == resultado:
+                nuevoResultado = key
+                #Memoria[operando2] = nuevoOperando2
+                break
+
+        #print("TESTERU", Memoria[operando1], nuevoResultado)
+        if((Memoria[operando1]  >= 0) and (Memoria[operando1]  <= nuevoResultado)):
+            flagGoodArr = True
+
+
+    #if(operador == '')
     #print("BEFORE", i)
     i += 1
     #print("AFTER",i)
@@ -2476,6 +2579,6 @@ while(operador!='END'):
     operando2   = cuadruplo[i][2]
     resultado   = cuadruplo[i][3]
     #print("DEBUGING", Memoria[5002])
-    
+
 
 
