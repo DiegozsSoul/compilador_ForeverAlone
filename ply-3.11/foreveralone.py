@@ -34,6 +34,8 @@ TempFloatTable = []
 auxPilaParamCont = 0
 banderaGlobalNoCond = False
 funcionGuardar = ''
+funcionGuardar2 = ''
+iAux = 1
 #VARIABLES ARREGLOS
 arrId = ''
 limSup = 0
@@ -81,7 +83,7 @@ Memoria =[None] * 15000
 
 #Reads the document
  
-Info= open("fibo_recu2.txt", "r") 
+Info= open("test4.txt", "r") 
 data=Info.read()
 
 # Reserved words
@@ -1040,8 +1042,11 @@ def p_fnvn1(p):
     global auxPilaParam
     global auxPilaParamCont 
     global funcionGuardar
+    global iAux
     funcionGuardar = p[-2]
     auxPilaParamCont = proc.getContPilaParam(p[-2])
+    iAux = 1
+    
     if(proc.funcionExiste(p[-2])):
         contLine += 1
         quad = ("ERA",None,None,p[-2],contLine)
@@ -1063,6 +1068,7 @@ def p_fnvn2(p):
     global auxTipoParam
     global auxPilaParam
     global auxPilaParamCont
+    global iAux
 
     #print("CHECK2",*PTipo,"SPACE",*PilaO)
     tempTipo = PTipo.pop()
@@ -1118,10 +1124,14 @@ def p_fnvn2(p):
         k+=1
         contLine+=1
         tempPilaPop = tempAuxPila[-1]
+  
+
         #print("K1",k,contLine)
-        quad = ("Param",auxMem,"para"+str(auxPilaParamCont),contLine )
+        quad = ("Param",auxMem,"para"+str(iAux),contLine )
+        if(iAux <= auxPilaParamCont):
+            iAux += 1
         cuadruplo.append(quad)
-        auxPilaParamCont-=1
+        #auxPilaParamCont-=1
     else:
         print("Error no es el mismo tipo",tempTipo,tempTipoPop)
     
@@ -1991,13 +2001,18 @@ def p_terminob(p):
 def p_factor(p):
     '''
     factor : LPAREN expresion RPAREN
-    | ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
+    | ID LPAREN llamadafun expresion llamadafun2  RPAREN llamadafun3
+    | ID LPAREN llamadafun expresion llamadafun2 COMMA  factorb
     | PLUS cte
     | MINUS cte
     | cte
     | ID asign
     '''
-
+def p_factorb(p):
+    '''
+    factorb :  expresion llamadafun2 COMMA factorb
+    | expresion llamadafun2 RPAREN llamadafun3
+    '''
 def p_llamadafun(p):
     '''
     llamadafun : empty
@@ -2007,7 +2022,11 @@ def p_llamadafun(p):
     global auxPilaParam
     global auxTipoParam
     global auxPilaParamCont 
+    global iAux
+    global funcionGuardar2
+    funcionGuardar2 = p[-2]
     auxPilaParamCont = proc.getContPilaParam(p[-2])
+    iAux = 1
     if(proc.funcionExiste(p[-2])):
         contLine += 1
         quad = ("ERA",None,None,p[-2],contLine)
@@ -2034,7 +2053,7 @@ def p_llamadafun2(p):
     global auxTipoParam
     global auxPilaParam
     global auxPilaParamCont
-
+    global iAux
     tempTipo = PTipo.pop()
     tempOper = PilaO.pop()
     
@@ -2091,7 +2110,9 @@ def p_llamadafun2(p):
         tempPilaPop = tempAuxPila[-1]
         #print("K",k,contLine)
         kont = k
-        quad = ("Param",auxMem, "para"+str(auxPilaParamCont), contLine)
+        quad = ("Param",auxMem, "para"+str(iAux), contLine)
+        if(iAux <= auxPilaParamCont):
+            iAux += 1
         cuadruplo.append(quad)
         auxPilaParamCont -= 1
     else:
@@ -2104,18 +2125,19 @@ def p_llamadafun3(p):
     global proc
     global contLine
     global k
-    #print("!!!!!!!",p[-1],p[-2],p[-3],p[-4],p[-5],p[-6],p[-7],p[-8],p[-9])
-    if(proc.getContPilaParam(p[-6]) !=k):
-        print("Numero de argumentos no coincide en la funcion2",p[-6])
+    global funcionGuardar2
+    print("!!!!!!!",p[-1],p[-2],p[-3],p[-4],p[-5],p[-6],p[-7],p[-8],p[-9])
+    if(proc.getContPilaParam(funcionGuardar2) !=k):
+        print("Numero de argumentos no coincide en la funcion2",funcionGuardar2)
     else:
         contLine += 1
-        inicioCuadruplo = proc.getInicioCuadruplo(p[-6])
-        quad = ("GoSub",p[-6],None,inicioCuadruplo,contLine)
+        inicioCuadruplo = proc.getInicioCuadruplo(funcionGuardar2)
+        quad = ("GoSub",funcionGuardar2,None,inicioCuadruplo,contLine)
         cuadruplo.append(quad)
 
         aux = proc.getDir('programa')
-        auxVarSearch = aux['tvar'].getLocacionMemoria(p[-6])
-        auxTipoSearch = aux['tvar'].getTipoVar(p[-6])
+        auxVarSearch = aux['tvar'].getLocacionMemoria(funcionGuardar2)
+        auxTipoSearch = aux['tvar'].getTipoVar(funcionGuardar2)
         if(auxTipoSearch != None):
             #print("GUADALUPANO2",aux,auxVarSearch, auxTipoSearch,p[-6])
             contLine += 1
@@ -2397,7 +2419,9 @@ while(operador!='END'):
         #ESTO PERMITE QUE SE REGRESEN MAS DE UN PARAMETRO
         numParam  = operando2[4]
         auxParam  = proc.getPilaParam(funcionInvocada)
+        print("PILA",auxParam)
         busqParam = auxParam[int(numParam)-1]
+        
         direccionParam = proc.getLocMem(funcionInvocada, busqParam)
         #print("DIRECCION PARAM",direccionParam)
         for key, value in constTable:

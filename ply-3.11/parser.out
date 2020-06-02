@@ -128,31 +128,34 @@ Rule 116   terminob -> TIMES termino
 Rule 117   terminob -> DIVIDE termino
 Rule 118   factor -> LPAREN expresion RPAREN
 Rule 119   factor -> ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-Rule 120   factor -> PLUS cte
-Rule 121   factor -> MINUS cte
-Rule 122   factor -> cte
-Rule 123   factor -> ID asign
-Rule 124   llamadafun -> empty
-Rule 125   llamadafun2 -> empty
-Rule 126   llamadafun3 -> empty
-Rule 127   estatuto -> asignacion
-Rule 128   estatuto -> funcionvoid
-Rule 129   estatuto -> retorno
-Rule 130   estatuto -> lee
-Rule 131   estatuto -> escritura
-Rule 132   estatuto -> decision
-Rule 133   estatuto -> repeticioncond
-Rule 134   estatuto -> repeticionnocond
-Rule 135   estatuto -> expresion
-Rule 136   empty -> <empty>
-Rule 137   agregavar -> <empty>
+Rule 120   factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+Rule 121   factor -> PLUS cte
+Rule 122   factor -> MINUS cte
+Rule 123   factor -> cte
+Rule 124   factor -> ID asign
+Rule 125   factorb -> expresion llamadafun2 COMMA factorb
+Rule 126   factorb -> expresion llamadafun2 RPAREN llamadafun3
+Rule 127   llamadafun -> empty
+Rule 128   llamadafun2 -> empty
+Rule 129   llamadafun3 -> empty
+Rule 130   estatuto -> asignacion
+Rule 131   estatuto -> funcionvoid
+Rule 132   estatuto -> retorno
+Rule 133   estatuto -> lee
+Rule 134   estatuto -> escritura
+Rule 135   estatuto -> decision
+Rule 136   estatuto -> repeticioncond
+Rule 137   estatuto -> repeticionnocond
+Rule 138   estatuto -> expresion
+Rule 139   empty -> <empty>
+Rule 140   agregavar -> <empty>
 
 Terminals, with rules where they appear
 
 ABRACKET             : 109
 CHAR                 : 15 18 21
 COLON                : 
-COMMA                : 27 32 66 73 76
+COMMA                : 27 32 66 73 76 120 125
 COMMENT              : 
 CTEC                 : 55 99
 CTEF                 : 98
@@ -171,24 +174,24 @@ GTHAN                : 104
 HACER                : 89
 HASTA                : 89
 HAZ                  : 85
-ID                   : 1 9 10 35 36 59 60 62 65 90 91 95 96 119 123
+ID                   : 1 9 10 35 36 59 60 62 65 90 91 95 96 119 120 124
 INT                  : 13 16 19
 LBRACK               : 10 53 54 55
 LBRACKET             : 48 49
 LEE                  : 71
 LEQUAL               : 108
-LPAREN               : 4 35 36 63 65 71 75 79 85 118 119
+LPAREN               : 4 35 36 63 65 71 75 79 85 118 119 120
 LTHAN                : 105
 MIENTRAS             : 85
-MINUS                : 113 121
+MINUS                : 113 122
 NUMBER               : 97
-PLUS                 : 112 120
+PLUS                 : 112 121
 PRINCIPAL            : 4
 PROGRAMA             : 1
 RBRACK               : 10 53 54 55
 RBRACKET             : 49 50
 REGRESA              : 63
-RPAREN               : 4 40 41 63 67 72 77 79 85 118 119
+RPAREN               : 4 40 41 63 67 72 77 79 85 118 119 126
 SEMICOL              : 1 28 61 62 63 67 72 77
 SI                   : 79
 SINO                 : 82
@@ -211,8 +214,8 @@ arreglo2             : 10
 arrn                 : 53 54 55
 arrn2                : 53 54 55
 arrn3                : 53 54 55
-asign                : 60 62 91 95 123
-asignacion           : 127
+asign                : 60 62 91 95 124
+asignacion           : 130
 asignacionb          : 59 60
 asignacioncond       : 89
 asignacioncondb      : 90 91
@@ -220,34 +223,35 @@ aux2                 : 35 36
 bloque               : 4 43 44 81 82 82 85 89
 bloqueb              : 48 51
 contVReset           : 26
-cte                  : 10 120 121 122
-decision             : 132
+cte                  : 10 121 122 123
+decision             : 135
 decisionb            : 79
-empty                : 5 6 11 12 26 29 30 37 38 39 42 45 46 47 52 56 57 58 64 68 69 70 74 78 80 83 84 86 87 88 92 93 101 102 124 125 126
+empty                : 5 6 11 12 26 29 30 37 38 39 42 45 46 47 52 56 57 58 64 68 69 70 74 78 80 83 84 86 87 88 92 93 101 102 127 128 129
 endpro               : 4
-escritura            : 131
+escritura            : 134
 escriturab           : 75 76
 estatuto             : 48 51
 exp                  : 89 94 103 104 104 105 105 106 106 107 107 108 108 109 109 112 113
 expb                 : 111
-expresion            : 53 61 63 65 66 75 76 79 85 118 119 135
+expresion            : 53 61 63 65 66 75 76 79 85 118 119 120 125 126 138
 factor               : 114 115
+factorb              : 120 125
 fnvn1                : 65
 fnvn2                : 65 66
 fnvn3                : 67
 funcion              : 2 43 44
 funcionb             : 35 36
 funcionc             : 40 41
-funcionvoid          : 128
+funcionvoid          : 131
 funcionvoidb         : 65 66
 helper               : 50
 id                   : 27 28 32 34 71 73
-lee                  : 130
+lee                  : 133
 leeb                 : 71 73
 leen                 : 72 73
-llamadafun           : 119
-llamadafun2          : 119
-llamadafun3          : 119
+llamadafun           : 119 120
+llamadafun2          : 119 120 125 126
+llamadafun3          : 119 126
 pn1                  : 79
 pn2                  : 81 82
 pn3                  : 82
@@ -260,12 +264,12 @@ rcn1                 : 85
 rcn2                 : 85
 rcn3                 : 85
 reinicio             : 43 44
-repeticioncond       : 133
-repeticionnocond     : 134
+repeticioncond       : 136
+repeticionnocond     : 137
 repnoconn            : 89
 repnoconn2           : 89
 retn                 : 63
-retorno              : 129
+retorno              : 132
 saveconst            : 97 98
 savestringconst      : 100
 termino              : 110 111 116 117
@@ -348,10 +352,10 @@ state 7
     (35) funcion -> . FUNCION aux2 ID LPAREN funcionb
     (36) funcion -> . FUNCION aux2 tipofun ID agregafunc LPAREN funcionb
     (37) funcion -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
     FUNCION         shift and go to state 12
-    PRINCIPAL       reduce using rule 136 (empty -> .)
+    PRINCIPAL       reduce using rule 139 (empty -> .)
 
     funcion                        shift and go to state 11
     empty                          shift and go to state 13
@@ -372,14 +376,14 @@ state 9
     (14) tipovar -> . FLOAT agregatipo
     (15) tipovar -> . CHAR agregatipo
     (30) contVReset -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
     CHAR            shift and go to state 20
-    FUNCION         reduce using rule 136 (empty -> .)
-    PRINCIPAL       reduce using rule 136 (empty -> .)
-    LBRACKET        reduce using rule 136 (empty -> .)
+    FUNCION         reduce using rule 139 (empty -> .)
+    PRINCIPAL       reduce using rule 139 (empty -> .)
+    LBRACKET        reduce using rule 139 (empty -> .)
 
     varsb                          shift and go to state 14
     tipovar                        shift and go to state 15
@@ -409,13 +413,13 @@ state 12
     (35) funcion -> FUNCION . aux2 ID LPAREN funcionb
     (36) funcion -> FUNCION . aux2 tipofun ID agregafunc LPAREN funcionb
     (38) aux2 -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    ID              reduce using rule 136 (empty -> .)
-    INT             reduce using rule 136 (empty -> .)
-    FLOAT           reduce using rule 136 (empty -> .)
-    CHAR            reduce using rule 136 (empty -> .)
-    VOID            reduce using rule 136 (empty -> .)
+    ID              reduce using rule 139 (empty -> .)
+    INT             reduce using rule 139 (empty -> .)
+    FLOAT           reduce using rule 139 (empty -> .)
+    CHAR            reduce using rule 139 (empty -> .)
+    VOID            reduce using rule 139 (empty -> .)
 
     aux2                           shift and go to state 23
     empty                          shift and go to state 24
@@ -444,12 +448,12 @@ state 15
     (29) varsc -> . empty
     (9) id -> . ID agregavar
     (10) id -> . ID agregavar LBRACK arreglo cte RBRACK arreglo2
-    (136) empty -> .
+    (139) empty -> .
 
     ID              shift and go to state 28
-    FUNCION         reduce using rule 136 (empty -> .)
-    PRINCIPAL       reduce using rule 136 (empty -> .)
-    LBRACKET        reduce using rule 136 (empty -> .)
+    FUNCION         reduce using rule 139 (empty -> .)
+    PRINCIPAL       reduce using rule 139 (empty -> .)
+    LBRACKET        reduce using rule 139 (empty -> .)
 
     varsc                          shift and go to state 25
     id                             shift and go to state 26
@@ -458,11 +462,11 @@ state 15
 state 16
 
     (26) varsb -> contVReset . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    FUNCION         reduce using rule 136 (empty -> .)
-    PRINCIPAL       reduce using rule 136 (empty -> .)
-    LBRACKET        reduce using rule 136 (empty -> .)
+    FUNCION         reduce using rule 139 (empty -> .)
+    PRINCIPAL       reduce using rule 139 (empty -> .)
+    LBRACKET        reduce using rule 139 (empty -> .)
 
     empty                          shift and go to state 29
 
@@ -584,12 +588,12 @@ state 28
 
     (9) id -> ID . agregavar
     (10) id -> ID . agregavar LBRACK arreglo cte RBRACK arreglo2
-    (137) agregavar -> .
+    (140) agregavar -> .
 
-    LBRACK          reduce using rule 137 (agregavar -> .)
-    COMMA           reduce using rule 137 (agregavar -> .)
-    SEMICOL         reduce using rule 137 (agregavar -> .)
-    RPAREN          reduce using rule 137 (agregavar -> .)
+    LBRACK          reduce using rule 140 (agregavar -> .)
+    COMMA           reduce using rule 140 (agregavar -> .)
+    SEMICOL         reduce using rule 140 (agregavar -> .)
+    RPAREN          reduce using rule 140 (agregavar -> .)
 
     agregavar                      shift and go to state 42
 
@@ -689,12 +693,12 @@ state 40
     (29) varsc -> . empty
     (9) id -> . ID agregavar
     (10) id -> . ID agregavar LBRACK arreglo cte RBRACK arreglo2
-    (136) empty -> .
+    (139) empty -> .
 
     ID              shift and go to state 28
-    FUNCION         reduce using rule 136 (empty -> .)
-    PRINCIPAL       reduce using rule 136 (empty -> .)
-    LBRACKET        reduce using rule 136 (empty -> .)
+    FUNCION         reduce using rule 139 (empty -> .)
+    PRINCIPAL       reduce using rule 139 (empty -> .)
+    LBRACKET        reduce using rule 139 (empty -> .)
 
     id                             shift and go to state 26
     varsc                          shift and go to state 46
@@ -709,14 +713,14 @@ state 41
     (14) tipovar -> . FLOAT agregatipo
     (15) tipovar -> . CHAR agregatipo
     (30) contVReset -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
     CHAR            shift and go to state 20
-    FUNCION         reduce using rule 136 (empty -> .)
-    PRINCIPAL       reduce using rule 136 (empty -> .)
-    LBRACKET        reduce using rule 136 (empty -> .)
+    FUNCION         reduce using rule 139 (empty -> .)
+    PRINCIPAL       reduce using rule 139 (empty -> .)
+    LBRACKET        reduce using rule 139 (empty -> .)
 
     varsb                          shift and go to state 47
     tipovar                        shift and go to state 15
@@ -738,9 +742,9 @@ state 43
 
     (4) programac -> PRINCIPAL agregarfuncmain2 LPAREN RPAREN . prinn bloque endpro
     (6) prinn -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    LBRACKET        reduce using rule 136 (empty -> .)
+    LBRACKET        reduce using rule 139 (empty -> .)
 
     prinn                          shift and go to state 49
     empty                          shift and go to state 50
@@ -768,9 +772,9 @@ state 45
 
     (36) funcion -> FUNCION aux2 tipofun ID . agregafunc LPAREN funcionb
     (39) agregafunc -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    LPAREN          reduce using rule 136 (empty -> .)
+    LPAREN          reduce using rule 139 (empty -> .)
 
     agregafunc                     shift and go to state 58
     empty                          shift and go to state 59
@@ -797,13 +801,13 @@ state 48
 
     (10) id -> ID agregavar LBRACK . arreglo cte RBRACK arreglo2
     (11) arreglo -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    ID              reduce using rule 136 (empty -> .)
-    NUMBER          reduce using rule 136 (empty -> .)
-    CTEF            reduce using rule 136 (empty -> .)
-    CTEC            reduce using rule 136 (empty -> .)
-    STRING          reduce using rule 136 (empty -> .)
+    ID              reduce using rule 139 (empty -> .)
+    NUMBER          reduce using rule 139 (empty -> .)
+    CTEF            reduce using rule 139 (empty -> .)
+    CTEC            reduce using rule 139 (empty -> .)
+    STRING          reduce using rule 139 (empty -> .)
 
     arreglo                        shift and go to state 60
     empty                          shift and go to state 61
@@ -836,11 +840,11 @@ state 52
 
     (40) funcionb -> RPAREN . testeru funcionc
     (42) testeru -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    VAR             reduce using rule 136 (empty -> .)
-    LBRACKET        reduce using rule 136 (empty -> .)
-    PRINCIPAL       reduce using rule 136 (empty -> .)
+    VAR             reduce using rule 139 (empty -> .)
+    LBRACKET        reduce using rule 139 (empty -> .)
+    PRINCIPAL       reduce using rule 139 (empty -> .)
 
     testeru                        shift and go to state 64
     empty                          shift and go to state 65
@@ -957,9 +961,9 @@ state 62
 
     (4) programac -> PRINCIPAL agregarfuncmain2 LPAREN RPAREN prinn bloque . endpro
     (5) endpro -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    $end            reduce using rule 136 (empty -> .)
+    $end            reduce using rule 139 (empty -> .)
 
     endpro                         shift and go to state 80
     empty                          shift and go to state 81
@@ -968,15 +972,15 @@ state 63
 
     (48) bloque -> LBRACKET . estatuto bloqueb
     (49) bloque -> LBRACKET . RBRACKET
-    (127) estatuto -> . asignacion
-    (128) estatuto -> . funcionvoid
-    (129) estatuto -> . retorno
-    (130) estatuto -> . lee
-    (131) estatuto -> . escritura
-    (132) estatuto -> . decision
-    (133) estatuto -> . repeticioncond
-    (134) estatuto -> . repeticionnocond
-    (135) estatuto -> . expresion
+    (130) estatuto -> . asignacion
+    (131) estatuto -> . funcionvoid
+    (132) estatuto -> . retorno
+    (133) estatuto -> . lee
+    (134) estatuto -> . escritura
+    (135) estatuto -> . decision
+    (136) estatuto -> . repeticioncond
+    (137) estatuto -> . repeticionnocond
+    (138) estatuto -> . expresion
     (59) asignacion -> . ID EQUAL asignacionb
     (60) asignacion -> . ID asign EQUAL asignacionb
     (65) funcionvoid -> . ID LPAREN fnvn1 expresion fnvn2 funcionvoidb
@@ -999,10 +1003,11 @@ state 63
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -1048,11 +1053,11 @@ state 64
     (45) funcionc -> . empty
     (24) vars -> . VAR varsb
     (46) agregacont -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
     VAR             shift and go to state 9
-    PRINCIPAL       reduce using rule 136 (empty -> .)
-    LBRACKET        reduce using rule 136 (empty -> .)
+    PRINCIPAL       reduce using rule 139 (empty -> .)
+    LBRACKET        reduce using rule 139 (empty -> .)
 
     funcionc                       shift and go to state 107
     vars                           shift and go to state 108
@@ -1072,11 +1077,11 @@ state 66
 
     (41) funcionb -> varsfunc RPAREN . testeru funcionc
     (42) testeru -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    VAR             reduce using rule 136 (empty -> .)
-    LBRACKET        reduce using rule 136 (empty -> .)
-    PRINCIPAL       reduce using rule 136 (empty -> .)
+    VAR             reduce using rule 139 (empty -> .)
+    LBRACKET        reduce using rule 139 (empty -> .)
+    PRINCIPAL       reduce using rule 139 (empty -> .)
 
     testeru                        shift and go to state 111
     empty                          shift and go to state 65
@@ -1199,37 +1204,37 @@ state 76
 
     (97) cte -> NUMBER . saveconst
     (101) saveconst -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    RBRACK          reduce using rule 136 (empty -> .)
-    TIMES           reduce using rule 136 (empty -> .)
-    DIVIDE          reduce using rule 136 (empty -> .)
-    PLUS            reduce using rule 136 (empty -> .)
-    MINUS           reduce using rule 136 (empty -> .)
-    GTHAN           reduce using rule 136 (empty -> .)
-    LTHAN           reduce using rule 136 (empty -> .)
-    EQLOP           reduce using rule 136 (empty -> .)
-    GEQUAL          reduce using rule 136 (empty -> .)
-    LEQUAL          reduce using rule 136 (empty -> .)
-    ABRACKET        reduce using rule 136 (empty -> .)
-    RBRACKET        reduce using rule 136 (empty -> .)
-    ID              reduce using rule 136 (empty -> .)
-    REGRESA         reduce using rule 136 (empty -> .)
-    LEE             reduce using rule 136 (empty -> .)
-    ESCRIBE         reduce using rule 136 (empty -> .)
-    SI              reduce using rule 136 (empty -> .)
-    MIENTRAS        reduce using rule 136 (empty -> .)
-    DESDE           reduce using rule 136 (empty -> .)
-    LPAREN          reduce using rule 136 (empty -> .)
-    NUMBER          reduce using rule 136 (empty -> .)
-    CTEF            reduce using rule 136 (empty -> .)
-    CTEC            reduce using rule 136 (empty -> .)
-    STRING          reduce using rule 136 (empty -> .)
-    RPAREN          reduce using rule 136 (empty -> .)
-    SEMICOL         reduce using rule 136 (empty -> .)
-    COMMA           reduce using rule 136 (empty -> .)
-    HACER           reduce using rule 136 (empty -> .)
-    HASTA           reduce using rule 136 (empty -> .)
+    RBRACK          reduce using rule 139 (empty -> .)
+    TIMES           reduce using rule 139 (empty -> .)
+    DIVIDE          reduce using rule 139 (empty -> .)
+    PLUS            reduce using rule 139 (empty -> .)
+    MINUS           reduce using rule 139 (empty -> .)
+    GTHAN           reduce using rule 139 (empty -> .)
+    LTHAN           reduce using rule 139 (empty -> .)
+    EQLOP           reduce using rule 139 (empty -> .)
+    GEQUAL          reduce using rule 139 (empty -> .)
+    LEQUAL          reduce using rule 139 (empty -> .)
+    ABRACKET        reduce using rule 139 (empty -> .)
+    RBRACKET        reduce using rule 139 (empty -> .)
+    ID              reduce using rule 139 (empty -> .)
+    REGRESA         reduce using rule 139 (empty -> .)
+    LEE             reduce using rule 139 (empty -> .)
+    ESCRIBE         reduce using rule 139 (empty -> .)
+    SI              reduce using rule 139 (empty -> .)
+    MIENTRAS        reduce using rule 139 (empty -> .)
+    DESDE           reduce using rule 139 (empty -> .)
+    LPAREN          reduce using rule 139 (empty -> .)
+    NUMBER          reduce using rule 139 (empty -> .)
+    CTEF            reduce using rule 139 (empty -> .)
+    CTEC            reduce using rule 139 (empty -> .)
+    STRING          reduce using rule 139 (empty -> .)
+    RPAREN          reduce using rule 139 (empty -> .)
+    SEMICOL         reduce using rule 139 (empty -> .)
+    COMMA           reduce using rule 139 (empty -> .)
+    HACER           reduce using rule 139 (empty -> .)
+    HASTA           reduce using rule 139 (empty -> .)
 
     saveconst                      shift and go to state 115
     empty                          shift and go to state 116
@@ -1238,37 +1243,37 @@ state 77
 
     (98) cte -> CTEF . saveconst
     (101) saveconst -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    RBRACK          reduce using rule 136 (empty -> .)
-    TIMES           reduce using rule 136 (empty -> .)
-    DIVIDE          reduce using rule 136 (empty -> .)
-    PLUS            reduce using rule 136 (empty -> .)
-    MINUS           reduce using rule 136 (empty -> .)
-    GTHAN           reduce using rule 136 (empty -> .)
-    LTHAN           reduce using rule 136 (empty -> .)
-    EQLOP           reduce using rule 136 (empty -> .)
-    GEQUAL          reduce using rule 136 (empty -> .)
-    LEQUAL          reduce using rule 136 (empty -> .)
-    ABRACKET        reduce using rule 136 (empty -> .)
-    RBRACKET        reduce using rule 136 (empty -> .)
-    ID              reduce using rule 136 (empty -> .)
-    REGRESA         reduce using rule 136 (empty -> .)
-    LEE             reduce using rule 136 (empty -> .)
-    ESCRIBE         reduce using rule 136 (empty -> .)
-    SI              reduce using rule 136 (empty -> .)
-    MIENTRAS        reduce using rule 136 (empty -> .)
-    DESDE           reduce using rule 136 (empty -> .)
-    LPAREN          reduce using rule 136 (empty -> .)
-    NUMBER          reduce using rule 136 (empty -> .)
-    CTEF            reduce using rule 136 (empty -> .)
-    CTEC            reduce using rule 136 (empty -> .)
-    STRING          reduce using rule 136 (empty -> .)
-    RPAREN          reduce using rule 136 (empty -> .)
-    SEMICOL         reduce using rule 136 (empty -> .)
-    COMMA           reduce using rule 136 (empty -> .)
-    HACER           reduce using rule 136 (empty -> .)
-    HASTA           reduce using rule 136 (empty -> .)
+    RBRACK          reduce using rule 139 (empty -> .)
+    TIMES           reduce using rule 139 (empty -> .)
+    DIVIDE          reduce using rule 139 (empty -> .)
+    PLUS            reduce using rule 139 (empty -> .)
+    MINUS           reduce using rule 139 (empty -> .)
+    GTHAN           reduce using rule 139 (empty -> .)
+    LTHAN           reduce using rule 139 (empty -> .)
+    EQLOP           reduce using rule 139 (empty -> .)
+    GEQUAL          reduce using rule 139 (empty -> .)
+    LEQUAL          reduce using rule 139 (empty -> .)
+    ABRACKET        reduce using rule 139 (empty -> .)
+    RBRACKET        reduce using rule 139 (empty -> .)
+    ID              reduce using rule 139 (empty -> .)
+    REGRESA         reduce using rule 139 (empty -> .)
+    LEE             reduce using rule 139 (empty -> .)
+    ESCRIBE         reduce using rule 139 (empty -> .)
+    SI              reduce using rule 139 (empty -> .)
+    MIENTRAS        reduce using rule 139 (empty -> .)
+    DESDE           reduce using rule 139 (empty -> .)
+    LPAREN          reduce using rule 139 (empty -> .)
+    NUMBER          reduce using rule 139 (empty -> .)
+    CTEF            reduce using rule 139 (empty -> .)
+    CTEC            reduce using rule 139 (empty -> .)
+    STRING          reduce using rule 139 (empty -> .)
+    RPAREN          reduce using rule 139 (empty -> .)
+    SEMICOL         reduce using rule 139 (empty -> .)
+    COMMA           reduce using rule 139 (empty -> .)
+    HACER           reduce using rule 139 (empty -> .)
+    HASTA           reduce using rule 139 (empty -> .)
 
     saveconst                      shift and go to state 117
     empty                          shift and go to state 116
@@ -1312,37 +1317,37 @@ state 79
 
     (100) cte -> STRING . savestringconst
     (102) savestringconst -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    RBRACK          reduce using rule 136 (empty -> .)
-    TIMES           reduce using rule 136 (empty -> .)
-    DIVIDE          reduce using rule 136 (empty -> .)
-    PLUS            reduce using rule 136 (empty -> .)
-    MINUS           reduce using rule 136 (empty -> .)
-    GTHAN           reduce using rule 136 (empty -> .)
-    LTHAN           reduce using rule 136 (empty -> .)
-    EQLOP           reduce using rule 136 (empty -> .)
-    GEQUAL          reduce using rule 136 (empty -> .)
-    LEQUAL          reduce using rule 136 (empty -> .)
-    ABRACKET        reduce using rule 136 (empty -> .)
-    RBRACKET        reduce using rule 136 (empty -> .)
-    ID              reduce using rule 136 (empty -> .)
-    REGRESA         reduce using rule 136 (empty -> .)
-    LEE             reduce using rule 136 (empty -> .)
-    ESCRIBE         reduce using rule 136 (empty -> .)
-    SI              reduce using rule 136 (empty -> .)
-    MIENTRAS        reduce using rule 136 (empty -> .)
-    DESDE           reduce using rule 136 (empty -> .)
-    LPAREN          reduce using rule 136 (empty -> .)
-    NUMBER          reduce using rule 136 (empty -> .)
-    CTEF            reduce using rule 136 (empty -> .)
-    CTEC            reduce using rule 136 (empty -> .)
-    STRING          reduce using rule 136 (empty -> .)
-    RPAREN          reduce using rule 136 (empty -> .)
-    SEMICOL         reduce using rule 136 (empty -> .)
-    COMMA           reduce using rule 136 (empty -> .)
-    HACER           reduce using rule 136 (empty -> .)
-    HASTA           reduce using rule 136 (empty -> .)
+    RBRACK          reduce using rule 139 (empty -> .)
+    TIMES           reduce using rule 139 (empty -> .)
+    DIVIDE          reduce using rule 139 (empty -> .)
+    PLUS            reduce using rule 139 (empty -> .)
+    MINUS           reduce using rule 139 (empty -> .)
+    GTHAN           reduce using rule 139 (empty -> .)
+    LTHAN           reduce using rule 139 (empty -> .)
+    EQLOP           reduce using rule 139 (empty -> .)
+    GEQUAL          reduce using rule 139 (empty -> .)
+    LEQUAL          reduce using rule 139 (empty -> .)
+    ABRACKET        reduce using rule 139 (empty -> .)
+    RBRACKET        reduce using rule 139 (empty -> .)
+    ID              reduce using rule 139 (empty -> .)
+    REGRESA         reduce using rule 139 (empty -> .)
+    LEE             reduce using rule 139 (empty -> .)
+    ESCRIBE         reduce using rule 139 (empty -> .)
+    SI              reduce using rule 139 (empty -> .)
+    MIENTRAS        reduce using rule 139 (empty -> .)
+    DESDE           reduce using rule 139 (empty -> .)
+    LPAREN          reduce using rule 139 (empty -> .)
+    NUMBER          reduce using rule 139 (empty -> .)
+    CTEF            reduce using rule 139 (empty -> .)
+    CTEC            reduce using rule 139 (empty -> .)
+    STRING          reduce using rule 139 (empty -> .)
+    RPAREN          reduce using rule 139 (empty -> .)
+    SEMICOL         reduce using rule 139 (empty -> .)
+    COMMA           reduce using rule 139 (empty -> .)
+    HACER           reduce using rule 139 (empty -> .)
+    HASTA           reduce using rule 139 (empty -> .)
 
     savestringconst                shift and go to state 118
     empty                          shift and go to state 119
@@ -1366,15 +1371,15 @@ state 82
     (48) bloque -> LBRACKET estatuto . bloqueb
     (50) bloqueb -> . RBRACKET helper
     (51) bloqueb -> . estatuto bloqueb
-    (127) estatuto -> . asignacion
-    (128) estatuto -> . funcionvoid
-    (129) estatuto -> . retorno
-    (130) estatuto -> . lee
-    (131) estatuto -> . escritura
-    (132) estatuto -> . decision
-    (133) estatuto -> . repeticioncond
-    (134) estatuto -> . repeticionnocond
-    (135) estatuto -> . expresion
+    (130) estatuto -> . asignacion
+    (131) estatuto -> . funcionvoid
+    (132) estatuto -> . retorno
+    (133) estatuto -> . lee
+    (134) estatuto -> . escritura
+    (135) estatuto -> . decision
+    (136) estatuto -> . repeticioncond
+    (137) estatuto -> . repeticionnocond
+    (138) estatuto -> . expresion
     (59) asignacion -> . ID EQUAL asignacionb
     (60) asignacion -> . ID asign EQUAL asignacionb
     (65) funcionvoid -> . ID LPAREN fnvn1 expresion fnvn2 funcionvoidb
@@ -1397,10 +1402,11 @@ state 82
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -1466,191 +1472,191 @@ state 83
 
 state 84
 
-    (127) estatuto -> asignacion .
+    (130) estatuto -> asignacion .
 
-    RBRACKET        reduce using rule 127 (estatuto -> asignacion .)
-    ID              reduce using rule 127 (estatuto -> asignacion .)
-    REGRESA         reduce using rule 127 (estatuto -> asignacion .)
-    LEE             reduce using rule 127 (estatuto -> asignacion .)
-    ESCRIBE         reduce using rule 127 (estatuto -> asignacion .)
-    SI              reduce using rule 127 (estatuto -> asignacion .)
-    MIENTRAS        reduce using rule 127 (estatuto -> asignacion .)
-    DESDE           reduce using rule 127 (estatuto -> asignacion .)
-    LPAREN          reduce using rule 127 (estatuto -> asignacion .)
-    PLUS            reduce using rule 127 (estatuto -> asignacion .)
-    MINUS           reduce using rule 127 (estatuto -> asignacion .)
-    NUMBER          reduce using rule 127 (estatuto -> asignacion .)
-    CTEF            reduce using rule 127 (estatuto -> asignacion .)
-    CTEC            reduce using rule 127 (estatuto -> asignacion .)
-    STRING          reduce using rule 127 (estatuto -> asignacion .)
+    RBRACKET        reduce using rule 130 (estatuto -> asignacion .)
+    ID              reduce using rule 130 (estatuto -> asignacion .)
+    REGRESA         reduce using rule 130 (estatuto -> asignacion .)
+    LEE             reduce using rule 130 (estatuto -> asignacion .)
+    ESCRIBE         reduce using rule 130 (estatuto -> asignacion .)
+    SI              reduce using rule 130 (estatuto -> asignacion .)
+    MIENTRAS        reduce using rule 130 (estatuto -> asignacion .)
+    DESDE           reduce using rule 130 (estatuto -> asignacion .)
+    LPAREN          reduce using rule 130 (estatuto -> asignacion .)
+    PLUS            reduce using rule 130 (estatuto -> asignacion .)
+    MINUS           reduce using rule 130 (estatuto -> asignacion .)
+    NUMBER          reduce using rule 130 (estatuto -> asignacion .)
+    CTEF            reduce using rule 130 (estatuto -> asignacion .)
+    CTEC            reduce using rule 130 (estatuto -> asignacion .)
+    STRING          reduce using rule 130 (estatuto -> asignacion .)
 
 
 state 85
 
-    (128) estatuto -> funcionvoid .
+    (131) estatuto -> funcionvoid .
 
-    RBRACKET        reduce using rule 128 (estatuto -> funcionvoid .)
-    ID              reduce using rule 128 (estatuto -> funcionvoid .)
-    REGRESA         reduce using rule 128 (estatuto -> funcionvoid .)
-    LEE             reduce using rule 128 (estatuto -> funcionvoid .)
-    ESCRIBE         reduce using rule 128 (estatuto -> funcionvoid .)
-    SI              reduce using rule 128 (estatuto -> funcionvoid .)
-    MIENTRAS        reduce using rule 128 (estatuto -> funcionvoid .)
-    DESDE           reduce using rule 128 (estatuto -> funcionvoid .)
-    LPAREN          reduce using rule 128 (estatuto -> funcionvoid .)
-    PLUS            reduce using rule 128 (estatuto -> funcionvoid .)
-    MINUS           reduce using rule 128 (estatuto -> funcionvoid .)
-    NUMBER          reduce using rule 128 (estatuto -> funcionvoid .)
-    CTEF            reduce using rule 128 (estatuto -> funcionvoid .)
-    CTEC            reduce using rule 128 (estatuto -> funcionvoid .)
-    STRING          reduce using rule 128 (estatuto -> funcionvoid .)
+    RBRACKET        reduce using rule 131 (estatuto -> funcionvoid .)
+    ID              reduce using rule 131 (estatuto -> funcionvoid .)
+    REGRESA         reduce using rule 131 (estatuto -> funcionvoid .)
+    LEE             reduce using rule 131 (estatuto -> funcionvoid .)
+    ESCRIBE         reduce using rule 131 (estatuto -> funcionvoid .)
+    SI              reduce using rule 131 (estatuto -> funcionvoid .)
+    MIENTRAS        reduce using rule 131 (estatuto -> funcionvoid .)
+    DESDE           reduce using rule 131 (estatuto -> funcionvoid .)
+    LPAREN          reduce using rule 131 (estatuto -> funcionvoid .)
+    PLUS            reduce using rule 131 (estatuto -> funcionvoid .)
+    MINUS           reduce using rule 131 (estatuto -> funcionvoid .)
+    NUMBER          reduce using rule 131 (estatuto -> funcionvoid .)
+    CTEF            reduce using rule 131 (estatuto -> funcionvoid .)
+    CTEC            reduce using rule 131 (estatuto -> funcionvoid .)
+    STRING          reduce using rule 131 (estatuto -> funcionvoid .)
 
 
 state 86
 
-    (129) estatuto -> retorno .
+    (132) estatuto -> retorno .
 
-    RBRACKET        reduce using rule 129 (estatuto -> retorno .)
-    ID              reduce using rule 129 (estatuto -> retorno .)
-    REGRESA         reduce using rule 129 (estatuto -> retorno .)
-    LEE             reduce using rule 129 (estatuto -> retorno .)
-    ESCRIBE         reduce using rule 129 (estatuto -> retorno .)
-    SI              reduce using rule 129 (estatuto -> retorno .)
-    MIENTRAS        reduce using rule 129 (estatuto -> retorno .)
-    DESDE           reduce using rule 129 (estatuto -> retorno .)
-    LPAREN          reduce using rule 129 (estatuto -> retorno .)
-    PLUS            reduce using rule 129 (estatuto -> retorno .)
-    MINUS           reduce using rule 129 (estatuto -> retorno .)
-    NUMBER          reduce using rule 129 (estatuto -> retorno .)
-    CTEF            reduce using rule 129 (estatuto -> retorno .)
-    CTEC            reduce using rule 129 (estatuto -> retorno .)
-    STRING          reduce using rule 129 (estatuto -> retorno .)
+    RBRACKET        reduce using rule 132 (estatuto -> retorno .)
+    ID              reduce using rule 132 (estatuto -> retorno .)
+    REGRESA         reduce using rule 132 (estatuto -> retorno .)
+    LEE             reduce using rule 132 (estatuto -> retorno .)
+    ESCRIBE         reduce using rule 132 (estatuto -> retorno .)
+    SI              reduce using rule 132 (estatuto -> retorno .)
+    MIENTRAS        reduce using rule 132 (estatuto -> retorno .)
+    DESDE           reduce using rule 132 (estatuto -> retorno .)
+    LPAREN          reduce using rule 132 (estatuto -> retorno .)
+    PLUS            reduce using rule 132 (estatuto -> retorno .)
+    MINUS           reduce using rule 132 (estatuto -> retorno .)
+    NUMBER          reduce using rule 132 (estatuto -> retorno .)
+    CTEF            reduce using rule 132 (estatuto -> retorno .)
+    CTEC            reduce using rule 132 (estatuto -> retorno .)
+    STRING          reduce using rule 132 (estatuto -> retorno .)
 
 
 state 87
 
-    (130) estatuto -> lee .
+    (133) estatuto -> lee .
 
-    RBRACKET        reduce using rule 130 (estatuto -> lee .)
-    ID              reduce using rule 130 (estatuto -> lee .)
-    REGRESA         reduce using rule 130 (estatuto -> lee .)
-    LEE             reduce using rule 130 (estatuto -> lee .)
-    ESCRIBE         reduce using rule 130 (estatuto -> lee .)
-    SI              reduce using rule 130 (estatuto -> lee .)
-    MIENTRAS        reduce using rule 130 (estatuto -> lee .)
-    DESDE           reduce using rule 130 (estatuto -> lee .)
-    LPAREN          reduce using rule 130 (estatuto -> lee .)
-    PLUS            reduce using rule 130 (estatuto -> lee .)
-    MINUS           reduce using rule 130 (estatuto -> lee .)
-    NUMBER          reduce using rule 130 (estatuto -> lee .)
-    CTEF            reduce using rule 130 (estatuto -> lee .)
-    CTEC            reduce using rule 130 (estatuto -> lee .)
-    STRING          reduce using rule 130 (estatuto -> lee .)
+    RBRACKET        reduce using rule 133 (estatuto -> lee .)
+    ID              reduce using rule 133 (estatuto -> lee .)
+    REGRESA         reduce using rule 133 (estatuto -> lee .)
+    LEE             reduce using rule 133 (estatuto -> lee .)
+    ESCRIBE         reduce using rule 133 (estatuto -> lee .)
+    SI              reduce using rule 133 (estatuto -> lee .)
+    MIENTRAS        reduce using rule 133 (estatuto -> lee .)
+    DESDE           reduce using rule 133 (estatuto -> lee .)
+    LPAREN          reduce using rule 133 (estatuto -> lee .)
+    PLUS            reduce using rule 133 (estatuto -> lee .)
+    MINUS           reduce using rule 133 (estatuto -> lee .)
+    NUMBER          reduce using rule 133 (estatuto -> lee .)
+    CTEF            reduce using rule 133 (estatuto -> lee .)
+    CTEC            reduce using rule 133 (estatuto -> lee .)
+    STRING          reduce using rule 133 (estatuto -> lee .)
 
 
 state 88
 
-    (131) estatuto -> escritura .
+    (134) estatuto -> escritura .
 
-    RBRACKET        reduce using rule 131 (estatuto -> escritura .)
-    ID              reduce using rule 131 (estatuto -> escritura .)
-    REGRESA         reduce using rule 131 (estatuto -> escritura .)
-    LEE             reduce using rule 131 (estatuto -> escritura .)
-    ESCRIBE         reduce using rule 131 (estatuto -> escritura .)
-    SI              reduce using rule 131 (estatuto -> escritura .)
-    MIENTRAS        reduce using rule 131 (estatuto -> escritura .)
-    DESDE           reduce using rule 131 (estatuto -> escritura .)
-    LPAREN          reduce using rule 131 (estatuto -> escritura .)
-    PLUS            reduce using rule 131 (estatuto -> escritura .)
-    MINUS           reduce using rule 131 (estatuto -> escritura .)
-    NUMBER          reduce using rule 131 (estatuto -> escritura .)
-    CTEF            reduce using rule 131 (estatuto -> escritura .)
-    CTEC            reduce using rule 131 (estatuto -> escritura .)
-    STRING          reduce using rule 131 (estatuto -> escritura .)
+    RBRACKET        reduce using rule 134 (estatuto -> escritura .)
+    ID              reduce using rule 134 (estatuto -> escritura .)
+    REGRESA         reduce using rule 134 (estatuto -> escritura .)
+    LEE             reduce using rule 134 (estatuto -> escritura .)
+    ESCRIBE         reduce using rule 134 (estatuto -> escritura .)
+    SI              reduce using rule 134 (estatuto -> escritura .)
+    MIENTRAS        reduce using rule 134 (estatuto -> escritura .)
+    DESDE           reduce using rule 134 (estatuto -> escritura .)
+    LPAREN          reduce using rule 134 (estatuto -> escritura .)
+    PLUS            reduce using rule 134 (estatuto -> escritura .)
+    MINUS           reduce using rule 134 (estatuto -> escritura .)
+    NUMBER          reduce using rule 134 (estatuto -> escritura .)
+    CTEF            reduce using rule 134 (estatuto -> escritura .)
+    CTEC            reduce using rule 134 (estatuto -> escritura .)
+    STRING          reduce using rule 134 (estatuto -> escritura .)
 
 
 state 89
 
-    (132) estatuto -> decision .
+    (135) estatuto -> decision .
 
-    RBRACKET        reduce using rule 132 (estatuto -> decision .)
-    ID              reduce using rule 132 (estatuto -> decision .)
-    REGRESA         reduce using rule 132 (estatuto -> decision .)
-    LEE             reduce using rule 132 (estatuto -> decision .)
-    ESCRIBE         reduce using rule 132 (estatuto -> decision .)
-    SI              reduce using rule 132 (estatuto -> decision .)
-    MIENTRAS        reduce using rule 132 (estatuto -> decision .)
-    DESDE           reduce using rule 132 (estatuto -> decision .)
-    LPAREN          reduce using rule 132 (estatuto -> decision .)
-    PLUS            reduce using rule 132 (estatuto -> decision .)
-    MINUS           reduce using rule 132 (estatuto -> decision .)
-    NUMBER          reduce using rule 132 (estatuto -> decision .)
-    CTEF            reduce using rule 132 (estatuto -> decision .)
-    CTEC            reduce using rule 132 (estatuto -> decision .)
-    STRING          reduce using rule 132 (estatuto -> decision .)
+    RBRACKET        reduce using rule 135 (estatuto -> decision .)
+    ID              reduce using rule 135 (estatuto -> decision .)
+    REGRESA         reduce using rule 135 (estatuto -> decision .)
+    LEE             reduce using rule 135 (estatuto -> decision .)
+    ESCRIBE         reduce using rule 135 (estatuto -> decision .)
+    SI              reduce using rule 135 (estatuto -> decision .)
+    MIENTRAS        reduce using rule 135 (estatuto -> decision .)
+    DESDE           reduce using rule 135 (estatuto -> decision .)
+    LPAREN          reduce using rule 135 (estatuto -> decision .)
+    PLUS            reduce using rule 135 (estatuto -> decision .)
+    MINUS           reduce using rule 135 (estatuto -> decision .)
+    NUMBER          reduce using rule 135 (estatuto -> decision .)
+    CTEF            reduce using rule 135 (estatuto -> decision .)
+    CTEC            reduce using rule 135 (estatuto -> decision .)
+    STRING          reduce using rule 135 (estatuto -> decision .)
 
 
 state 90
 
-    (133) estatuto -> repeticioncond .
+    (136) estatuto -> repeticioncond .
 
-    RBRACKET        reduce using rule 133 (estatuto -> repeticioncond .)
-    ID              reduce using rule 133 (estatuto -> repeticioncond .)
-    REGRESA         reduce using rule 133 (estatuto -> repeticioncond .)
-    LEE             reduce using rule 133 (estatuto -> repeticioncond .)
-    ESCRIBE         reduce using rule 133 (estatuto -> repeticioncond .)
-    SI              reduce using rule 133 (estatuto -> repeticioncond .)
-    MIENTRAS        reduce using rule 133 (estatuto -> repeticioncond .)
-    DESDE           reduce using rule 133 (estatuto -> repeticioncond .)
-    LPAREN          reduce using rule 133 (estatuto -> repeticioncond .)
-    PLUS            reduce using rule 133 (estatuto -> repeticioncond .)
-    MINUS           reduce using rule 133 (estatuto -> repeticioncond .)
-    NUMBER          reduce using rule 133 (estatuto -> repeticioncond .)
-    CTEF            reduce using rule 133 (estatuto -> repeticioncond .)
-    CTEC            reduce using rule 133 (estatuto -> repeticioncond .)
-    STRING          reduce using rule 133 (estatuto -> repeticioncond .)
+    RBRACKET        reduce using rule 136 (estatuto -> repeticioncond .)
+    ID              reduce using rule 136 (estatuto -> repeticioncond .)
+    REGRESA         reduce using rule 136 (estatuto -> repeticioncond .)
+    LEE             reduce using rule 136 (estatuto -> repeticioncond .)
+    ESCRIBE         reduce using rule 136 (estatuto -> repeticioncond .)
+    SI              reduce using rule 136 (estatuto -> repeticioncond .)
+    MIENTRAS        reduce using rule 136 (estatuto -> repeticioncond .)
+    DESDE           reduce using rule 136 (estatuto -> repeticioncond .)
+    LPAREN          reduce using rule 136 (estatuto -> repeticioncond .)
+    PLUS            reduce using rule 136 (estatuto -> repeticioncond .)
+    MINUS           reduce using rule 136 (estatuto -> repeticioncond .)
+    NUMBER          reduce using rule 136 (estatuto -> repeticioncond .)
+    CTEF            reduce using rule 136 (estatuto -> repeticioncond .)
+    CTEC            reduce using rule 136 (estatuto -> repeticioncond .)
+    STRING          reduce using rule 136 (estatuto -> repeticioncond .)
 
 
 state 91
 
-    (134) estatuto -> repeticionnocond .
+    (137) estatuto -> repeticionnocond .
 
-    RBRACKET        reduce using rule 134 (estatuto -> repeticionnocond .)
-    ID              reduce using rule 134 (estatuto -> repeticionnocond .)
-    REGRESA         reduce using rule 134 (estatuto -> repeticionnocond .)
-    LEE             reduce using rule 134 (estatuto -> repeticionnocond .)
-    ESCRIBE         reduce using rule 134 (estatuto -> repeticionnocond .)
-    SI              reduce using rule 134 (estatuto -> repeticionnocond .)
-    MIENTRAS        reduce using rule 134 (estatuto -> repeticionnocond .)
-    DESDE           reduce using rule 134 (estatuto -> repeticionnocond .)
-    LPAREN          reduce using rule 134 (estatuto -> repeticionnocond .)
-    PLUS            reduce using rule 134 (estatuto -> repeticionnocond .)
-    MINUS           reduce using rule 134 (estatuto -> repeticionnocond .)
-    NUMBER          reduce using rule 134 (estatuto -> repeticionnocond .)
-    CTEF            reduce using rule 134 (estatuto -> repeticionnocond .)
-    CTEC            reduce using rule 134 (estatuto -> repeticionnocond .)
-    STRING          reduce using rule 134 (estatuto -> repeticionnocond .)
+    RBRACKET        reduce using rule 137 (estatuto -> repeticionnocond .)
+    ID              reduce using rule 137 (estatuto -> repeticionnocond .)
+    REGRESA         reduce using rule 137 (estatuto -> repeticionnocond .)
+    LEE             reduce using rule 137 (estatuto -> repeticionnocond .)
+    ESCRIBE         reduce using rule 137 (estatuto -> repeticionnocond .)
+    SI              reduce using rule 137 (estatuto -> repeticionnocond .)
+    MIENTRAS        reduce using rule 137 (estatuto -> repeticionnocond .)
+    DESDE           reduce using rule 137 (estatuto -> repeticionnocond .)
+    LPAREN          reduce using rule 137 (estatuto -> repeticionnocond .)
+    PLUS            reduce using rule 137 (estatuto -> repeticionnocond .)
+    MINUS           reduce using rule 137 (estatuto -> repeticionnocond .)
+    NUMBER          reduce using rule 137 (estatuto -> repeticionnocond .)
+    CTEF            reduce using rule 137 (estatuto -> repeticionnocond .)
+    CTEC            reduce using rule 137 (estatuto -> repeticionnocond .)
+    STRING          reduce using rule 137 (estatuto -> repeticionnocond .)
 
 
 state 92
 
-    (135) estatuto -> expresion .
+    (138) estatuto -> expresion .
 
-    RBRACKET        reduce using rule 135 (estatuto -> expresion .)
-    ID              reduce using rule 135 (estatuto -> expresion .)
-    REGRESA         reduce using rule 135 (estatuto -> expresion .)
-    LEE             reduce using rule 135 (estatuto -> expresion .)
-    ESCRIBE         reduce using rule 135 (estatuto -> expresion .)
-    SI              reduce using rule 135 (estatuto -> expresion .)
-    MIENTRAS        reduce using rule 135 (estatuto -> expresion .)
-    DESDE           reduce using rule 135 (estatuto -> expresion .)
-    LPAREN          reduce using rule 135 (estatuto -> expresion .)
-    PLUS            reduce using rule 135 (estatuto -> expresion .)
-    MINUS           reduce using rule 135 (estatuto -> expresion .)
-    NUMBER          reduce using rule 135 (estatuto -> expresion .)
-    CTEF            reduce using rule 135 (estatuto -> expresion .)
-    CTEC            reduce using rule 135 (estatuto -> expresion .)
-    STRING          reduce using rule 135 (estatuto -> expresion .)
+    RBRACKET        reduce using rule 138 (estatuto -> expresion .)
+    ID              reduce using rule 138 (estatuto -> expresion .)
+    REGRESA         reduce using rule 138 (estatuto -> expresion .)
+    LEE             reduce using rule 138 (estatuto -> expresion .)
+    ESCRIBE         reduce using rule 138 (estatuto -> expresion .)
+    SI              reduce using rule 138 (estatuto -> expresion .)
+    MIENTRAS        reduce using rule 138 (estatuto -> expresion .)
+    DESDE           reduce using rule 138 (estatuto -> expresion .)
+    LPAREN          reduce using rule 138 (estatuto -> expresion .)
+    PLUS            reduce using rule 138 (estatuto -> expresion .)
+    MINUS           reduce using rule 138 (estatuto -> expresion .)
+    NUMBER          reduce using rule 138 (estatuto -> expresion .)
+    CTEF            reduce using rule 138 (estatuto -> expresion .)
+    CTEC            reduce using rule 138 (estatuto -> expresion .)
+    STRING          reduce using rule 138 (estatuto -> expresion .)
 
 
 state 93
@@ -1659,7 +1665,8 @@ state 93
     (60) asignacion -> ID . asign EQUAL asignacionb
     (65) funcionvoid -> ID . LPAREN fnvn1 expresion fnvn2 funcionvoidb
     (119) factor -> ID . LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (123) factor -> ID . asign
+    (120) factor -> ID . LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (124) factor -> ID . asign
     (96) cte -> ID .
     (53) asign -> . LBRACK arrn expresion arrn2 RBRACK arrn3
     (54) asign -> . LBRACK arrn CTEI arrn2 RBRACK arrn3
@@ -1712,10 +1719,11 @@ state 94
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -1769,9 +1777,9 @@ state 99
 
     (85) repeticioncond -> MIENTRAS . rcn1 LPAREN expresion RPAREN HAZ rcn2 bloque rcn3
     (86) rcn1 -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    LPAREN          reduce using rule 136 (empty -> .)
+    LPAREN          reduce using rule 139 (empty -> .)
 
     rcn1                           shift and go to state 133
     empty                          shift and go to state 134
@@ -1906,7 +1914,7 @@ state 103
 
 state 104
 
-    (120) factor -> PLUS . cte
+    (121) factor -> PLUS . cte
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -1923,42 +1931,42 @@ state 104
 
 state 105
 
-    (122) factor -> cte .
+    (123) factor -> cte .
 
-    TIMES           reduce using rule 122 (factor -> cte .)
-    DIVIDE          reduce using rule 122 (factor -> cte .)
-    PLUS            reduce using rule 122 (factor -> cte .)
-    MINUS           reduce using rule 122 (factor -> cte .)
-    GTHAN           reduce using rule 122 (factor -> cte .)
-    LTHAN           reduce using rule 122 (factor -> cte .)
-    EQLOP           reduce using rule 122 (factor -> cte .)
-    GEQUAL          reduce using rule 122 (factor -> cte .)
-    LEQUAL          reduce using rule 122 (factor -> cte .)
-    ABRACKET        reduce using rule 122 (factor -> cte .)
-    RBRACKET        reduce using rule 122 (factor -> cte .)
-    ID              reduce using rule 122 (factor -> cte .)
-    REGRESA         reduce using rule 122 (factor -> cte .)
-    LEE             reduce using rule 122 (factor -> cte .)
-    ESCRIBE         reduce using rule 122 (factor -> cte .)
-    SI              reduce using rule 122 (factor -> cte .)
-    MIENTRAS        reduce using rule 122 (factor -> cte .)
-    DESDE           reduce using rule 122 (factor -> cte .)
-    LPAREN          reduce using rule 122 (factor -> cte .)
-    NUMBER          reduce using rule 122 (factor -> cte .)
-    CTEF            reduce using rule 122 (factor -> cte .)
-    CTEC            reduce using rule 122 (factor -> cte .)
-    STRING          reduce using rule 122 (factor -> cte .)
-    RPAREN          reduce using rule 122 (factor -> cte .)
-    SEMICOL         reduce using rule 122 (factor -> cte .)
-    COMMA           reduce using rule 122 (factor -> cte .)
-    RBRACK          reduce using rule 122 (factor -> cte .)
-    HACER           reduce using rule 122 (factor -> cte .)
-    HASTA           reduce using rule 122 (factor -> cte .)
+    TIMES           reduce using rule 123 (factor -> cte .)
+    DIVIDE          reduce using rule 123 (factor -> cte .)
+    PLUS            reduce using rule 123 (factor -> cte .)
+    MINUS           reduce using rule 123 (factor -> cte .)
+    GTHAN           reduce using rule 123 (factor -> cte .)
+    LTHAN           reduce using rule 123 (factor -> cte .)
+    EQLOP           reduce using rule 123 (factor -> cte .)
+    GEQUAL          reduce using rule 123 (factor -> cte .)
+    LEQUAL          reduce using rule 123 (factor -> cte .)
+    ABRACKET        reduce using rule 123 (factor -> cte .)
+    RBRACKET        reduce using rule 123 (factor -> cte .)
+    ID              reduce using rule 123 (factor -> cte .)
+    REGRESA         reduce using rule 123 (factor -> cte .)
+    LEE             reduce using rule 123 (factor -> cte .)
+    ESCRIBE         reduce using rule 123 (factor -> cte .)
+    SI              reduce using rule 123 (factor -> cte .)
+    MIENTRAS        reduce using rule 123 (factor -> cte .)
+    DESDE           reduce using rule 123 (factor -> cte .)
+    LPAREN          reduce using rule 123 (factor -> cte .)
+    NUMBER          reduce using rule 123 (factor -> cte .)
+    CTEF            reduce using rule 123 (factor -> cte .)
+    CTEC            reduce using rule 123 (factor -> cte .)
+    STRING          reduce using rule 123 (factor -> cte .)
+    RPAREN          reduce using rule 123 (factor -> cte .)
+    SEMICOL         reduce using rule 123 (factor -> cte .)
+    COMMA           reduce using rule 123 (factor -> cte .)
+    RBRACK          reduce using rule 123 (factor -> cte .)
+    HACER           reduce using rule 123 (factor -> cte .)
+    HASTA           reduce using rule 123 (factor -> cte .)
 
 
 state 106
 
-    (121) factor -> MINUS . cte
+    (122) factor -> MINUS . cte
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -1984,9 +1992,9 @@ state 108
 
     (43) funcionc -> vars . agregacont bloque reinicio funcion
     (46) agregacont -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    LBRACKET        reduce using rule 136 (empty -> .)
+    LBRACKET        reduce using rule 139 (empty -> .)
 
     agregacont                     shift and go to state 151
     empty                          shift and go to state 152
@@ -2018,11 +2026,11 @@ state 111
     (45) funcionc -> . empty
     (24) vars -> . VAR varsb
     (46) agregacont -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
     VAR             shift and go to state 9
-    PRINCIPAL       reduce using rule 136 (empty -> .)
-    LBRACKET        reduce using rule 136 (empty -> .)
+    PRINCIPAL       reduce using rule 139 (empty -> .)
+    LBRACKET        reduce using rule 139 (empty -> .)
 
     funcionc                       shift and go to state 154
     vars                           shift and go to state 108
@@ -2063,11 +2071,11 @@ state 114
 
     (10) id -> ID agregavar LBRACK arreglo cte RBRACK . arreglo2
     (12) arreglo2 -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    COMMA           reduce using rule 136 (empty -> .)
-    SEMICOL         reduce using rule 136 (empty -> .)
-    RPAREN          reduce using rule 136 (empty -> .)
+    COMMA           reduce using rule 139 (empty -> .)
+    SEMICOL         reduce using rule 139 (empty -> .)
+    RPAREN          reduce using rule 139 (empty -> .)
 
     arreglo2                       shift and go to state 156
     empty                          shift and go to state 157
@@ -2252,15 +2260,15 @@ state 120
     (51) bloqueb -> estatuto . bloqueb
     (50) bloqueb -> . RBRACKET helper
     (51) bloqueb -> . estatuto bloqueb
-    (127) estatuto -> . asignacion
-    (128) estatuto -> . funcionvoid
-    (129) estatuto -> . retorno
-    (130) estatuto -> . lee
-    (131) estatuto -> . escritura
-    (132) estatuto -> . decision
-    (133) estatuto -> . repeticioncond
-    (134) estatuto -> . repeticionnocond
-    (135) estatuto -> . expresion
+    (130) estatuto -> . asignacion
+    (131) estatuto -> . funcionvoid
+    (132) estatuto -> . retorno
+    (133) estatuto -> . lee
+    (134) estatuto -> . escritura
+    (135) estatuto -> . decision
+    (136) estatuto -> . repeticioncond
+    (137) estatuto -> . repeticionnocond
+    (138) estatuto -> . expresion
     (59) asignacion -> . ID EQUAL asignacionb
     (60) asignacion -> . ID asign EQUAL asignacionb
     (65) funcionvoid -> . ID LPAREN fnvn1 expresion fnvn2 funcionvoidb
@@ -2283,10 +2291,11 @@ state 120
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -2354,27 +2363,27 @@ state 122
 
     (50) bloqueb -> RBRACKET . helper
     (52) helper -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    $end            reduce using rule 136 (empty -> .)
-    FUNCION         reduce using rule 136 (empty -> .)
-    PRINCIPAL       reduce using rule 136 (empty -> .)
-    SINO            reduce using rule 136 (empty -> .)
-    RBRACKET        reduce using rule 136 (empty -> .)
-    ID              reduce using rule 136 (empty -> .)
-    REGRESA         reduce using rule 136 (empty -> .)
-    LEE             reduce using rule 136 (empty -> .)
-    ESCRIBE         reduce using rule 136 (empty -> .)
-    SI              reduce using rule 136 (empty -> .)
-    MIENTRAS        reduce using rule 136 (empty -> .)
-    DESDE           reduce using rule 136 (empty -> .)
-    LPAREN          reduce using rule 136 (empty -> .)
-    PLUS            reduce using rule 136 (empty -> .)
-    MINUS           reduce using rule 136 (empty -> .)
-    NUMBER          reduce using rule 136 (empty -> .)
-    CTEF            reduce using rule 136 (empty -> .)
-    CTEC            reduce using rule 136 (empty -> .)
-    STRING          reduce using rule 136 (empty -> .)
+    $end            reduce using rule 139 (empty -> .)
+    FUNCION         reduce using rule 139 (empty -> .)
+    PRINCIPAL       reduce using rule 139 (empty -> .)
+    SINO            reduce using rule 139 (empty -> .)
+    RBRACKET        reduce using rule 139 (empty -> .)
+    ID              reduce using rule 139 (empty -> .)
+    REGRESA         reduce using rule 139 (empty -> .)
+    LEE             reduce using rule 139 (empty -> .)
+    ESCRIBE         reduce using rule 139 (empty -> .)
+    SI              reduce using rule 139 (empty -> .)
+    MIENTRAS        reduce using rule 139 (empty -> .)
+    DESDE           reduce using rule 139 (empty -> .)
+    LPAREN          reduce using rule 139 (empty -> .)
+    PLUS            reduce using rule 139 (empty -> .)
+    MINUS           reduce using rule 139 (empty -> .)
+    NUMBER          reduce using rule 139 (empty -> .)
+    CTEF            reduce using rule 139 (empty -> .)
+    CTEC            reduce using rule 139 (empty -> .)
+    STRING          reduce using rule 139 (empty -> .)
 
     helper                         shift and go to state 159
     empty                          shift and go to state 160
@@ -2397,10 +2406,11 @@ state 123
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -2426,50 +2436,51 @@ state 123
 state 124
 
     (60) asignacion -> ID asign . EQUAL asignacionb
-    (123) factor -> ID asign .
+    (124) factor -> ID asign .
 
     EQUAL           shift and go to state 164
-    TIMES           reduce using rule 123 (factor -> ID asign .)
-    DIVIDE          reduce using rule 123 (factor -> ID asign .)
-    PLUS            reduce using rule 123 (factor -> ID asign .)
-    MINUS           reduce using rule 123 (factor -> ID asign .)
-    GTHAN           reduce using rule 123 (factor -> ID asign .)
-    LTHAN           reduce using rule 123 (factor -> ID asign .)
-    EQLOP           reduce using rule 123 (factor -> ID asign .)
-    GEQUAL          reduce using rule 123 (factor -> ID asign .)
-    LEQUAL          reduce using rule 123 (factor -> ID asign .)
-    ABRACKET        reduce using rule 123 (factor -> ID asign .)
-    RBRACKET        reduce using rule 123 (factor -> ID asign .)
-    ID              reduce using rule 123 (factor -> ID asign .)
-    REGRESA         reduce using rule 123 (factor -> ID asign .)
-    LEE             reduce using rule 123 (factor -> ID asign .)
-    ESCRIBE         reduce using rule 123 (factor -> ID asign .)
-    SI              reduce using rule 123 (factor -> ID asign .)
-    MIENTRAS        reduce using rule 123 (factor -> ID asign .)
-    DESDE           reduce using rule 123 (factor -> ID asign .)
-    LPAREN          reduce using rule 123 (factor -> ID asign .)
-    NUMBER          reduce using rule 123 (factor -> ID asign .)
-    CTEF            reduce using rule 123 (factor -> ID asign .)
-    CTEC            reduce using rule 123 (factor -> ID asign .)
-    STRING          reduce using rule 123 (factor -> ID asign .)
+    TIMES           reduce using rule 124 (factor -> ID asign .)
+    DIVIDE          reduce using rule 124 (factor -> ID asign .)
+    PLUS            reduce using rule 124 (factor -> ID asign .)
+    MINUS           reduce using rule 124 (factor -> ID asign .)
+    GTHAN           reduce using rule 124 (factor -> ID asign .)
+    LTHAN           reduce using rule 124 (factor -> ID asign .)
+    EQLOP           reduce using rule 124 (factor -> ID asign .)
+    GEQUAL          reduce using rule 124 (factor -> ID asign .)
+    LEQUAL          reduce using rule 124 (factor -> ID asign .)
+    ABRACKET        reduce using rule 124 (factor -> ID asign .)
+    RBRACKET        reduce using rule 124 (factor -> ID asign .)
+    ID              reduce using rule 124 (factor -> ID asign .)
+    REGRESA         reduce using rule 124 (factor -> ID asign .)
+    LEE             reduce using rule 124 (factor -> ID asign .)
+    ESCRIBE         reduce using rule 124 (factor -> ID asign .)
+    SI              reduce using rule 124 (factor -> ID asign .)
+    MIENTRAS        reduce using rule 124 (factor -> ID asign .)
+    DESDE           reduce using rule 124 (factor -> ID asign .)
+    LPAREN          reduce using rule 124 (factor -> ID asign .)
+    NUMBER          reduce using rule 124 (factor -> ID asign .)
+    CTEF            reduce using rule 124 (factor -> ID asign .)
+    CTEC            reduce using rule 124 (factor -> ID asign .)
+    STRING          reduce using rule 124 (factor -> ID asign .)
 
 
 state 125
 
     (65) funcionvoid -> ID LPAREN . fnvn1 expresion fnvn2 funcionvoidb
     (119) factor -> ID LPAREN . llamadafun expresion llamadafun2 RPAREN llamadafun3
+    (120) factor -> ID LPAREN . llamadafun expresion llamadafun2 COMMA factorb
     (68) fnvn1 -> . empty
-    (124) llamadafun -> . empty
-    (136) empty -> .
+    (127) llamadafun -> . empty
+    (139) empty -> .
 
-    LPAREN          reduce using rule 136 (empty -> .)
-    ID              reduce using rule 136 (empty -> .)
-    PLUS            reduce using rule 136 (empty -> .)
-    MINUS           reduce using rule 136 (empty -> .)
-    NUMBER          reduce using rule 136 (empty -> .)
-    CTEF            reduce using rule 136 (empty -> .)
-    CTEC            reduce using rule 136 (empty -> .)
-    STRING          reduce using rule 136 (empty -> .)
+    LPAREN          reduce using rule 139 (empty -> .)
+    ID              reduce using rule 139 (empty -> .)
+    PLUS            reduce using rule 139 (empty -> .)
+    MINUS           reduce using rule 139 (empty -> .)
+    NUMBER          reduce using rule 139 (empty -> .)
+    CTEF            reduce using rule 139 (empty -> .)
+    CTEC            reduce using rule 139 (empty -> .)
+    STRING          reduce using rule 139 (empty -> .)
 
     fnvn1                          shift and go to state 165
     llamadafun                     shift and go to state 166
@@ -2481,17 +2492,17 @@ state 126
     (54) asign -> LBRACK . arrn CTEI arrn2 RBRACK arrn3
     (55) asign -> LBRACK . arrn CTEC arrn2 RBRACK arrn3
     (56) arrn -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    CTEI            reduce using rule 136 (empty -> .)
-    CTEC            reduce using rule 136 (empty -> .)
-    LPAREN          reduce using rule 136 (empty -> .)
-    ID              reduce using rule 136 (empty -> .)
-    PLUS            reduce using rule 136 (empty -> .)
-    MINUS           reduce using rule 136 (empty -> .)
-    NUMBER          reduce using rule 136 (empty -> .)
-    CTEF            reduce using rule 136 (empty -> .)
-    STRING          reduce using rule 136 (empty -> .)
+    CTEI            reduce using rule 139 (empty -> .)
+    CTEC            reduce using rule 139 (empty -> .)
+    LPAREN          reduce using rule 139 (empty -> .)
+    ID              reduce using rule 139 (empty -> .)
+    PLUS            reduce using rule 139 (empty -> .)
+    MINUS           reduce using rule 139 (empty -> .)
+    NUMBER          reduce using rule 139 (empty -> .)
+    CTEF            reduce using rule 139 (empty -> .)
+    STRING          reduce using rule 139 (empty -> .)
 
     arrn                           shift and go to state 168
     empty                          shift and go to state 169
@@ -2506,7 +2517,8 @@ state 127
 state 128
 
     (119) factor -> ID . LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (123) factor -> ID . asign
+    (120) factor -> ID . LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (124) factor -> ID . asign
     (96) cte -> ID .
     (53) asign -> . LBRACK arrn expresion arrn2 RBRACK arrn3
     (54) asign -> . LBRACK arrn CTEI arrn2 RBRACK arrn3
@@ -2564,10 +2576,11 @@ state 129
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -2615,10 +2628,11 @@ state 131
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -2656,10 +2670,11 @@ state 132
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -2724,10 +2739,11 @@ state 137
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -2757,10 +2773,11 @@ state 138
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -2790,10 +2807,11 @@ state 139
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -2823,10 +2841,11 @@ state 140
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -2856,10 +2875,11 @@ state 141
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -2889,10 +2909,11 @@ state 142
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -2955,10 +2976,11 @@ state 144
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -2988,10 +3010,11 @@ state 145
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -3052,10 +3075,11 @@ state 147
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -3082,10 +3106,11 @@ state 148
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -3107,72 +3132,72 @@ state 148
 
 state 149
 
-    (120) factor -> PLUS cte .
+    (121) factor -> PLUS cte .
 
-    TIMES           reduce using rule 120 (factor -> PLUS cte .)
-    DIVIDE          reduce using rule 120 (factor -> PLUS cte .)
-    PLUS            reduce using rule 120 (factor -> PLUS cte .)
-    MINUS           reduce using rule 120 (factor -> PLUS cte .)
-    GTHAN           reduce using rule 120 (factor -> PLUS cte .)
-    LTHAN           reduce using rule 120 (factor -> PLUS cte .)
-    EQLOP           reduce using rule 120 (factor -> PLUS cte .)
-    GEQUAL          reduce using rule 120 (factor -> PLUS cte .)
-    LEQUAL          reduce using rule 120 (factor -> PLUS cte .)
-    ABRACKET        reduce using rule 120 (factor -> PLUS cte .)
-    RBRACKET        reduce using rule 120 (factor -> PLUS cte .)
-    ID              reduce using rule 120 (factor -> PLUS cte .)
-    REGRESA         reduce using rule 120 (factor -> PLUS cte .)
-    LEE             reduce using rule 120 (factor -> PLUS cte .)
-    ESCRIBE         reduce using rule 120 (factor -> PLUS cte .)
-    SI              reduce using rule 120 (factor -> PLUS cte .)
-    MIENTRAS        reduce using rule 120 (factor -> PLUS cte .)
-    DESDE           reduce using rule 120 (factor -> PLUS cte .)
-    LPAREN          reduce using rule 120 (factor -> PLUS cte .)
-    NUMBER          reduce using rule 120 (factor -> PLUS cte .)
-    CTEF            reduce using rule 120 (factor -> PLUS cte .)
-    CTEC            reduce using rule 120 (factor -> PLUS cte .)
-    STRING          reduce using rule 120 (factor -> PLUS cte .)
-    RPAREN          reduce using rule 120 (factor -> PLUS cte .)
-    SEMICOL         reduce using rule 120 (factor -> PLUS cte .)
-    COMMA           reduce using rule 120 (factor -> PLUS cte .)
-    RBRACK          reduce using rule 120 (factor -> PLUS cte .)
-    HACER           reduce using rule 120 (factor -> PLUS cte .)
-    HASTA           reduce using rule 120 (factor -> PLUS cte .)
+    TIMES           reduce using rule 121 (factor -> PLUS cte .)
+    DIVIDE          reduce using rule 121 (factor -> PLUS cte .)
+    PLUS            reduce using rule 121 (factor -> PLUS cte .)
+    MINUS           reduce using rule 121 (factor -> PLUS cte .)
+    GTHAN           reduce using rule 121 (factor -> PLUS cte .)
+    LTHAN           reduce using rule 121 (factor -> PLUS cte .)
+    EQLOP           reduce using rule 121 (factor -> PLUS cte .)
+    GEQUAL          reduce using rule 121 (factor -> PLUS cte .)
+    LEQUAL          reduce using rule 121 (factor -> PLUS cte .)
+    ABRACKET        reduce using rule 121 (factor -> PLUS cte .)
+    RBRACKET        reduce using rule 121 (factor -> PLUS cte .)
+    ID              reduce using rule 121 (factor -> PLUS cte .)
+    REGRESA         reduce using rule 121 (factor -> PLUS cte .)
+    LEE             reduce using rule 121 (factor -> PLUS cte .)
+    ESCRIBE         reduce using rule 121 (factor -> PLUS cte .)
+    SI              reduce using rule 121 (factor -> PLUS cte .)
+    MIENTRAS        reduce using rule 121 (factor -> PLUS cte .)
+    DESDE           reduce using rule 121 (factor -> PLUS cte .)
+    LPAREN          reduce using rule 121 (factor -> PLUS cte .)
+    NUMBER          reduce using rule 121 (factor -> PLUS cte .)
+    CTEF            reduce using rule 121 (factor -> PLUS cte .)
+    CTEC            reduce using rule 121 (factor -> PLUS cte .)
+    STRING          reduce using rule 121 (factor -> PLUS cte .)
+    RPAREN          reduce using rule 121 (factor -> PLUS cte .)
+    SEMICOL         reduce using rule 121 (factor -> PLUS cte .)
+    COMMA           reduce using rule 121 (factor -> PLUS cte .)
+    RBRACK          reduce using rule 121 (factor -> PLUS cte .)
+    HACER           reduce using rule 121 (factor -> PLUS cte .)
+    HASTA           reduce using rule 121 (factor -> PLUS cte .)
 
 
 state 150
 
-    (121) factor -> MINUS cte .
+    (122) factor -> MINUS cte .
 
-    TIMES           reduce using rule 121 (factor -> MINUS cte .)
-    DIVIDE          reduce using rule 121 (factor -> MINUS cte .)
-    PLUS            reduce using rule 121 (factor -> MINUS cte .)
-    MINUS           reduce using rule 121 (factor -> MINUS cte .)
-    GTHAN           reduce using rule 121 (factor -> MINUS cte .)
-    LTHAN           reduce using rule 121 (factor -> MINUS cte .)
-    EQLOP           reduce using rule 121 (factor -> MINUS cte .)
-    GEQUAL          reduce using rule 121 (factor -> MINUS cte .)
-    LEQUAL          reduce using rule 121 (factor -> MINUS cte .)
-    ABRACKET        reduce using rule 121 (factor -> MINUS cte .)
-    RBRACKET        reduce using rule 121 (factor -> MINUS cte .)
-    ID              reduce using rule 121 (factor -> MINUS cte .)
-    REGRESA         reduce using rule 121 (factor -> MINUS cte .)
-    LEE             reduce using rule 121 (factor -> MINUS cte .)
-    ESCRIBE         reduce using rule 121 (factor -> MINUS cte .)
-    SI              reduce using rule 121 (factor -> MINUS cte .)
-    MIENTRAS        reduce using rule 121 (factor -> MINUS cte .)
-    DESDE           reduce using rule 121 (factor -> MINUS cte .)
-    LPAREN          reduce using rule 121 (factor -> MINUS cte .)
-    NUMBER          reduce using rule 121 (factor -> MINUS cte .)
-    CTEF            reduce using rule 121 (factor -> MINUS cte .)
-    CTEC            reduce using rule 121 (factor -> MINUS cte .)
-    STRING          reduce using rule 121 (factor -> MINUS cte .)
-    RPAREN          reduce using rule 121 (factor -> MINUS cte .)
-    SEMICOL         reduce using rule 121 (factor -> MINUS cte .)
-    COMMA           reduce using rule 121 (factor -> MINUS cte .)
-    RBRACK          reduce using rule 121 (factor -> MINUS cte .)
-    HACER           reduce using rule 121 (factor -> MINUS cte .)
-    HASTA           reduce using rule 121 (factor -> MINUS cte .)
+    TIMES           reduce using rule 122 (factor -> MINUS cte .)
+    DIVIDE          reduce using rule 122 (factor -> MINUS cte .)
+    PLUS            reduce using rule 122 (factor -> MINUS cte .)
+    MINUS           reduce using rule 122 (factor -> MINUS cte .)
+    GTHAN           reduce using rule 122 (factor -> MINUS cte .)
+    LTHAN           reduce using rule 122 (factor -> MINUS cte .)
+    EQLOP           reduce using rule 122 (factor -> MINUS cte .)
+    GEQUAL          reduce using rule 122 (factor -> MINUS cte .)
+    LEQUAL          reduce using rule 122 (factor -> MINUS cte .)
+    ABRACKET        reduce using rule 122 (factor -> MINUS cte .)
+    RBRACKET        reduce using rule 122 (factor -> MINUS cte .)
+    ID              reduce using rule 122 (factor -> MINUS cte .)
+    REGRESA         reduce using rule 122 (factor -> MINUS cte .)
+    LEE             reduce using rule 122 (factor -> MINUS cte .)
+    ESCRIBE         reduce using rule 122 (factor -> MINUS cte .)
+    SI              reduce using rule 122 (factor -> MINUS cte .)
+    MIENTRAS        reduce using rule 122 (factor -> MINUS cte .)
+    DESDE           reduce using rule 122 (factor -> MINUS cte .)
+    LPAREN          reduce using rule 122 (factor -> MINUS cte .)
+    NUMBER          reduce using rule 122 (factor -> MINUS cte .)
+    CTEF            reduce using rule 122 (factor -> MINUS cte .)
+    CTEC            reduce using rule 122 (factor -> MINUS cte .)
+    STRING          reduce using rule 122 (factor -> MINUS cte .)
+    RPAREN          reduce using rule 122 (factor -> MINUS cte .)
+    SEMICOL         reduce using rule 122 (factor -> MINUS cte .)
+    COMMA           reduce using rule 122 (factor -> MINUS cte .)
+    RBRACK          reduce using rule 122 (factor -> MINUS cte .)
+    HACER           reduce using rule 122 (factor -> MINUS cte .)
+    HASTA           reduce using rule 122 (factor -> MINUS cte .)
 
 
 state 151
@@ -3196,10 +3221,10 @@ state 153
 
     (44) funcionc -> agregacont bloque . reinicio funcion
     (47) reinicio -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    FUNCION         reduce using rule 136 (empty -> .)
-    PRINCIPAL       reduce using rule 136 (empty -> .)
+    FUNCION         reduce using rule 139 (empty -> .)
+    PRINCIPAL       reduce using rule 139 (empty -> .)
 
     reinicio                       shift and go to state 192
     empty                          shift and go to state 193
@@ -3315,7 +3340,8 @@ state 161
 
     (62) asignacionb -> ID . asign SEMICOL
     (119) factor -> ID . LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (123) factor -> ID . asign
+    (120) factor -> ID . LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (124) factor -> ID . asign
     (96) cte -> ID .
     (53) asign -> . LBRACK arrn expresion arrn2 RBRACK arrn3
     (54) asign -> . LBRACK arrn CTEI arrn2 RBRACK arrn3
@@ -3383,10 +3409,11 @@ state 164
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -3425,10 +3452,11 @@ state 165
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -3453,6 +3481,7 @@ state 165
 state 166
 
     (119) factor -> ID LPAREN llamadafun . expresion llamadafun2 RPAREN llamadafun3
+    (120) factor -> ID LPAREN llamadafun . expresion llamadafun2 COMMA factorb
     (103) expresion -> . exp
     (104) expresion -> . exp GTHAN exp
     (105) expresion -> . exp LTHAN exp
@@ -3466,10 +3495,11 @@ state 166
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -3494,7 +3524,7 @@ state 166
 state 167
 
     (68) fnvn1 -> empty .
-    (124) llamadafun -> empty .
+    (127) llamadafun -> empty .
 
   ! reduce/reduce conflict for LPAREN resolved using rule 68 (fnvn1 -> empty .)
   ! reduce/reduce conflict for ID resolved using rule 68 (fnvn1 -> empty .)
@@ -3513,14 +3543,14 @@ state 167
     CTEC            reduce using rule 68 (fnvn1 -> empty .)
     STRING          reduce using rule 68 (fnvn1 -> empty .)
 
-  ! LPAREN          [ reduce using rule 124 (llamadafun -> empty .) ]
-  ! ID              [ reduce using rule 124 (llamadafun -> empty .) ]
-  ! PLUS            [ reduce using rule 124 (llamadafun -> empty .) ]
-  ! MINUS           [ reduce using rule 124 (llamadafun -> empty .) ]
-  ! NUMBER          [ reduce using rule 124 (llamadafun -> empty .) ]
-  ! CTEF            [ reduce using rule 124 (llamadafun -> empty .) ]
-  ! CTEC            [ reduce using rule 124 (llamadafun -> empty .) ]
-  ! STRING          [ reduce using rule 124 (llamadafun -> empty .) ]
+  ! LPAREN          [ reduce using rule 127 (llamadafun -> empty .) ]
+  ! ID              [ reduce using rule 127 (llamadafun -> empty .) ]
+  ! PLUS            [ reduce using rule 127 (llamadafun -> empty .) ]
+  ! MINUS           [ reduce using rule 127 (llamadafun -> empty .) ]
+  ! NUMBER          [ reduce using rule 127 (llamadafun -> empty .) ]
+  ! CTEF            [ reduce using rule 127 (llamadafun -> empty .) ]
+  ! CTEC            [ reduce using rule 127 (llamadafun -> empty .) ]
+  ! STRING          [ reduce using rule 127 (llamadafun -> empty .) ]
 
 
 state 168
@@ -3541,10 +3571,11 @@ state 168
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -3620,63 +3651,64 @@ state 170
 state 171
 
     (119) factor -> ID LPAREN . llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (124) llamadafun -> . empty
-    (136) empty -> .
+    (120) factor -> ID LPAREN . llamadafun expresion llamadafun2 COMMA factorb
+    (127) llamadafun -> . empty
+    (139) empty -> .
 
-    LPAREN          reduce using rule 136 (empty -> .)
-    ID              reduce using rule 136 (empty -> .)
-    PLUS            reduce using rule 136 (empty -> .)
-    MINUS           reduce using rule 136 (empty -> .)
-    NUMBER          reduce using rule 136 (empty -> .)
-    CTEF            reduce using rule 136 (empty -> .)
-    CTEC            reduce using rule 136 (empty -> .)
-    STRING          reduce using rule 136 (empty -> .)
+    LPAREN          reduce using rule 139 (empty -> .)
+    ID              reduce using rule 139 (empty -> .)
+    PLUS            reduce using rule 139 (empty -> .)
+    MINUS           reduce using rule 139 (empty -> .)
+    NUMBER          reduce using rule 139 (empty -> .)
+    CTEF            reduce using rule 139 (empty -> .)
+    CTEC            reduce using rule 139 (empty -> .)
+    STRING          reduce using rule 139 (empty -> .)
 
     llamadafun                     shift and go to state 166
     empty                          shift and go to state 202
 
 state 172
 
-    (123) factor -> ID asign .
+    (124) factor -> ID asign .
 
-    TIMES           reduce using rule 123 (factor -> ID asign .)
-    DIVIDE          reduce using rule 123 (factor -> ID asign .)
-    PLUS            reduce using rule 123 (factor -> ID asign .)
-    MINUS           reduce using rule 123 (factor -> ID asign .)
-    GTHAN           reduce using rule 123 (factor -> ID asign .)
-    LTHAN           reduce using rule 123 (factor -> ID asign .)
-    EQLOP           reduce using rule 123 (factor -> ID asign .)
-    GEQUAL          reduce using rule 123 (factor -> ID asign .)
-    LEQUAL          reduce using rule 123 (factor -> ID asign .)
-    ABRACKET        reduce using rule 123 (factor -> ID asign .)
-    RPAREN          reduce using rule 123 (factor -> ID asign .)
-    COMMA           reduce using rule 123 (factor -> ID asign .)
-    RBRACKET        reduce using rule 123 (factor -> ID asign .)
-    ID              reduce using rule 123 (factor -> ID asign .)
-    REGRESA         reduce using rule 123 (factor -> ID asign .)
-    LEE             reduce using rule 123 (factor -> ID asign .)
-    ESCRIBE         reduce using rule 123 (factor -> ID asign .)
-    SI              reduce using rule 123 (factor -> ID asign .)
-    MIENTRAS        reduce using rule 123 (factor -> ID asign .)
-    DESDE           reduce using rule 123 (factor -> ID asign .)
-    LPAREN          reduce using rule 123 (factor -> ID asign .)
-    NUMBER          reduce using rule 123 (factor -> ID asign .)
-    CTEF            reduce using rule 123 (factor -> ID asign .)
-    CTEC            reduce using rule 123 (factor -> ID asign .)
-    STRING          reduce using rule 123 (factor -> ID asign .)
-    SEMICOL         reduce using rule 123 (factor -> ID asign .)
-    RBRACK          reduce using rule 123 (factor -> ID asign .)
-    HACER           reduce using rule 123 (factor -> ID asign .)
-    HASTA           reduce using rule 123 (factor -> ID asign .)
+    TIMES           reduce using rule 124 (factor -> ID asign .)
+    DIVIDE          reduce using rule 124 (factor -> ID asign .)
+    PLUS            reduce using rule 124 (factor -> ID asign .)
+    MINUS           reduce using rule 124 (factor -> ID asign .)
+    GTHAN           reduce using rule 124 (factor -> ID asign .)
+    LTHAN           reduce using rule 124 (factor -> ID asign .)
+    EQLOP           reduce using rule 124 (factor -> ID asign .)
+    GEQUAL          reduce using rule 124 (factor -> ID asign .)
+    LEQUAL          reduce using rule 124 (factor -> ID asign .)
+    ABRACKET        reduce using rule 124 (factor -> ID asign .)
+    RPAREN          reduce using rule 124 (factor -> ID asign .)
+    COMMA           reduce using rule 124 (factor -> ID asign .)
+    RBRACKET        reduce using rule 124 (factor -> ID asign .)
+    ID              reduce using rule 124 (factor -> ID asign .)
+    REGRESA         reduce using rule 124 (factor -> ID asign .)
+    LEE             reduce using rule 124 (factor -> ID asign .)
+    ESCRIBE         reduce using rule 124 (factor -> ID asign .)
+    SI              reduce using rule 124 (factor -> ID asign .)
+    MIENTRAS        reduce using rule 124 (factor -> ID asign .)
+    DESDE           reduce using rule 124 (factor -> ID asign .)
+    LPAREN          reduce using rule 124 (factor -> ID asign .)
+    NUMBER          reduce using rule 124 (factor -> ID asign .)
+    CTEF            reduce using rule 124 (factor -> ID asign .)
+    CTEC            reduce using rule 124 (factor -> ID asign .)
+    STRING          reduce using rule 124 (factor -> ID asign .)
+    SEMICOL         reduce using rule 124 (factor -> ID asign .)
+    RBRACK          reduce using rule 124 (factor -> ID asign .)
+    HACER           reduce using rule 124 (factor -> ID asign .)
+    HASTA           reduce using rule 124 (factor -> ID asign .)
 
 
 state 173
 
     (63) retorno -> REGRESA LPAREN expresion . retn RPAREN SEMICOL
     (64) retn -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    RPAREN          reduce using rule 136 (empty -> .)
+    RPAREN          reduce using rule 139 (empty -> .)
 
     retn                           shift and go to state 203
     empty                          shift and go to state 204
@@ -3696,10 +3728,10 @@ state 175
 
     (75) escritura -> ESCRIBE LPAREN expresion . prin1 escriturab
     (78) prin1 -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    COMMA           reduce using rule 136 (empty -> .)
-    RPAREN          reduce using rule 136 (empty -> .)
+    COMMA           reduce using rule 139 (empty -> .)
+    RPAREN          reduce using rule 139 (empty -> .)
 
     prin1                          shift and go to state 208
     empty                          shift and go to state 209
@@ -3708,9 +3740,9 @@ state 176
 
     (79) decision -> SI LPAREN expresion . pn1 RPAREN ENTONCES decisionb
     (80) pn1 -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    RPAREN          reduce using rule 136 (empty -> .)
+    RPAREN          reduce using rule 139 (empty -> .)
 
     pn1                            shift and go to state 210
     empty                          shift and go to state 211
@@ -3731,10 +3763,11 @@ state 177
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -3765,10 +3798,11 @@ state 178
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -3800,10 +3834,11 @@ state 179
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -4118,10 +4153,10 @@ state 191
 
     (43) funcionc -> vars agregacont bloque . reinicio funcion
     (47) reinicio -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    FUNCION         reduce using rule 136 (empty -> .)
-    PRINCIPAL       reduce using rule 136 (empty -> .)
+    FUNCION         reduce using rule 139 (empty -> .)
+    PRINCIPAL       reduce using rule 139 (empty -> .)
 
     reinicio                       shift and go to state 218
     empty                          shift and go to state 193
@@ -4132,10 +4167,10 @@ state 192
     (35) funcion -> . FUNCION aux2 ID LPAREN funcionb
     (36) funcion -> . FUNCION aux2 tipofun ID agregafunc LPAREN funcionb
     (37) funcion -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
     FUNCION         shift and go to state 12
-    PRINCIPAL       reduce using rule 136 (empty -> .)
+    PRINCIPAL       reduce using rule 139 (empty -> .)
 
     funcion                        shift and go to state 219
     empty                          shift and go to state 13
@@ -4151,22 +4186,22 @@ state 193
 state 194
 
     (62) asignacionb -> ID asign . SEMICOL
-    (123) factor -> ID asign .
+    (124) factor -> ID asign .
 
   ! shift/reduce conflict for SEMICOL resolved as shift
     SEMICOL         shift and go to state 220
-    TIMES           reduce using rule 123 (factor -> ID asign .)
-    DIVIDE          reduce using rule 123 (factor -> ID asign .)
-    PLUS            reduce using rule 123 (factor -> ID asign .)
-    MINUS           reduce using rule 123 (factor -> ID asign .)
-    GTHAN           reduce using rule 123 (factor -> ID asign .)
-    LTHAN           reduce using rule 123 (factor -> ID asign .)
-    EQLOP           reduce using rule 123 (factor -> ID asign .)
-    GEQUAL          reduce using rule 123 (factor -> ID asign .)
-    LEQUAL          reduce using rule 123 (factor -> ID asign .)
-    ABRACKET        reduce using rule 123 (factor -> ID asign .)
+    TIMES           reduce using rule 124 (factor -> ID asign .)
+    DIVIDE          reduce using rule 124 (factor -> ID asign .)
+    PLUS            reduce using rule 124 (factor -> ID asign .)
+    MINUS           reduce using rule 124 (factor -> ID asign .)
+    GTHAN           reduce using rule 124 (factor -> ID asign .)
+    LTHAN           reduce using rule 124 (factor -> ID asign .)
+    EQLOP           reduce using rule 124 (factor -> ID asign .)
+    GEQUAL          reduce using rule 124 (factor -> ID asign .)
+    LEQUAL          reduce using rule 124 (factor -> ID asign .)
+    ABRACKET        reduce using rule 124 (factor -> ID asign .)
 
-  ! SEMICOL         [ reduce using rule 123 (factor -> ID asign .) ]
+  ! SEMICOL         [ reduce using rule 124 (factor -> ID asign .) ]
 
 
 state 195
@@ -4215,10 +4250,10 @@ state 197
 
     (65) funcionvoid -> ID LPAREN fnvn1 expresion . fnvn2 funcionvoidb
     (69) fnvn2 -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    COMMA           reduce using rule 136 (empty -> .)
-    RPAREN          reduce using rule 136 (empty -> .)
+    COMMA           reduce using rule 139 (empty -> .)
+    RPAREN          reduce using rule 139 (empty -> .)
 
     fnvn2                          shift and go to state 221
     empty                          shift and go to state 222
@@ -4226,10 +4261,12 @@ state 197
 state 198
 
     (119) factor -> ID LPAREN llamadafun expresion . llamadafun2 RPAREN llamadafun3
-    (125) llamadafun2 -> . empty
-    (136) empty -> .
+    (120) factor -> ID LPAREN llamadafun expresion . llamadafun2 COMMA factorb
+    (128) llamadafun2 -> . empty
+    (139) empty -> .
 
-    RPAREN          reduce using rule 136 (empty -> .)
+    RPAREN          reduce using rule 139 (empty -> .)
+    COMMA           reduce using rule 139 (empty -> .)
 
     llamadafun2                    shift and go to state 223
     empty                          shift and go to state 224
@@ -4238,9 +4275,9 @@ state 199
 
     (53) asign -> LBRACK arrn expresion . arrn2 RBRACK arrn3
     (57) arrn2 -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    RBRACK          reduce using rule 136 (empty -> .)
+    RBRACK          reduce using rule 139 (empty -> .)
 
     arrn2                          shift and go to state 225
     empty                          shift and go to state 226
@@ -4249,9 +4286,9 @@ state 200
 
     (54) asign -> LBRACK arrn CTEI . arrn2 RBRACK arrn3
     (57) arrn2 -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    RBRACK          reduce using rule 136 (empty -> .)
+    RBRACK          reduce using rule 139 (empty -> .)
 
     arrn2                          shift and go to state 227
     empty                          shift and go to state 226
@@ -4261,7 +4298,7 @@ state 201
     (55) asign -> LBRACK arrn CTEC . arrn2 RBRACK arrn3
     (99) cte -> CTEC .
     (57) arrn2 -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
   ! reduce/reduce conflict for RBRACK resolved using rule 99 (cte -> CTEC .)
     TIMES           reduce using rule 99 (cte -> CTEC .)
@@ -4276,23 +4313,23 @@ state 201
     ABRACKET        reduce using rule 99 (cte -> CTEC .)
     RBRACK          reduce using rule 99 (cte -> CTEC .)
 
-  ! RBRACK          [ reduce using rule 136 (empty -> .) ]
+  ! RBRACK          [ reduce using rule 139 (empty -> .) ]
 
     arrn2                          shift and go to state 228
     empty                          shift and go to state 226
 
 state 202
 
-    (124) llamadafun -> empty .
+    (127) llamadafun -> empty .
 
-    LPAREN          reduce using rule 124 (llamadafun -> empty .)
-    ID              reduce using rule 124 (llamadafun -> empty .)
-    PLUS            reduce using rule 124 (llamadafun -> empty .)
-    MINUS           reduce using rule 124 (llamadafun -> empty .)
-    NUMBER          reduce using rule 124 (llamadafun -> empty .)
-    CTEF            reduce using rule 124 (llamadafun -> empty .)
-    CTEC            reduce using rule 124 (llamadafun -> empty .)
-    STRING          reduce using rule 124 (llamadafun -> empty .)
+    LPAREN          reduce using rule 127 (llamadafun -> empty .)
+    ID              reduce using rule 127 (llamadafun -> empty .)
+    PLUS            reduce using rule 127 (llamadafun -> empty .)
+    MINUS           reduce using rule 127 (llamadafun -> empty .)
+    NUMBER          reduce using rule 127 (llamadafun -> empty .)
+    CTEF            reduce using rule 127 (llamadafun -> empty .)
+    CTEC            reduce using rule 127 (llamadafun -> empty .)
+    STRING          reduce using rule 127 (llamadafun -> empty .)
 
 
 state 203
@@ -4334,9 +4371,9 @@ state 206
 
     (72) leeb -> RPAREN . leen SEMICOL
     (74) leen -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    SEMICOL         reduce using rule 136 (empty -> .)
+    SEMICOL         reduce using rule 139 (empty -> .)
 
     leen                           shift and go to state 230
     empty                          shift and go to state 231
@@ -4345,9 +4382,9 @@ state 207
 
     (73) leeb -> COMMA . leen id leeb
     (74) leen -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    ID              reduce using rule 136 (empty -> .)
+    ID              reduce using rule 139 (empty -> .)
 
     leen                           shift and go to state 232
     empty                          shift and go to state 231
@@ -4396,9 +4433,9 @@ state 213
 
     (89) repeticionnocond -> DESDE asignacioncond HASTA exp . repnoconn HACER bloque repnoconn2
     (92) repnoconn -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    HACER           reduce using rule 136 (empty -> .)
+    HACER           reduce using rule 139 (empty -> .)
 
     repnoconn                      shift and go to state 238
     empty                          shift and go to state 239
@@ -4407,7 +4444,8 @@ state 214
 
     (95) asignacioncondb -> ID . asign
     (119) factor -> ID . LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (123) factor -> ID . asign
+    (120) factor -> ID . LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (124) factor -> ID . asign
     (96) cte -> ID .
     (53) asign -> . LBRACK arrn expresion arrn2 RBRACK arrn3
     (54) asign -> . LBRACK arrn CTEI arrn2 RBRACK arrn3
@@ -4448,10 +4486,11 @@ state 217
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -4479,10 +4518,10 @@ state 218
     (35) funcion -> . FUNCION aux2 ID LPAREN funcionb
     (36) funcion -> . FUNCION aux2 tipofun ID agregafunc LPAREN funcionb
     (37) funcion -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
     FUNCION         shift and go to state 12
-    PRINCIPAL       reduce using rule 136 (empty -> .)
+    PRINCIPAL       reduce using rule 139 (empty -> .)
 
     funcion                        shift and go to state 242
     empty                          shift and go to state 13
@@ -4537,22 +4576,25 @@ state 222
 state 223
 
     (119) factor -> ID LPAREN llamadafun expresion llamadafun2 . RPAREN llamadafun3
+    (120) factor -> ID LPAREN llamadafun expresion llamadafun2 . COMMA factorb
 
     RPAREN          shift and go to state 246
+    COMMA           shift and go to state 247
 
 
 state 224
 
-    (125) llamadafun2 -> empty .
+    (128) llamadafun2 -> empty .
 
-    RPAREN          reduce using rule 125 (llamadafun2 -> empty .)
+    RPAREN          reduce using rule 128 (llamadafun2 -> empty .)
+    COMMA           reduce using rule 128 (llamadafun2 -> empty .)
 
 
 state 225
 
     (53) asign -> LBRACK arrn expresion arrn2 . RBRACK arrn3
 
-    RBRACK          shift and go to state 247
+    RBRACK          shift and go to state 248
 
 
 state 226
@@ -4566,28 +4608,28 @@ state 227
 
     (54) asign -> LBRACK arrn CTEI arrn2 . RBRACK arrn3
 
-    RBRACK          shift and go to state 248
+    RBRACK          shift and go to state 249
 
 
 state 228
 
     (55) asign -> LBRACK arrn CTEC arrn2 . RBRACK arrn3
 
-    RBRACK          shift and go to state 249
+    RBRACK          shift and go to state 250
 
 
 state 229
 
     (63) retorno -> REGRESA LPAREN expresion retn RPAREN . SEMICOL
 
-    SEMICOL         shift and go to state 250
+    SEMICOL         shift and go to state 251
 
 
 state 230
 
     (72) leeb -> RPAREN leen . SEMICOL
 
-    SEMICOL         shift and go to state 251
+    SEMICOL         shift and go to state 252
 
 
 state 231
@@ -4606,7 +4648,7 @@ state 232
 
     ID              shift and go to state 28
 
-    id                             shift and go to state 252
+    id                             shift and go to state 253
 
 state 233
 
@@ -4645,10 +4687,11 @@ state 234
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -4664,7 +4707,7 @@ state 234
     CTEC            shift and go to state 78
     STRING          shift and go to state 79
 
-    expresion                      shift and go to state 253
+    expresion                      shift and go to state 254
     exp                            shift and go to state 101
     termino                        shift and go to state 102
     factor                         shift and go to state 103
@@ -4674,28 +4717,28 @@ state 235
 
     (77) escriturab -> RPAREN . SEMICOL
 
-    SEMICOL         shift and go to state 254
+    SEMICOL         shift and go to state 255
 
 
 state 236
 
     (79) decision -> SI LPAREN expresion pn1 RPAREN . ENTONCES decisionb
 
-    ENTONCES        shift and go to state 255
+    ENTONCES        shift and go to state 256
 
 
 state 237
 
     (85) repeticioncond -> MIENTRAS rcn1 LPAREN expresion RPAREN . HAZ rcn2 bloque rcn3
 
-    HAZ             shift and go to state 256
+    HAZ             shift and go to state 257
 
 
 state 238
 
     (89) repeticionnocond -> DESDE asignacioncond HASTA exp repnoconn . HACER bloque repnoconn2
 
-    HACER           shift and go to state 257
+    HACER           shift and go to state 258
 
 
 state 239
@@ -4708,16 +4751,16 @@ state 239
 state 240
 
     (95) asignacioncondb -> ID asign .
-    (123) factor -> ID asign .
+    (124) factor -> ID asign .
 
   ! reduce/reduce conflict for HASTA resolved using rule 95 (asignacioncondb -> ID asign .)
     HASTA           reduce using rule 95 (asignacioncondb -> ID asign .)
-    TIMES           reduce using rule 123 (factor -> ID asign .)
-    DIVIDE          reduce using rule 123 (factor -> ID asign .)
-    PLUS            reduce using rule 123 (factor -> ID asign .)
-    MINUS           reduce using rule 123 (factor -> ID asign .)
+    TIMES           reduce using rule 124 (factor -> ID asign .)
+    DIVIDE          reduce using rule 124 (factor -> ID asign .)
+    PLUS            reduce using rule 124 (factor -> ID asign .)
+    MINUS           reduce using rule 124 (factor -> ID asign .)
 
-  ! HASTA           [ reduce using rule 123 (factor -> ID asign .) ]
+  ! HASTA           [ reduce using rule 124 (factor -> ID asign .) ]
 
 
 state 241
@@ -4771,10 +4814,11 @@ state 244
     (115) termino -> . factor terminob
     (118) factor -> . LPAREN expresion RPAREN
     (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
-    (120) factor -> . PLUS cte
-    (121) factor -> . MINUS cte
-    (122) factor -> . cte
-    (123) factor -> . ID asign
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
     (96) cte -> . ID
     (97) cte -> . NUMBER saveconst
     (98) cte -> . CTEF saveconst
@@ -4790,7 +4834,7 @@ state 244
     CTEC            shift and go to state 78
     STRING          shift and go to state 79
 
-    expresion                      shift and go to state 258
+    expresion                      shift and go to state 259
     exp                            shift and go to state 101
     termino                        shift and go to state 102
     factor                         shift and go to state 103
@@ -4800,173 +4844,218 @@ state 245
 
     (67) funcionvoidb -> RPAREN . fnvn3 SEMICOL
     (70) fnvn3 -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    SEMICOL         reduce using rule 136 (empty -> .)
+    SEMICOL         reduce using rule 139 (empty -> .)
 
-    fnvn3                          shift and go to state 259
-    empty                          shift and go to state 260
+    fnvn3                          shift and go to state 260
+    empty                          shift and go to state 261
 
 state 246
 
     (119) factor -> ID LPAREN llamadafun expresion llamadafun2 RPAREN . llamadafun3
-    (126) llamadafun3 -> . empty
-    (136) empty -> .
+    (129) llamadafun3 -> . empty
+    (139) empty -> .
 
-    TIMES           reduce using rule 136 (empty -> .)
-    DIVIDE          reduce using rule 136 (empty -> .)
-    PLUS            reduce using rule 136 (empty -> .)
-    MINUS           reduce using rule 136 (empty -> .)
-    GTHAN           reduce using rule 136 (empty -> .)
-    LTHAN           reduce using rule 136 (empty -> .)
-    EQLOP           reduce using rule 136 (empty -> .)
-    GEQUAL          reduce using rule 136 (empty -> .)
-    LEQUAL          reduce using rule 136 (empty -> .)
-    ABRACKET        reduce using rule 136 (empty -> .)
-    RBRACKET        reduce using rule 136 (empty -> .)
-    ID              reduce using rule 136 (empty -> .)
-    REGRESA         reduce using rule 136 (empty -> .)
-    LEE             reduce using rule 136 (empty -> .)
-    ESCRIBE         reduce using rule 136 (empty -> .)
-    SI              reduce using rule 136 (empty -> .)
-    MIENTRAS        reduce using rule 136 (empty -> .)
-    DESDE           reduce using rule 136 (empty -> .)
-    LPAREN          reduce using rule 136 (empty -> .)
-    NUMBER          reduce using rule 136 (empty -> .)
-    CTEF            reduce using rule 136 (empty -> .)
-    CTEC            reduce using rule 136 (empty -> .)
-    STRING          reduce using rule 136 (empty -> .)
-    RPAREN          reduce using rule 136 (empty -> .)
-    SEMICOL         reduce using rule 136 (empty -> .)
-    COMMA           reduce using rule 136 (empty -> .)
-    RBRACK          reduce using rule 136 (empty -> .)
-    HACER           reduce using rule 136 (empty -> .)
-    HASTA           reduce using rule 136 (empty -> .)
+    TIMES           reduce using rule 139 (empty -> .)
+    DIVIDE          reduce using rule 139 (empty -> .)
+    PLUS            reduce using rule 139 (empty -> .)
+    MINUS           reduce using rule 139 (empty -> .)
+    GTHAN           reduce using rule 139 (empty -> .)
+    LTHAN           reduce using rule 139 (empty -> .)
+    EQLOP           reduce using rule 139 (empty -> .)
+    GEQUAL          reduce using rule 139 (empty -> .)
+    LEQUAL          reduce using rule 139 (empty -> .)
+    ABRACKET        reduce using rule 139 (empty -> .)
+    RBRACKET        reduce using rule 139 (empty -> .)
+    ID              reduce using rule 139 (empty -> .)
+    REGRESA         reduce using rule 139 (empty -> .)
+    LEE             reduce using rule 139 (empty -> .)
+    ESCRIBE         reduce using rule 139 (empty -> .)
+    SI              reduce using rule 139 (empty -> .)
+    MIENTRAS        reduce using rule 139 (empty -> .)
+    DESDE           reduce using rule 139 (empty -> .)
+    LPAREN          reduce using rule 139 (empty -> .)
+    NUMBER          reduce using rule 139 (empty -> .)
+    CTEF            reduce using rule 139 (empty -> .)
+    CTEC            reduce using rule 139 (empty -> .)
+    STRING          reduce using rule 139 (empty -> .)
+    RPAREN          reduce using rule 139 (empty -> .)
+    SEMICOL         reduce using rule 139 (empty -> .)
+    COMMA           reduce using rule 139 (empty -> .)
+    RBRACK          reduce using rule 139 (empty -> .)
+    HACER           reduce using rule 139 (empty -> .)
+    HASTA           reduce using rule 139 (empty -> .)
 
-    llamadafun3                    shift and go to state 261
-    empty                          shift and go to state 262
+    llamadafun3                    shift and go to state 262
+    empty                          shift and go to state 263
 
 state 247
 
-    (53) asign -> LBRACK arrn expresion arrn2 RBRACK . arrn3
-    (58) arrn3 -> . empty
-    (136) empty -> .
+    (120) factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA . factorb
+    (125) factorb -> . expresion llamadafun2 COMMA factorb
+    (126) factorb -> . expresion llamadafun2 RPAREN llamadafun3
+    (103) expresion -> . exp
+    (104) expresion -> . exp GTHAN exp
+    (105) expresion -> . exp LTHAN exp
+    (106) expresion -> . exp EQLOP exp
+    (107) expresion -> . exp GEQUAL exp
+    (108) expresion -> . exp LEQUAL exp
+    (109) expresion -> . exp ABRACKET exp
+    (110) exp -> . termino
+    (111) exp -> . termino expb
+    (114) termino -> . factor
+    (115) termino -> . factor terminob
+    (118) factor -> . LPAREN expresion RPAREN
+    (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
+    (96) cte -> . ID
+    (97) cte -> . NUMBER saveconst
+    (98) cte -> . CTEF saveconst
+    (99) cte -> . CTEC
+    (100) cte -> . STRING savestringconst
 
-    EQUAL           reduce using rule 136 (empty -> .)
-    TIMES           reduce using rule 136 (empty -> .)
-    DIVIDE          reduce using rule 136 (empty -> .)
-    PLUS            reduce using rule 136 (empty -> .)
-    MINUS           reduce using rule 136 (empty -> .)
-    GTHAN           reduce using rule 136 (empty -> .)
-    LTHAN           reduce using rule 136 (empty -> .)
-    EQLOP           reduce using rule 136 (empty -> .)
-    GEQUAL          reduce using rule 136 (empty -> .)
-    LEQUAL          reduce using rule 136 (empty -> .)
-    ABRACKET        reduce using rule 136 (empty -> .)
-    RBRACKET        reduce using rule 136 (empty -> .)
-    ID              reduce using rule 136 (empty -> .)
-    REGRESA         reduce using rule 136 (empty -> .)
-    LEE             reduce using rule 136 (empty -> .)
-    ESCRIBE         reduce using rule 136 (empty -> .)
-    SI              reduce using rule 136 (empty -> .)
-    MIENTRAS        reduce using rule 136 (empty -> .)
-    DESDE           reduce using rule 136 (empty -> .)
-    LPAREN          reduce using rule 136 (empty -> .)
-    NUMBER          reduce using rule 136 (empty -> .)
-    CTEF            reduce using rule 136 (empty -> .)
-    CTEC            reduce using rule 136 (empty -> .)
-    STRING          reduce using rule 136 (empty -> .)
-    RPAREN          reduce using rule 136 (empty -> .)
-    COMMA           reduce using rule 136 (empty -> .)
-    SEMICOL         reduce using rule 136 (empty -> .)
-    RBRACK          reduce using rule 136 (empty -> .)
-    HACER           reduce using rule 136 (empty -> .)
-    HASTA           reduce using rule 136 (empty -> .)
+    LPAREN          shift and go to state 94
+    ID              shift and go to state 128
+    PLUS            shift and go to state 104
+    MINUS           shift and go to state 106
+    NUMBER          shift and go to state 76
+    CTEF            shift and go to state 77
+    CTEC            shift and go to state 78
+    STRING          shift and go to state 79
 
-    arrn3                          shift and go to state 263
-    empty                          shift and go to state 264
+    expresion                      shift and go to state 264
+    factorb                        shift and go to state 265
+    exp                            shift and go to state 101
+    termino                        shift and go to state 102
+    factor                         shift and go to state 103
+    cte                            shift and go to state 105
 
 state 248
 
-    (54) asign -> LBRACK arrn CTEI arrn2 RBRACK . arrn3
+    (53) asign -> LBRACK arrn expresion arrn2 RBRACK . arrn3
     (58) arrn3 -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    EQUAL           reduce using rule 136 (empty -> .)
-    TIMES           reduce using rule 136 (empty -> .)
-    DIVIDE          reduce using rule 136 (empty -> .)
-    PLUS            reduce using rule 136 (empty -> .)
-    MINUS           reduce using rule 136 (empty -> .)
-    GTHAN           reduce using rule 136 (empty -> .)
-    LTHAN           reduce using rule 136 (empty -> .)
-    EQLOP           reduce using rule 136 (empty -> .)
-    GEQUAL          reduce using rule 136 (empty -> .)
-    LEQUAL          reduce using rule 136 (empty -> .)
-    ABRACKET        reduce using rule 136 (empty -> .)
-    RBRACKET        reduce using rule 136 (empty -> .)
-    ID              reduce using rule 136 (empty -> .)
-    REGRESA         reduce using rule 136 (empty -> .)
-    LEE             reduce using rule 136 (empty -> .)
-    ESCRIBE         reduce using rule 136 (empty -> .)
-    SI              reduce using rule 136 (empty -> .)
-    MIENTRAS        reduce using rule 136 (empty -> .)
-    DESDE           reduce using rule 136 (empty -> .)
-    LPAREN          reduce using rule 136 (empty -> .)
-    NUMBER          reduce using rule 136 (empty -> .)
-    CTEF            reduce using rule 136 (empty -> .)
-    CTEC            reduce using rule 136 (empty -> .)
-    STRING          reduce using rule 136 (empty -> .)
-    RPAREN          reduce using rule 136 (empty -> .)
-    COMMA           reduce using rule 136 (empty -> .)
-    SEMICOL         reduce using rule 136 (empty -> .)
-    RBRACK          reduce using rule 136 (empty -> .)
-    HACER           reduce using rule 136 (empty -> .)
-    HASTA           reduce using rule 136 (empty -> .)
+    EQUAL           reduce using rule 139 (empty -> .)
+    TIMES           reduce using rule 139 (empty -> .)
+    DIVIDE          reduce using rule 139 (empty -> .)
+    PLUS            reduce using rule 139 (empty -> .)
+    MINUS           reduce using rule 139 (empty -> .)
+    GTHAN           reduce using rule 139 (empty -> .)
+    LTHAN           reduce using rule 139 (empty -> .)
+    EQLOP           reduce using rule 139 (empty -> .)
+    GEQUAL          reduce using rule 139 (empty -> .)
+    LEQUAL          reduce using rule 139 (empty -> .)
+    ABRACKET        reduce using rule 139 (empty -> .)
+    RBRACKET        reduce using rule 139 (empty -> .)
+    ID              reduce using rule 139 (empty -> .)
+    REGRESA         reduce using rule 139 (empty -> .)
+    LEE             reduce using rule 139 (empty -> .)
+    ESCRIBE         reduce using rule 139 (empty -> .)
+    SI              reduce using rule 139 (empty -> .)
+    MIENTRAS        reduce using rule 139 (empty -> .)
+    DESDE           reduce using rule 139 (empty -> .)
+    LPAREN          reduce using rule 139 (empty -> .)
+    NUMBER          reduce using rule 139 (empty -> .)
+    CTEF            reduce using rule 139 (empty -> .)
+    CTEC            reduce using rule 139 (empty -> .)
+    STRING          reduce using rule 139 (empty -> .)
+    RPAREN          reduce using rule 139 (empty -> .)
+    COMMA           reduce using rule 139 (empty -> .)
+    SEMICOL         reduce using rule 139 (empty -> .)
+    RBRACK          reduce using rule 139 (empty -> .)
+    HACER           reduce using rule 139 (empty -> .)
+    HASTA           reduce using rule 139 (empty -> .)
 
-    arrn3                          shift and go to state 265
-    empty                          shift and go to state 264
+    arrn3                          shift and go to state 266
+    empty                          shift and go to state 267
 
 state 249
 
-    (55) asign -> LBRACK arrn CTEC arrn2 RBRACK . arrn3
+    (54) asign -> LBRACK arrn CTEI arrn2 RBRACK . arrn3
     (58) arrn3 -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    EQUAL           reduce using rule 136 (empty -> .)
-    TIMES           reduce using rule 136 (empty -> .)
-    DIVIDE          reduce using rule 136 (empty -> .)
-    PLUS            reduce using rule 136 (empty -> .)
-    MINUS           reduce using rule 136 (empty -> .)
-    GTHAN           reduce using rule 136 (empty -> .)
-    LTHAN           reduce using rule 136 (empty -> .)
-    EQLOP           reduce using rule 136 (empty -> .)
-    GEQUAL          reduce using rule 136 (empty -> .)
-    LEQUAL          reduce using rule 136 (empty -> .)
-    ABRACKET        reduce using rule 136 (empty -> .)
-    RBRACKET        reduce using rule 136 (empty -> .)
-    ID              reduce using rule 136 (empty -> .)
-    REGRESA         reduce using rule 136 (empty -> .)
-    LEE             reduce using rule 136 (empty -> .)
-    ESCRIBE         reduce using rule 136 (empty -> .)
-    SI              reduce using rule 136 (empty -> .)
-    MIENTRAS        reduce using rule 136 (empty -> .)
-    DESDE           reduce using rule 136 (empty -> .)
-    LPAREN          reduce using rule 136 (empty -> .)
-    NUMBER          reduce using rule 136 (empty -> .)
-    CTEF            reduce using rule 136 (empty -> .)
-    CTEC            reduce using rule 136 (empty -> .)
-    STRING          reduce using rule 136 (empty -> .)
-    RPAREN          reduce using rule 136 (empty -> .)
-    COMMA           reduce using rule 136 (empty -> .)
-    SEMICOL         reduce using rule 136 (empty -> .)
-    RBRACK          reduce using rule 136 (empty -> .)
-    HACER           reduce using rule 136 (empty -> .)
-    HASTA           reduce using rule 136 (empty -> .)
+    EQUAL           reduce using rule 139 (empty -> .)
+    TIMES           reduce using rule 139 (empty -> .)
+    DIVIDE          reduce using rule 139 (empty -> .)
+    PLUS            reduce using rule 139 (empty -> .)
+    MINUS           reduce using rule 139 (empty -> .)
+    GTHAN           reduce using rule 139 (empty -> .)
+    LTHAN           reduce using rule 139 (empty -> .)
+    EQLOP           reduce using rule 139 (empty -> .)
+    GEQUAL          reduce using rule 139 (empty -> .)
+    LEQUAL          reduce using rule 139 (empty -> .)
+    ABRACKET        reduce using rule 139 (empty -> .)
+    RBRACKET        reduce using rule 139 (empty -> .)
+    ID              reduce using rule 139 (empty -> .)
+    REGRESA         reduce using rule 139 (empty -> .)
+    LEE             reduce using rule 139 (empty -> .)
+    ESCRIBE         reduce using rule 139 (empty -> .)
+    SI              reduce using rule 139 (empty -> .)
+    MIENTRAS        reduce using rule 139 (empty -> .)
+    DESDE           reduce using rule 139 (empty -> .)
+    LPAREN          reduce using rule 139 (empty -> .)
+    NUMBER          reduce using rule 139 (empty -> .)
+    CTEF            reduce using rule 139 (empty -> .)
+    CTEC            reduce using rule 139 (empty -> .)
+    STRING          reduce using rule 139 (empty -> .)
+    RPAREN          reduce using rule 139 (empty -> .)
+    COMMA           reduce using rule 139 (empty -> .)
+    SEMICOL         reduce using rule 139 (empty -> .)
+    RBRACK          reduce using rule 139 (empty -> .)
+    HACER           reduce using rule 139 (empty -> .)
+    HASTA           reduce using rule 139 (empty -> .)
 
-    arrn3                          shift and go to state 266
-    empty                          shift and go to state 264
+    arrn3                          shift and go to state 268
+    empty                          shift and go to state 267
 
 state 250
+
+    (55) asign -> LBRACK arrn CTEC arrn2 RBRACK . arrn3
+    (58) arrn3 -> . empty
+    (139) empty -> .
+
+    EQUAL           reduce using rule 139 (empty -> .)
+    TIMES           reduce using rule 139 (empty -> .)
+    DIVIDE          reduce using rule 139 (empty -> .)
+    PLUS            reduce using rule 139 (empty -> .)
+    MINUS           reduce using rule 139 (empty -> .)
+    GTHAN           reduce using rule 139 (empty -> .)
+    LTHAN           reduce using rule 139 (empty -> .)
+    EQLOP           reduce using rule 139 (empty -> .)
+    GEQUAL          reduce using rule 139 (empty -> .)
+    LEQUAL          reduce using rule 139 (empty -> .)
+    ABRACKET        reduce using rule 139 (empty -> .)
+    RBRACKET        reduce using rule 139 (empty -> .)
+    ID              reduce using rule 139 (empty -> .)
+    REGRESA         reduce using rule 139 (empty -> .)
+    LEE             reduce using rule 139 (empty -> .)
+    ESCRIBE         reduce using rule 139 (empty -> .)
+    SI              reduce using rule 139 (empty -> .)
+    MIENTRAS        reduce using rule 139 (empty -> .)
+    DESDE           reduce using rule 139 (empty -> .)
+    LPAREN          reduce using rule 139 (empty -> .)
+    NUMBER          reduce using rule 139 (empty -> .)
+    CTEF            reduce using rule 139 (empty -> .)
+    CTEC            reduce using rule 139 (empty -> .)
+    STRING          reduce using rule 139 (empty -> .)
+    RPAREN          reduce using rule 139 (empty -> .)
+    COMMA           reduce using rule 139 (empty -> .)
+    SEMICOL         reduce using rule 139 (empty -> .)
+    RBRACK          reduce using rule 139 (empty -> .)
+    HACER           reduce using rule 139 (empty -> .)
+    HASTA           reduce using rule 139 (empty -> .)
+
+    arrn3                          shift and go to state 269
+    empty                          shift and go to state 267
+
+state 251
 
     (63) retorno -> REGRESA LPAREN expresion retn RPAREN SEMICOL .
 
@@ -4987,7 +5076,7 @@ state 250
     STRING          reduce using rule 63 (retorno -> REGRESA LPAREN expresion retn RPAREN SEMICOL .)
 
 
-state 251
+state 252
 
     (72) leeb -> RPAREN leen SEMICOL .
 
@@ -5008,7 +5097,7 @@ state 251
     STRING          reduce using rule 72 (leeb -> RPAREN leen SEMICOL .)
 
 
-state 252
+state 253
 
     (73) leeb -> COMMA leen id . leeb
     (72) leeb -> . RPAREN leen SEMICOL
@@ -5017,21 +5106,21 @@ state 252
     RPAREN          shift and go to state 206
     COMMA           shift and go to state 207
 
-    leeb                           shift and go to state 267
+    leeb                           shift and go to state 270
 
-state 253
+state 254
 
     (76) escriturab -> COMMA expresion . prin1 escriturab
     (78) prin1 -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    COMMA           reduce using rule 136 (empty -> .)
-    RPAREN          reduce using rule 136 (empty -> .)
+    COMMA           reduce using rule 139 (empty -> .)
+    RPAREN          reduce using rule 139 (empty -> .)
 
-    prin1                          shift and go to state 268
+    prin1                          shift and go to state 271
     empty                          shift and go to state 209
 
-state 254
+state 255
 
     (77) escriturab -> RPAREN SEMICOL .
 
@@ -5052,7 +5141,7 @@ state 254
     STRING          reduce using rule 77 (escriturab -> RPAREN SEMICOL .)
 
 
-state 255
+state 256
 
     (79) decision -> SI LPAREN expresion pn1 RPAREN ENTONCES . decisionb
     (81) decisionb -> . bloque pn2
@@ -5062,21 +5151,21 @@ state 255
 
     LBRACKET        shift and go to state 63
 
-    decisionb                      shift and go to state 269
-    bloque                         shift and go to state 270
+    decisionb                      shift and go to state 272
+    bloque                         shift and go to state 273
 
-state 256
+state 257
 
     (85) repeticioncond -> MIENTRAS rcn1 LPAREN expresion RPAREN HAZ . rcn2 bloque rcn3
     (87) rcn2 -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    LBRACKET        reduce using rule 136 (empty -> .)
+    LBRACKET        reduce using rule 139 (empty -> .)
 
-    rcn2                           shift and go to state 271
-    empty                          shift and go to state 272
+    rcn2                           shift and go to state 274
+    empty                          shift and go to state 275
 
-state 257
+state 258
 
     (89) repeticionnocond -> DESDE asignacioncond HASTA exp repnoconn HACER . bloque repnoconn2
     (48) bloque -> . LBRACKET estatuto bloqueb
@@ -5084,35 +5173,35 @@ state 257
 
     LBRACKET        shift and go to state 63
 
-    bloque                         shift and go to state 273
-
-state 258
-
-    (66) funcionvoidb -> COMMA expresion . fnvn2 funcionvoidb
-    (69) fnvn2 -> . empty
-    (136) empty -> .
-
-    COMMA           reduce using rule 136 (empty -> .)
-    RPAREN          reduce using rule 136 (empty -> .)
-
-    fnvn2                          shift and go to state 274
-    empty                          shift and go to state 222
+    bloque                         shift and go to state 276
 
 state 259
 
-    (67) funcionvoidb -> RPAREN fnvn3 . SEMICOL
+    (66) funcionvoidb -> COMMA expresion . fnvn2 funcionvoidb
+    (69) fnvn2 -> . empty
+    (139) empty -> .
 
-    SEMICOL         shift and go to state 275
+    COMMA           reduce using rule 139 (empty -> .)
+    RPAREN          reduce using rule 139 (empty -> .)
 
+    fnvn2                          shift and go to state 277
+    empty                          shift and go to state 222
 
 state 260
+
+    (67) funcionvoidb -> RPAREN fnvn3 . SEMICOL
+
+    SEMICOL         shift and go to state 278
+
+
+state 261
 
     (70) fnvn3 -> empty .
 
     SEMICOL         reduce using rule 70 (fnvn3 -> empty .)
 
 
-state 261
+state 262
 
     (119) factor -> ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3 .
 
@@ -5147,42 +5236,90 @@ state 261
     HASTA           reduce using rule 119 (factor -> ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3 .)
 
 
-state 262
-
-    (126) llamadafun3 -> empty .
-
-    TIMES           reduce using rule 126 (llamadafun3 -> empty .)
-    DIVIDE          reduce using rule 126 (llamadafun3 -> empty .)
-    PLUS            reduce using rule 126 (llamadafun3 -> empty .)
-    MINUS           reduce using rule 126 (llamadafun3 -> empty .)
-    GTHAN           reduce using rule 126 (llamadafun3 -> empty .)
-    LTHAN           reduce using rule 126 (llamadafun3 -> empty .)
-    EQLOP           reduce using rule 126 (llamadafun3 -> empty .)
-    GEQUAL          reduce using rule 126 (llamadafun3 -> empty .)
-    LEQUAL          reduce using rule 126 (llamadafun3 -> empty .)
-    ABRACKET        reduce using rule 126 (llamadafun3 -> empty .)
-    RBRACKET        reduce using rule 126 (llamadafun3 -> empty .)
-    ID              reduce using rule 126 (llamadafun3 -> empty .)
-    REGRESA         reduce using rule 126 (llamadafun3 -> empty .)
-    LEE             reduce using rule 126 (llamadafun3 -> empty .)
-    ESCRIBE         reduce using rule 126 (llamadafun3 -> empty .)
-    SI              reduce using rule 126 (llamadafun3 -> empty .)
-    MIENTRAS        reduce using rule 126 (llamadafun3 -> empty .)
-    DESDE           reduce using rule 126 (llamadafun3 -> empty .)
-    LPAREN          reduce using rule 126 (llamadafun3 -> empty .)
-    NUMBER          reduce using rule 126 (llamadafun3 -> empty .)
-    CTEF            reduce using rule 126 (llamadafun3 -> empty .)
-    CTEC            reduce using rule 126 (llamadafun3 -> empty .)
-    STRING          reduce using rule 126 (llamadafun3 -> empty .)
-    RPAREN          reduce using rule 126 (llamadafun3 -> empty .)
-    SEMICOL         reduce using rule 126 (llamadafun3 -> empty .)
-    COMMA           reduce using rule 126 (llamadafun3 -> empty .)
-    RBRACK          reduce using rule 126 (llamadafun3 -> empty .)
-    HACER           reduce using rule 126 (llamadafun3 -> empty .)
-    HASTA           reduce using rule 126 (llamadafun3 -> empty .)
-
-
 state 263
+
+    (129) llamadafun3 -> empty .
+
+    TIMES           reduce using rule 129 (llamadafun3 -> empty .)
+    DIVIDE          reduce using rule 129 (llamadafun3 -> empty .)
+    PLUS            reduce using rule 129 (llamadafun3 -> empty .)
+    MINUS           reduce using rule 129 (llamadafun3 -> empty .)
+    GTHAN           reduce using rule 129 (llamadafun3 -> empty .)
+    LTHAN           reduce using rule 129 (llamadafun3 -> empty .)
+    EQLOP           reduce using rule 129 (llamadafun3 -> empty .)
+    GEQUAL          reduce using rule 129 (llamadafun3 -> empty .)
+    LEQUAL          reduce using rule 129 (llamadafun3 -> empty .)
+    ABRACKET        reduce using rule 129 (llamadafun3 -> empty .)
+    RBRACKET        reduce using rule 129 (llamadafun3 -> empty .)
+    ID              reduce using rule 129 (llamadafun3 -> empty .)
+    REGRESA         reduce using rule 129 (llamadafun3 -> empty .)
+    LEE             reduce using rule 129 (llamadafun3 -> empty .)
+    ESCRIBE         reduce using rule 129 (llamadafun3 -> empty .)
+    SI              reduce using rule 129 (llamadafun3 -> empty .)
+    MIENTRAS        reduce using rule 129 (llamadafun3 -> empty .)
+    DESDE           reduce using rule 129 (llamadafun3 -> empty .)
+    LPAREN          reduce using rule 129 (llamadafun3 -> empty .)
+    NUMBER          reduce using rule 129 (llamadafun3 -> empty .)
+    CTEF            reduce using rule 129 (llamadafun3 -> empty .)
+    CTEC            reduce using rule 129 (llamadafun3 -> empty .)
+    STRING          reduce using rule 129 (llamadafun3 -> empty .)
+    RPAREN          reduce using rule 129 (llamadafun3 -> empty .)
+    SEMICOL         reduce using rule 129 (llamadafun3 -> empty .)
+    COMMA           reduce using rule 129 (llamadafun3 -> empty .)
+    RBRACK          reduce using rule 129 (llamadafun3 -> empty .)
+    HACER           reduce using rule 129 (llamadafun3 -> empty .)
+    HASTA           reduce using rule 129 (llamadafun3 -> empty .)
+
+
+state 264
+
+    (125) factorb -> expresion . llamadafun2 COMMA factorb
+    (126) factorb -> expresion . llamadafun2 RPAREN llamadafun3
+    (128) llamadafun2 -> . empty
+    (139) empty -> .
+
+    COMMA           reduce using rule 139 (empty -> .)
+    RPAREN          reduce using rule 139 (empty -> .)
+
+    llamadafun2                    shift and go to state 279
+    empty                          shift and go to state 224
+
+state 265
+
+    (120) factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .
+
+    TIMES           reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    DIVIDE          reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    PLUS            reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    MINUS           reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    GTHAN           reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    LTHAN           reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    EQLOP           reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    GEQUAL          reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    LEQUAL          reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    ABRACKET        reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    RBRACKET        reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    ID              reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    REGRESA         reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    LEE             reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    ESCRIBE         reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    SI              reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    MIENTRAS        reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    DESDE           reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    LPAREN          reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    NUMBER          reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    CTEF            reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    CTEC            reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    STRING          reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    RPAREN          reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    SEMICOL         reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    COMMA           reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    RBRACK          reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    HACER           reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+    HASTA           reduce using rule 120 (factor -> ID LPAREN llamadafun expresion llamadafun2 COMMA factorb .)
+
+
+state 266
 
     (53) asign -> LBRACK arrn expresion arrn2 RBRACK arrn3 .
 
@@ -5218,7 +5355,7 @@ state 263
     HASTA           reduce using rule 53 (asign -> LBRACK arrn expresion arrn2 RBRACK arrn3 .)
 
 
-state 264
+state 267
 
     (58) arrn3 -> empty .
 
@@ -5254,7 +5391,7 @@ state 264
     HASTA           reduce using rule 58 (arrn3 -> empty .)
 
 
-state 265
+state 268
 
     (54) asign -> LBRACK arrn CTEI arrn2 RBRACK arrn3 .
 
@@ -5290,7 +5427,7 @@ state 265
     HASTA           reduce using rule 54 (asign -> LBRACK arrn CTEI arrn2 RBRACK arrn3 .)
 
 
-state 266
+state 269
 
     (55) asign -> LBRACK arrn CTEC arrn2 RBRACK arrn3 .
 
@@ -5326,7 +5463,7 @@ state 266
     HASTA           reduce using rule 55 (asign -> LBRACK arrn CTEC arrn2 RBRACK arrn3 .)
 
 
-state 267
+state 270
 
     (73) leeb -> COMMA leen id leeb .
 
@@ -5347,7 +5484,7 @@ state 267
     STRING          reduce using rule 73 (leeb -> COMMA leen id leeb .)
 
 
-state 268
+state 271
 
     (76) escriturab -> COMMA expresion prin1 . escriturab
     (76) escriturab -> . COMMA expresion prin1 escriturab
@@ -5356,9 +5493,9 @@ state 268
     COMMA           shift and go to state 234
     RPAREN          shift and go to state 235
 
-    escriturab                     shift and go to state 276
+    escriturab                     shift and go to state 280
 
-state 269
+state 272
 
     (79) decision -> SI LPAREN expresion pn1 RPAREN ENTONCES decisionb .
 
@@ -5379,34 +5516,34 @@ state 269
     STRING          reduce using rule 79 (decision -> SI LPAREN expresion pn1 RPAREN ENTONCES decisionb .)
 
 
-state 270
+state 273
 
     (81) decisionb -> bloque . pn2
     (82) decisionb -> bloque . SINO pn3 bloque pn2
     (83) pn2 -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    SINO            shift and go to state 278
-    RBRACKET        reduce using rule 136 (empty -> .)
-    ID              reduce using rule 136 (empty -> .)
-    REGRESA         reduce using rule 136 (empty -> .)
-    LEE             reduce using rule 136 (empty -> .)
-    ESCRIBE         reduce using rule 136 (empty -> .)
-    SI              reduce using rule 136 (empty -> .)
-    MIENTRAS        reduce using rule 136 (empty -> .)
-    DESDE           reduce using rule 136 (empty -> .)
-    LPAREN          reduce using rule 136 (empty -> .)
-    PLUS            reduce using rule 136 (empty -> .)
-    MINUS           reduce using rule 136 (empty -> .)
-    NUMBER          reduce using rule 136 (empty -> .)
-    CTEF            reduce using rule 136 (empty -> .)
-    CTEC            reduce using rule 136 (empty -> .)
-    STRING          reduce using rule 136 (empty -> .)
+    SINO            shift and go to state 282
+    RBRACKET        reduce using rule 139 (empty -> .)
+    ID              reduce using rule 139 (empty -> .)
+    REGRESA         reduce using rule 139 (empty -> .)
+    LEE             reduce using rule 139 (empty -> .)
+    ESCRIBE         reduce using rule 139 (empty -> .)
+    SI              reduce using rule 139 (empty -> .)
+    MIENTRAS        reduce using rule 139 (empty -> .)
+    DESDE           reduce using rule 139 (empty -> .)
+    LPAREN          reduce using rule 139 (empty -> .)
+    PLUS            reduce using rule 139 (empty -> .)
+    MINUS           reduce using rule 139 (empty -> .)
+    NUMBER          reduce using rule 139 (empty -> .)
+    CTEF            reduce using rule 139 (empty -> .)
+    CTEC            reduce using rule 139 (empty -> .)
+    STRING          reduce using rule 139 (empty -> .)
 
-    pn2                            shift and go to state 277
-    empty                          shift and go to state 279
+    pn2                            shift and go to state 281
+    empty                          shift and go to state 283
 
-state 271
+state 274
 
     (85) repeticioncond -> MIENTRAS rcn1 LPAREN expresion RPAREN HAZ rcn2 . bloque rcn3
     (48) bloque -> . LBRACKET estatuto bloqueb
@@ -5414,41 +5551,41 @@ state 271
 
     LBRACKET        shift and go to state 63
 
-    bloque                         shift and go to state 280
+    bloque                         shift and go to state 284
 
-state 272
+state 275
 
     (87) rcn2 -> empty .
 
     LBRACKET        reduce using rule 87 (rcn2 -> empty .)
 
 
-state 273
+state 276
 
     (89) repeticionnocond -> DESDE asignacioncond HASTA exp repnoconn HACER bloque . repnoconn2
     (93) repnoconn2 -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    RBRACKET        reduce using rule 136 (empty -> .)
-    ID              reduce using rule 136 (empty -> .)
-    REGRESA         reduce using rule 136 (empty -> .)
-    LEE             reduce using rule 136 (empty -> .)
-    ESCRIBE         reduce using rule 136 (empty -> .)
-    SI              reduce using rule 136 (empty -> .)
-    MIENTRAS        reduce using rule 136 (empty -> .)
-    DESDE           reduce using rule 136 (empty -> .)
-    LPAREN          reduce using rule 136 (empty -> .)
-    PLUS            reduce using rule 136 (empty -> .)
-    MINUS           reduce using rule 136 (empty -> .)
-    NUMBER          reduce using rule 136 (empty -> .)
-    CTEF            reduce using rule 136 (empty -> .)
-    CTEC            reduce using rule 136 (empty -> .)
-    STRING          reduce using rule 136 (empty -> .)
+    RBRACKET        reduce using rule 139 (empty -> .)
+    ID              reduce using rule 139 (empty -> .)
+    REGRESA         reduce using rule 139 (empty -> .)
+    LEE             reduce using rule 139 (empty -> .)
+    ESCRIBE         reduce using rule 139 (empty -> .)
+    SI              reduce using rule 139 (empty -> .)
+    MIENTRAS        reduce using rule 139 (empty -> .)
+    DESDE           reduce using rule 139 (empty -> .)
+    LPAREN          reduce using rule 139 (empty -> .)
+    PLUS            reduce using rule 139 (empty -> .)
+    MINUS           reduce using rule 139 (empty -> .)
+    NUMBER          reduce using rule 139 (empty -> .)
+    CTEF            reduce using rule 139 (empty -> .)
+    CTEC            reduce using rule 139 (empty -> .)
+    STRING          reduce using rule 139 (empty -> .)
 
-    repnoconn2                     shift and go to state 281
-    empty                          shift and go to state 282
+    repnoconn2                     shift and go to state 285
+    empty                          shift and go to state 286
 
-state 274
+state 277
 
     (66) funcionvoidb -> COMMA expresion fnvn2 . funcionvoidb
     (66) funcionvoidb -> . COMMA expresion fnvn2 funcionvoidb
@@ -5457,9 +5594,9 @@ state 274
     COMMA           shift and go to state 244
     RPAREN          shift and go to state 245
 
-    funcionvoidb                   shift and go to state 283
+    funcionvoidb                   shift and go to state 287
 
-state 275
+state 278
 
     (67) funcionvoidb -> RPAREN fnvn3 SEMICOL .
 
@@ -5480,7 +5617,16 @@ state 275
     STRING          reduce using rule 67 (funcionvoidb -> RPAREN fnvn3 SEMICOL .)
 
 
-state 276
+state 279
+
+    (125) factorb -> expresion llamadafun2 . COMMA factorb
+    (126) factorb -> expresion llamadafun2 . RPAREN llamadafun3
+
+    COMMA           shift and go to state 288
+    RPAREN          shift and go to state 289
+
+
+state 280
 
     (76) escriturab -> COMMA expresion prin1 escriturab .
 
@@ -5501,7 +5647,7 @@ state 276
     STRING          reduce using rule 76 (escriturab -> COMMA expresion prin1 escriturab .)
 
 
-state 277
+state 281
 
     (81) decisionb -> bloque pn2 .
 
@@ -5522,18 +5668,18 @@ state 277
     STRING          reduce using rule 81 (decisionb -> bloque pn2 .)
 
 
-state 278
+state 282
 
     (82) decisionb -> bloque SINO . pn3 bloque pn2
     (84) pn3 -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    LBRACKET        reduce using rule 136 (empty -> .)
+    LBRACKET        reduce using rule 139 (empty -> .)
 
-    pn3                            shift and go to state 284
-    empty                          shift and go to state 285
+    pn3                            shift and go to state 290
+    empty                          shift and go to state 291
 
-state 279
+state 283
 
     (83) pn2 -> empty .
 
@@ -5554,32 +5700,32 @@ state 279
     STRING          reduce using rule 83 (pn2 -> empty .)
 
 
-state 280
+state 284
 
     (85) repeticioncond -> MIENTRAS rcn1 LPAREN expresion RPAREN HAZ rcn2 bloque . rcn3
     (88) rcn3 -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    RBRACKET        reduce using rule 136 (empty -> .)
-    ID              reduce using rule 136 (empty -> .)
-    REGRESA         reduce using rule 136 (empty -> .)
-    LEE             reduce using rule 136 (empty -> .)
-    ESCRIBE         reduce using rule 136 (empty -> .)
-    SI              reduce using rule 136 (empty -> .)
-    MIENTRAS        reduce using rule 136 (empty -> .)
-    DESDE           reduce using rule 136 (empty -> .)
-    LPAREN          reduce using rule 136 (empty -> .)
-    PLUS            reduce using rule 136 (empty -> .)
-    MINUS           reduce using rule 136 (empty -> .)
-    NUMBER          reduce using rule 136 (empty -> .)
-    CTEF            reduce using rule 136 (empty -> .)
-    CTEC            reduce using rule 136 (empty -> .)
-    STRING          reduce using rule 136 (empty -> .)
+    RBRACKET        reduce using rule 139 (empty -> .)
+    ID              reduce using rule 139 (empty -> .)
+    REGRESA         reduce using rule 139 (empty -> .)
+    LEE             reduce using rule 139 (empty -> .)
+    ESCRIBE         reduce using rule 139 (empty -> .)
+    SI              reduce using rule 139 (empty -> .)
+    MIENTRAS        reduce using rule 139 (empty -> .)
+    DESDE           reduce using rule 139 (empty -> .)
+    LPAREN          reduce using rule 139 (empty -> .)
+    PLUS            reduce using rule 139 (empty -> .)
+    MINUS           reduce using rule 139 (empty -> .)
+    NUMBER          reduce using rule 139 (empty -> .)
+    CTEF            reduce using rule 139 (empty -> .)
+    CTEC            reduce using rule 139 (empty -> .)
+    STRING          reduce using rule 139 (empty -> .)
 
-    rcn3                           shift and go to state 286
-    empty                          shift and go to state 287
+    rcn3                           shift and go to state 292
+    empty                          shift and go to state 293
 
-state 281
+state 285
 
     (89) repeticionnocond -> DESDE asignacioncond HASTA exp repnoconn HACER bloque repnoconn2 .
 
@@ -5600,7 +5746,7 @@ state 281
     STRING          reduce using rule 89 (repeticionnocond -> DESDE asignacioncond HASTA exp repnoconn HACER bloque repnoconn2 .)
 
 
-state 282
+state 286
 
     (93) repnoconn2 -> empty .
 
@@ -5621,7 +5767,7 @@ state 282
     STRING          reduce using rule 93 (repnoconn2 -> empty .)
 
 
-state 283
+state 287
 
     (66) funcionvoidb -> COMMA expresion fnvn2 funcionvoidb .
 
@@ -5642,7 +5788,91 @@ state 283
     STRING          reduce using rule 66 (funcionvoidb -> COMMA expresion fnvn2 funcionvoidb .)
 
 
-state 284
+state 288
+
+    (125) factorb -> expresion llamadafun2 COMMA . factorb
+    (125) factorb -> . expresion llamadafun2 COMMA factorb
+    (126) factorb -> . expresion llamadafun2 RPAREN llamadafun3
+    (103) expresion -> . exp
+    (104) expresion -> . exp GTHAN exp
+    (105) expresion -> . exp LTHAN exp
+    (106) expresion -> . exp EQLOP exp
+    (107) expresion -> . exp GEQUAL exp
+    (108) expresion -> . exp LEQUAL exp
+    (109) expresion -> . exp ABRACKET exp
+    (110) exp -> . termino
+    (111) exp -> . termino expb
+    (114) termino -> . factor
+    (115) termino -> . factor terminob
+    (118) factor -> . LPAREN expresion RPAREN
+    (119) factor -> . ID LPAREN llamadafun expresion llamadafun2 RPAREN llamadafun3
+    (120) factor -> . ID LPAREN llamadafun expresion llamadafun2 COMMA factorb
+    (121) factor -> . PLUS cte
+    (122) factor -> . MINUS cte
+    (123) factor -> . cte
+    (124) factor -> . ID asign
+    (96) cte -> . ID
+    (97) cte -> . NUMBER saveconst
+    (98) cte -> . CTEF saveconst
+    (99) cte -> . CTEC
+    (100) cte -> . STRING savestringconst
+
+    LPAREN          shift and go to state 94
+    ID              shift and go to state 128
+    PLUS            shift and go to state 104
+    MINUS           shift and go to state 106
+    NUMBER          shift and go to state 76
+    CTEF            shift and go to state 77
+    CTEC            shift and go to state 78
+    STRING          shift and go to state 79
+
+    expresion                      shift and go to state 264
+    factorb                        shift and go to state 294
+    exp                            shift and go to state 101
+    termino                        shift and go to state 102
+    factor                         shift and go to state 103
+    cte                            shift and go to state 105
+
+state 289
+
+    (126) factorb -> expresion llamadafun2 RPAREN . llamadafun3
+    (129) llamadafun3 -> . empty
+    (139) empty -> .
+
+    TIMES           reduce using rule 139 (empty -> .)
+    DIVIDE          reduce using rule 139 (empty -> .)
+    PLUS            reduce using rule 139 (empty -> .)
+    MINUS           reduce using rule 139 (empty -> .)
+    GTHAN           reduce using rule 139 (empty -> .)
+    LTHAN           reduce using rule 139 (empty -> .)
+    EQLOP           reduce using rule 139 (empty -> .)
+    GEQUAL          reduce using rule 139 (empty -> .)
+    LEQUAL          reduce using rule 139 (empty -> .)
+    ABRACKET        reduce using rule 139 (empty -> .)
+    RBRACKET        reduce using rule 139 (empty -> .)
+    ID              reduce using rule 139 (empty -> .)
+    REGRESA         reduce using rule 139 (empty -> .)
+    LEE             reduce using rule 139 (empty -> .)
+    ESCRIBE         reduce using rule 139 (empty -> .)
+    SI              reduce using rule 139 (empty -> .)
+    MIENTRAS        reduce using rule 139 (empty -> .)
+    DESDE           reduce using rule 139 (empty -> .)
+    LPAREN          reduce using rule 139 (empty -> .)
+    NUMBER          reduce using rule 139 (empty -> .)
+    CTEF            reduce using rule 139 (empty -> .)
+    CTEC            reduce using rule 139 (empty -> .)
+    STRING          reduce using rule 139 (empty -> .)
+    RPAREN          reduce using rule 139 (empty -> .)
+    SEMICOL         reduce using rule 139 (empty -> .)
+    COMMA           reduce using rule 139 (empty -> .)
+    RBRACK          reduce using rule 139 (empty -> .)
+    HACER           reduce using rule 139 (empty -> .)
+    HASTA           reduce using rule 139 (empty -> .)
+
+    llamadafun3                    shift and go to state 295
+    empty                          shift and go to state 263
+
+state 290
 
     (82) decisionb -> bloque SINO pn3 . bloque pn2
     (48) bloque -> . LBRACKET estatuto bloqueb
@@ -5650,16 +5880,16 @@ state 284
 
     LBRACKET        shift and go to state 63
 
-    bloque                         shift and go to state 288
+    bloque                         shift and go to state 296
 
-state 285
+state 291
 
     (84) pn3 -> empty .
 
     LBRACKET        reduce using rule 84 (pn3 -> empty .)
 
 
-state 286
+state 292
 
     (85) repeticioncond -> MIENTRAS rcn1 LPAREN expresion RPAREN HAZ rcn2 bloque rcn3 .
 
@@ -5680,7 +5910,7 @@ state 286
     STRING          reduce using rule 85 (repeticioncond -> MIENTRAS rcn1 LPAREN expresion RPAREN HAZ rcn2 bloque rcn3 .)
 
 
-state 287
+state 293
 
     (88) rcn3 -> empty .
 
@@ -5701,32 +5931,102 @@ state 287
     STRING          reduce using rule 88 (rcn3 -> empty .)
 
 
-state 288
+state 294
+
+    (125) factorb -> expresion llamadafun2 COMMA factorb .
+
+    TIMES           reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    DIVIDE          reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    PLUS            reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    MINUS           reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    GTHAN           reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    LTHAN           reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    EQLOP           reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    GEQUAL          reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    LEQUAL          reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    ABRACKET        reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    RBRACKET        reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    ID              reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    REGRESA         reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    LEE             reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    ESCRIBE         reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    SI              reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    MIENTRAS        reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    DESDE           reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    LPAREN          reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    NUMBER          reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    CTEF            reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    CTEC            reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    STRING          reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    RPAREN          reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    SEMICOL         reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    COMMA           reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    RBRACK          reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    HACER           reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+    HASTA           reduce using rule 125 (factorb -> expresion llamadafun2 COMMA factorb .)
+
+
+state 295
+
+    (126) factorb -> expresion llamadafun2 RPAREN llamadafun3 .
+
+    TIMES           reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    DIVIDE          reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    PLUS            reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    MINUS           reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    GTHAN           reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    LTHAN           reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    EQLOP           reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    GEQUAL          reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    LEQUAL          reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    ABRACKET        reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    RBRACKET        reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    ID              reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    REGRESA         reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    LEE             reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    ESCRIBE         reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    SI              reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    MIENTRAS        reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    DESDE           reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    LPAREN          reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    NUMBER          reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    CTEF            reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    CTEC            reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    STRING          reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    RPAREN          reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    SEMICOL         reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    COMMA           reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    RBRACK          reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    HACER           reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+    HASTA           reduce using rule 126 (factorb -> expresion llamadafun2 RPAREN llamadafun3 .)
+
+
+state 296
 
     (82) decisionb -> bloque SINO pn3 bloque . pn2
     (83) pn2 -> . empty
-    (136) empty -> .
+    (139) empty -> .
 
-    RBRACKET        reduce using rule 136 (empty -> .)
-    ID              reduce using rule 136 (empty -> .)
-    REGRESA         reduce using rule 136 (empty -> .)
-    LEE             reduce using rule 136 (empty -> .)
-    ESCRIBE         reduce using rule 136 (empty -> .)
-    SI              reduce using rule 136 (empty -> .)
-    MIENTRAS        reduce using rule 136 (empty -> .)
-    DESDE           reduce using rule 136 (empty -> .)
-    LPAREN          reduce using rule 136 (empty -> .)
-    PLUS            reduce using rule 136 (empty -> .)
-    MINUS           reduce using rule 136 (empty -> .)
-    NUMBER          reduce using rule 136 (empty -> .)
-    CTEF            reduce using rule 136 (empty -> .)
-    CTEC            reduce using rule 136 (empty -> .)
-    STRING          reduce using rule 136 (empty -> .)
+    RBRACKET        reduce using rule 139 (empty -> .)
+    ID              reduce using rule 139 (empty -> .)
+    REGRESA         reduce using rule 139 (empty -> .)
+    LEE             reduce using rule 139 (empty -> .)
+    ESCRIBE         reduce using rule 139 (empty -> .)
+    SI              reduce using rule 139 (empty -> .)
+    MIENTRAS        reduce using rule 139 (empty -> .)
+    DESDE           reduce using rule 139 (empty -> .)
+    LPAREN          reduce using rule 139 (empty -> .)
+    PLUS            reduce using rule 139 (empty -> .)
+    MINUS           reduce using rule 139 (empty -> .)
+    NUMBER          reduce using rule 139 (empty -> .)
+    CTEF            reduce using rule 139 (empty -> .)
+    CTEC            reduce using rule 139 (empty -> .)
+    STRING          reduce using rule 139 (empty -> .)
 
-    pn2                            shift and go to state 289
-    empty                          shift and go to state 279
+    pn2                            shift and go to state 297
+    empty                          shift and go to state 283
 
-state 289
+state 297
 
     (82) decisionb -> bloque SINO pn3 bloque pn2 .
 

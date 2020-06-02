@@ -1,27 +1,23 @@
 programa foreveralone;
 var int i, j,p,l,k;
-int Arreglo[10];
-int  OtroArreglo[10];
 
-
-funcion int inicia(int y)
+funcion int inicia(int y, int n)
  var int x, z;
 { x = 5;
   z = 1;
-  x = x * z + y;
+  x = x * z + y *n;
   escribe(x*z);
-  Arreglo[z] = x * y * 2;
   regresa(x);
 }
 
 principal()
 { lee(j);
-  i = inicia(j);
+  lee(k);
+  i = inicia(j,k);
   p = 1;
  escribe('TEST');
 
-
  escribe('Este es p',p);
- escribe('Este es arr',Arreglo[1]);
+
 }
 

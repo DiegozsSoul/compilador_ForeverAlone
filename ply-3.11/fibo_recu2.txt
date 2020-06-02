@@ -1,9 +1,9 @@
 programa foreveralone;
 var int k;
-funcion void fibo( int l1)
+funcion void fibo( int l1, int l2)
 {
-
-	si ( l1 > 5) entonces
+	escribe(l1,l2);
+	si ( l1 > l2) entonces
 	{
   	escribe(2);
 	}
@@ -14,7 +14,7 @@ funcion void fibo( int l1)
 }
 principal()
 {
-fibo(2);
+fibo(2,1);
 escribe('fibo recursive');
 
 }
