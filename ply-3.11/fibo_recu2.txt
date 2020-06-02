@@ -1,0 +1,20 @@
+programa foreveralone;
+var int k;
+funcion void fibo( int l1)
+{
+
+	si ( l1 > 5) entonces
+	{
+  	escribe(2);
+	}
+	si ( l1  < 5) entonces
+	{
+    		escribe('No');
+	}
+}
+principal()
+{
+fibo(2);
+escribe('fibo recursive');
+
+}

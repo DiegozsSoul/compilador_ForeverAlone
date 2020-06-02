@@ -1,0 +1,22 @@
+programa foreveralone;
+var int i, j;
+
+funcion int fact(int x)
+{ 
+  si( x == 0) entonces
+  {
+   regresa(1);
+  }
+  sino
+  {
+   regresa(fact(x - 1)*x);
+  }
+}
+
+principal()
+{ lee(j);
+  i = fact(j);
+  escribe(i);
+
+}
+

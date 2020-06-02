@@ -4,7 +4,7 @@ int Arreglo[10];
 int  OtroArreglo[10];
 
 
-funcion int inicia(int y)
+funcion void inicia(int y)
  var int x, z;
 { x = 5;
   z = 1;

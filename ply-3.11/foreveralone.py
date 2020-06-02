@@ -33,6 +33,7 @@ TempIntTable = []
 TempFloatTable = []
 auxPilaParamCont = 0
 banderaGlobalNoCond = False
+funcionGuardar = ''
 #VARIABLES ARREGLOS
 arrId = ''
 limSup = 0
@@ -76,11 +77,11 @@ MemoriaVirtual = {
     'tpointer':21000,
     'const'  :12000,
 }
-Memoria =[None] * 25000
+Memoria =[None] * 15000
 
 #Reads the document
  
-Info= open("test4.txt", "r") 
+Info= open("fibo_recu2.txt", "r") 
 data=Info.read()
 
 # Reserved words
@@ -943,8 +944,13 @@ def p_retn(p):
     validaTipoF = proc.getTipoFunc(funcionActual[-1])
     helper = proc.getDir(funcionActual[-1])
     variable = PilaO.pop()
-    print("IS DIS INICIA?", variable)
     validaTipoV = helper['tvar'].getTipoVar(variable)
+
+    if(variable in dict(constTable)):
+        d = dict(constTable)
+        variable = d[variable]
+        auxMem = variable
+
     if(validaTipoF=='void'):
         print("Error, funcion tipo void")
     elif(validaTipoV != None):
@@ -969,15 +975,12 @@ def p_retn(p):
 
 
 
-
     #print("VALIDACION Funcion", validaTipoF,"FUNCION" ,funcionActual[-1],"VALIDACION Variable",validaTipoV, "VARIABLE",variable)
     if(validaTipoF==validaTipoV):
-
         ##########################
         if(variable in dict(constTable)):
             d = dict(constTable)
             auxMem = d[variable]
-            
         elif(variable in TempIntTable):
 
             #print("ENTRE AL ELIF SUMA",aux)
@@ -1036,6 +1039,8 @@ def p_fnvn1(p):
     global auxTipoParam
     global auxPilaParam
     global auxPilaParamCont 
+    global funcionGuardar
+    funcionGuardar = p[-2]
     auxPilaParamCont = proc.getContPilaParam(p[-2])
     if(proc.funcionExiste(p[-2])):
         contLine += 1
@@ -1127,15 +1132,15 @@ def p_fnvn3(p):
     global contLine
     global k
     global proc
-
-    #print("???????",p[-1],p[-2],p[-3],p[-4],p[-5],p[-6],p[-7],p[-8],p[-9])
-    if(proc.getContPilaParam(p[-6]) != k ):
+    global funcionGuardar
+    print("???????",p[1],p[-1],p[-2],p[-3],p[-4],p[-5],p[-6],p[-7],p[-8],p[-9],p[-10])
+    if(proc.getContPilaParam(funcionGuardar) != k ):
         print("Numero de argumentos no coincide en la funcion 1",p[-6])
     else:
         #print("SI ENTRE AL FNVN3")
         contLine += 1
-        iniciocuadruplo = proc.getInicioCuadruplo(p[-9])
-        quad = ("GoSub",p[-6],None,iniciocuadruplo,contLine)
+        iniciocuadruplo = proc.getInicioCuadruplo(funcionGuardar)
+        quad = ("GoSub",funcionGuardar,None,iniciocuadruplo,contLine)
         cuadruplo.append(quad)
 
 
@@ -1148,6 +1153,8 @@ def p_fnvn3(p):
             #print("GUADALUPANO",aux,auxVarSearch, auxTipoSearch,p[-6])
             contLine += 1
             quad = ('=',auxVarSearch,None,MemoriaVirtual['t'+auxTipoSearch],contLine)
+            TempIntTable.append(['t'+auxTipoSearch])
+            PilaO.append(MemoriaVirtual['t'+auxTipoSearch])
             MemoriaVirtual['t'+auxTipoSearch] += 1
             cuadruplo.append(quad)
     k = 0
@@ -1224,6 +1231,7 @@ def p_prin1(p):
     test = PilaO.pop()
     ###################
     #print("TABLA INT TEMP",*TempIntTable)
+    #print("PRINT", test)
     if(test in dict(constTable)):
         d = dict(constTable)
         auxImprime = d[test]
@@ -2229,13 +2237,16 @@ guardaCuadruplo = 0
 saltoGoSub = 0
 contRecursion = 0
 recursionAux = [None]*100
+pilaRecursion = []
+pilaParam = []
+regFlag = True
 #lineaConteo = cuadruplo[0][4]
 
 #print(operador,operando1,operando2,resultado)
 while(operador!='END'):
     #print("NEW CUADRUPLO", i, "CUADRUPLO ",operador,operando1,operando2,resultado)
 
-    #print("QUAD", operador,operando1,operando2,resultado)
+    print("QUAD", operador,operando1,operando2,resultado)
     #CADA CUADRUPLO TIENE GUARDADO EL LA 4ta O 5ta POSICION EL NUMERO DE CUADRUPLO A MOVERSE O EL NUMERO DE CUADRUPLO QUE ES RESPECTIVAMENTE
     if(len(cuadruplo[i])>4):
         contadorLineas = cuadruplo[i][4]
@@ -2243,7 +2254,8 @@ while(operador!='END'):
     else:
         contadorLineas = resultado
 
-    if(operador == '*'):
+    if(operador == '*'):    
+        print("MULTI", Memoria[operando1], Memoria[operando2])
         if(Memoria[operando1] == None):
             #SI EN LA MULTIPLICACION LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
@@ -2262,7 +2274,6 @@ while(operador!='END'):
                     break
                 else:
                     Memoria[operando2] = operando2
-        print("MULTI", Memoria[operando1], Memoria[operando2])
         Memoria[resultado] = Memoria[operando1] * Memoria[operando2]
 
     if(operador == '/'):
@@ -2287,18 +2298,18 @@ while(operador!='END'):
         Memoria[resultado] = Memoria[operando1] / Memoria[operando2]
 
     if(operador == '+'):
-        print("Memoria",Memoria[operando1],Memoria[operando2])
+        print("Suma",Memoria[operando1],Memoria[operando2])
         if(Memoria[operando1] == None):
             #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando1:
                     nuevoOperando1 = key
                     Memoria[operando1] = nuevoOperando1
-                    print("YEET?")
+                    #print("YEET?")
                     break
                 else:
                     Memoria[operando1] = operando1
-                    print("YEET!")
+                    #print("YEET!")
         if(Memoria[operando2] == None):
             #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
@@ -2309,8 +2320,8 @@ while(operador!='END'):
                 else:
                     Memoria[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
-        print("NO YEET")
-        print("SUMACION",Memoria[8002],Memoria[operando2])
+        #print("NO YEET")
+        #print("SUMACION",Memoria[8002],Memoria[operando2])
         Memoria[resultado] = Memoria[operando1] + Memoria[operando2]
 
     if(operador == '-'):
@@ -2344,22 +2355,17 @@ while(operador!='END'):
                     nuevoOperando1 = key
                     #print("ASIGNACION1",nuevoOperando1)
                     Memoria[operando1] = nuevoOperando1
-                    print("ASIGNACION1",Memoria[operando1],operando1)
+                    #print("ASIGNACION1",Memoria[operando1],operando1)
                     break
                 else: 
                     #print("ASIGNACION2",operando1)
                     Memoria[operando1] = operando1
-                    print("ASIGNACION2",Memoria[operando1],operando1)
-        print("ASIGNACION3",Memoria[operando1],operando1)
+                    #print("ASIGNACION2",Memoria[operando1],operando1)
+        #print("ASIGNACION3",Memoria[operando1],operando1)
         Memoria[resultado] = Memoria[operando1]
         #print("ASIGNACION3",Memoria[resultado],Memoria[operando1],operando1)
     
-    if(operador == 'GoSub'):
-        guardaCuadruplo = i
-        i = resultado - 2 
-        #print("CONT RECURSION",contRecursion)
-        recursionAux[contRecursion] = guardaCuadruplo
-        contRecursion += 1
+ 
 
     if(operador == 'Escritura'):
         if(Memoria[resultado] == None):
@@ -2388,6 +2394,7 @@ while(operador!='END'):
         #print("ERA", inicioNuevaFuncion)
 
     if(operador == 'Param'):
+        #ESTO PERMITE QUE SE REGRESEN MAS DE UN PARAMETRO
         numParam  = operando2[4]
         auxParam  = proc.getPilaParam(funcionInvocada)
         busqParam = auxParam[int(numParam)-1]
@@ -2404,19 +2411,57 @@ while(operador!='END'):
                 #print("ENTRE FALSE", Memoria[operando1],operando1)
 
         #print("SALI DEL FOR",Memoria[operando1])
+        
         Memoria[direccionParam] = Memoria[operando1]
-        #print("PARAM", Memoria[direccionParam])
+        tes=(funcionInvocada, Memoria[direccionParam],direccionParam)
+        pilaParam.append(tes)
 
+        print("PARAM", Memoria[direccionParam],direccionParam)
 
+    if(operador == 'GoSub'):
+        
+        #pilaRecursion.append(recur)
+        print("TEST",pilaParam)
+        print("PENE",resultado)
+        guardaCuadruplo = i
+        i = resultado - 2 
+        #print("CONT RECURSION",cuadruplo[i])
+
+        recursionAux[contRecursion] = guardaCuadruplo
+        #print("RECURSION",recursionAux[contRecursion])
+        contRecursion += 1
 
     if(operador == 'Regresa'):
         #print("REGRESA",resultado,funcionInvocada)
+        #pilaRecursion.pop()
+        if(regFlag):
+            pilaParam.pop()
+            regFlag = False
+        if(len(pilaParam)!=0):
+
+            helper = pilaParam.pop()
+            Memoria[helper[2]] = helper[1]
+            print("REGRESA",helper)
+
         memoriaFuncion = proc.getLocMem("programa",funcionInvocada)
-        #print("BUSCANDO RESPUESTA",Memoria[memoriaFuncion], Memoria[resultado] )
+        for key, value in constTable:
+            if value == resultado:  
+                variableAGuardar = key
+                Memoria[resultado] = variableAGuardar
+                #print("ENTRE TRUE", Memoria[operando1])
+                break
+      
         Memoria[memoriaFuncion] = Memoria[resultado]
+
+        print("REGRESA2",Memoria[memoriaFuncion])
         contRecursion -= 1
         i = recursionAux[contRecursion]
 
+    if(operador == 'ENDFUNC'):
+        regFlag = True
+        if(proc.getTipoFunc(funcionInvocada)=='void'):
+            i = guardaCuadruplo 
+    
     if(operador == '>'):
         if(Memoria[operando1] == None):
         #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL

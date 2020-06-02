@@ -3,14 +3,14 @@ var int i, j;
 
 funcion int fibo(int x)
 { 
-  si( x <= 1) entonces
+  si( x < 2) entonces
   {
 
    regresa(x);
   }
   sino
   {
-   regresa(fibo(x - 1) + fibo(x - 2));
+   regresa(fibo(x-1)+fibo(x-2));
   }
 }
 
