@@ -1,3 +1,4 @@
+import sys
 class tablaVariables(object):
     def __init__(self):
         self.arreglo = {}

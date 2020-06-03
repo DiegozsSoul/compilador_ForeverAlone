@@ -1,5 +1,5 @@
 from tablavar import tablaVariables
-
+import sys
 class tablaFunciones(object):
 
     def __init__(self):
@@ -28,11 +28,13 @@ class tablaFunciones(object):
         if (nombref in self.arreglo):
             tabVar = self.arreglo[nombref]
             if (tabVar['tvar'].busca(nombrev) == True):
-                print("Variable ya existe" )
+                print("Variable",nombrev , "ya existe en la funcion",nombref )
+                sys.exit()
             else:
                 tabVar['tvar'].agrega(nombrev, tipov, locmemv,tabArr)
         else:
-            print("La funcion no existe")
+            print("La funcion",nombref,"no existe")
+            sys.exit()
 
     #Agrega los tipos de parametros a la tabla de funcion
     def agregaTablaTipoParam(self,nombref,tiposDeParam,cantParam):
@@ -47,7 +49,8 @@ class tablaFunciones(object):
             tabVar = self.arreglo[nombref]
             tabVar['cantVarLoc'] = cantVarLoc
         else:
-            print("Funcion no existe")
+            print("Funcion no", nombref," existe")
+            sys.exit()
 
     #Agrega la cantidad de parametros que recibe la funcion
     def agregaContTemp(self,nombref,contTemp):
@@ -55,7 +58,9 @@ class tablaFunciones(object):
             tabVar = self.arreglo[nombref]
             tabVar['contTemp'] = contTemp
         else:
-            print("Funcion no existe")
+            print("Funcion ",nombref,"no existe")
+            sys.exit()
+
 
     #Agrega los parametros a la tabla de funcion correspondiente
     def agregaPilaParam(self,nombref,pilaParam):
@@ -77,6 +82,8 @@ class tablaFunciones(object):
                 return tabVar['tvar'].getLocacionMemoria(nombrev)
             else:
                 print("variable no existe")
+                sys.exit()
+
 
     #Agrega el numero de cuadruplo en el que inicia la funcion
     def agregaContCuadruplo(self,nombref, iniciaCuadru):
@@ -90,7 +97,8 @@ class tablaFunciones(object):
         if(nombref in self.arreglo):
             return self.arreglo[nombref]['iniciaCuadru']
         else: 
-            print("Funcion no existe")   
+            print("Funcion",nombref," no existe")
+            sys.exit()  
 
     #Agrega el tipo de funcion 
     def getTipoFunc(self,nombref):
@@ -106,7 +114,8 @@ class tablaFunciones(object):
         if(nombref in self.arreglo):
             return self.arreglo[nombref]['pilaParam']
         else:
-            print("Funcion no existe")
+            print("Funcion",nombref," no existe")
+            sys.exit()
 
     def getContPilaParam(self,nombref):
         if(nombref in self.arreglo):

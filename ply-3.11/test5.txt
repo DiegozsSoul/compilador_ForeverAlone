@@ -3,11 +3,23 @@ var int i, j,p;
 int Arreglo[10];
 int  OtroArreglo[10];
 
+funcion int test(int x)
+var int y;
+{
+mientras(x<30) haz 
+{
+escribe(x);
+x= x + 1;
+}
+escribe(x);
+regresa(x);
+}
+
 principal()
 { i = 27;
-  j = 27;
- 
-  p = i+j+6;
+  test(i);
+  p = 1+4;
+  
   escribe(p); 
 }
 

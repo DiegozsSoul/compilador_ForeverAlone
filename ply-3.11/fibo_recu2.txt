@@ -3,7 +3,7 @@ var int k;
 funcion void fibo( int l1, int l2)
 {
 	escribe(l1,l2);
-	si ( l1 > l2) entonces
+	si ( l1  > l2) entonces
 	{
   	escribe(2);
 	}

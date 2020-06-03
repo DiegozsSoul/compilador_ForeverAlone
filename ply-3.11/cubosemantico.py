@@ -34,13 +34,13 @@ class ConsideracionesSemanticas ():
 
                 #Float con entero
                  'float' : { 'int': {
-                    '+' : 'float', '-' : 'float', '*' : 'float', '/' : 'float', '%' : 'float', '=' : 'float',
-                    '==' : 'bool', '<' : 'bool', '>' : 'bool', '<=' : 'bool', '>=' : 'bool','!=' : 'bool','<>' : 'bool',
+                    '+' : 'float', '-' : 'float', '*' : 'float', '/' : 'float', '=' : 'float',
+                    '==' : 'bool', '<' : 'bool', '>' : 'bool', '<=' : 'bool', '>=' : 'bool','<>' : 'bool',
                 },
                 #Float con float
                 'float' : {
-                    '+' : 'float', '-' : 'float', '*' : 'float', '/' : 'float', '%' : 'float', '=' : 'float',
-                    '==' : 'bool', '<' : 'bool', '>' : 'bool', '<=' : 'bool', '>=' : 'bool','!=' : 'bool','<>' : 'bool',
+                    '+' : 'float', '-' : 'float', '*' : 'float', '/' : 'float', '=' : 'float',
+                    '==' : 'bool', '<' : 'bool', '>' : 'bool', '<=' : 'bool', '>=' : 'bool','<>' : 'bool',
                 },
                 #Float con boolean
                 'bool' : {
@@ -74,7 +74,7 @@ class ConsideracionesSemanticas ():
                 #boolean con booelean
                 'bool' : { 
                     '+' : 'typeError', '-' : 'typeError', '*' : 'typeError', '/' : 'typeError', '=' : 'bool',
-                    '==' : 'bool', '<' : 'typeError', '>' : 'typeError', '<=' : 'typeError', '>=' : 'typeError','!=' : 'bool','<>' : 'typeError',
+                    '==' : 'bool', '<' : 'typeError', '>' : 'typeError', '<=' : 'typeError', '>=' : 'typeError','<>' : 'typeError',
                 },
                 #boolean con char
                 'char' : {
@@ -108,7 +108,7 @@ class ConsideracionesSemanticas ():
                 #char con char
                 'char' : {
                     '+' : 'char', '-' : 'typeError', '*' : 'typeError', '/' : 'typeError', '=' : 'char',
-                    '==' : 'bool', '<' : 'typeError', '>' : 'typeError', '<=' : 'typeError', '>=' : 'typeError','!=' : 'bool','<>' : 'typeError',
+                    '==' : 'bool', '<' : 'typeError', '>' : 'typeError', '<=' : 'typeError', '>=' : 'typeError','<>' : 'typeError',
                 },
                 #char con string
                 'string' : {
@@ -137,12 +137,12 @@ class ConsideracionesSemanticas ():
                 #string con char
                 'char' : {
                     '+' : 'string', '-' : 'typeError', '*' : 'typeError', '/' : 'typeError', '=' : 'typeError',
-                    '==' : 'bool', '<' : 'typeError', '>' : 'typeError', '<=' : 'typeError', '>=' : 'typeError','!=' : 'bool','<>' : 'typeError',  #Revisar == y != como bools ?
+                    '==' : 'bool', '<' : 'typeError', '>' : 'typeError', '<=' : 'typeError', '>=' : 'typeError','<>' : 'typeError',  #Revisar == y != como bools ?
                 },
                 #string con string
                 'string' : {
                     '+' : 'string', '-' : 'typeError', '*' : 'typeError', '/' : 'typeError', '=' : 'string',
-                    '==' : 'bool', '<' : 'typeError', '>' : 'typeError', '<=' : 'typeError', '>=' : 'typeError','!=' : 'bool','<>' : 'typeError',
+                    '==' : 'bool', '<' : 'typeError', '>' : 'typeError', '<=' : 'typeError', '>=' : 'typeError','<>' : 'typeError',
                 }
                  }
 

@@ -1,5 +1,6 @@
 import ply.lex as lex
 import ply.yacc as yacc
+import sys
 
 from tablafunc import tablaFunciones
 from cubosemantico import ConsideracionesSemanticas
@@ -78,12 +79,14 @@ MemoriaVirtual = {
     'tbool'  :14000,
     'tpointer':21000,
     'const'  :12000,
+    'gchar':15000,
+    'tchar':16000,
 }
-Memoria =[None] * 15000
+Memoria =[None] * 22000
 
 #Reads the document
  
-Info= open("test4.txt", "r") 
+Info= open("test5.txt", "r") 
 data=Info.read()
 
 # Reserved words
@@ -191,6 +194,7 @@ t_ignore_COMMENT  = r'\%%.*'
 def t_error(t):
      print("Illegal character '%s'" % t.value[0])
      t.lexer.skip(1)
+     sys.exit()
  
 def t_ID(t):
      r'[a-zA-Z_][a-zA-Z_0-9]*'
@@ -325,7 +329,8 @@ def p_arreglo2(p):
         buscador = proc.getDir(funcionActual[0])
         varfinder = buscador['tvar'].getvar(arrId)
     if varfinder == None:
-        print("Variable Arreglo no existe ",arrId)
+        print("Variable" ,arrId,"no existe ")
+        sys.exit()
     else:
         if(isGlobal):
             buscador = proc.getDir(funcionActual[0])
@@ -570,7 +575,8 @@ def p_arrn(p):
         buscador=proc.getDir(funcionActual[0])
         varfinder=buscador['tvar'].getvar(p[-2])
     if varfinder == None:
-        print("Variable Arreglo no existe ",arrId)
+        print("Variable",arrId, "no existe ")
+        sys.exit()
     else:
         if(isGlobal):
             buscador = proc.getDir(funcionActual[0])
@@ -608,7 +614,8 @@ def p_arrn2(p):
         buscador = proc.getDir(funcionActual[0])
         varfinder = buscador['tvar'].getvar(p[-4])
     if varfinder == None:
-        print("Variable Arreglo no existe ",arrId)
+        print("Variable",arrId," no existe ")
+        sys.exit()
     else:
         if(isGlobal):
             buscador = proc.getDir(funcionActual[0])
@@ -638,7 +645,8 @@ def p_arrn2(p):
                     buscador = proc.getDir(funcionActual[0])
                     varAux = buscador['tvar'].getvar(PilaO[-1])
                 if varAux == None:
-                    print("Variable Arreglo no existe ",varAux)
+                    print("Variable",varAux, "no existe ")
+                    sys.exit()
                 else:
                     if(isGlobal2):
                         buscador = proc.getDir(funcionActual[0])
@@ -678,7 +686,7 @@ def p_arrn2(p):
                     buscador = proc.getDir(funcionActual[0])
                     varAux = buscador['tvar'].getvar(PilaO[-1])
                 if varAux == None:
-                    print("Variable Arreglo no existe ",varAux)
+                    print("Variable" ,varAux," no existe ")
                 else:
                     if(isGlobal2):
                         buscador = proc.getDir(funcionActual[0])
@@ -713,6 +721,7 @@ def p_arrn3(p):
         varfinder = buscador['tvar'].getvar(p[-6])
     if varfinder == None:
         print("Variable Arreglo no existe ",p[-6])
+        sys.exit()
     else:
         if(isGlobal):
             buscador = proc.getDir(funcionActual[0])
@@ -748,7 +757,8 @@ def p_arrn3(p):
             buscador = proc.getDir(funcionActual[0])
             varAux = buscador['tvar'].getvar(aux1)
         if varAux == None:
-            print("Variable Arreglo no existe ",aux1)
+            print("Variable",aux1," no existe ")
+            sys.exit()
         else:
             if(isGlobal2):
                 buscador = proc.getDir(funcionActual[0])
@@ -838,7 +848,8 @@ def p_asignacionb(p):
                 buscador=proc.getDir(funcionActual[0])
                 varfinder=buscador['tvar'].getvar(p[-2])
             if varfinder == None:
-                print("Variable Normal asignacion no declarada", p[-2], funcionActual[-1])
+                print("Variable",p[-2],"asignacion no declarada en la funcion", funcionActual[-1])
+                sys.exit()
             else:
                 varhelper = varfinder['tipo']
                 PTipo.append(varhelper)
@@ -893,7 +904,8 @@ def p_asignacionb(p):
                         buscador=proc.getDir(funcionActual[0])
                         varfinder=buscador['tvar'].getvar(aux)
                     if varfinder == None:
-                        print("Variable Arreglo no existe ",aux)
+                        print("Variable",aux," no existe ")
+                        sys.exit()
                     else:
                         if(isGlobal):
                             buscador = proc.getDir(funcionActual[0])
@@ -911,7 +923,6 @@ def p_asignacionb(p):
                 PTipo.append(resultType)
                 pointerFlag = False
             else:
-
                 right_operand = arrAuxOp.pop()
                 left_operand = arrAuxOp.pop()
                 quad= (operator, left_operand, None, right_operand,contLine)
@@ -931,6 +942,7 @@ def p_asignacionb(p):
             """
         else:
             print("Type mismatch")
+            sys.exit()
             
             
 def p_retorno(p):
@@ -954,7 +966,8 @@ def p_retn(p):
         auxMem = variable
 
     if(validaTipoF=='void'):
-        print("Error, funcion tipo void")
+        print("Error,regresa no puede estar en funcion tipo void")
+        sys.exit()
     elif(validaTipoV != None):
         validaTipoV 
  
@@ -1006,7 +1019,8 @@ def p_retn(p):
                 buscador=proc.getDir(funcionActual[0])
                 varfinder=buscador['tvar'].getvar(variable)
             if varfinder == None:
-                print("Variable Arreglo no existe ",variable)
+                print("Variable ",variable," no existe ")
+                sys.exit()
             else:
                 if(isGlobal):
                     buscador = proc.getDir(funcionActual[0])
@@ -1021,6 +1035,9 @@ def p_retn(p):
         quad = ("Regresa",None,None,auxMem,contLine)
         cuadruplo.append(quad)
         #AQUIESTOY
+    else:
+        print("Tipo de variable de retorno y de funcion no son el mismo!")
+        sys.exit()
 
 def p_funcionvoid(p):
     '''
@@ -1056,7 +1073,8 @@ def p_fnvn1(p):
         #print("CHECK",auxTipoParam,auxPilaParam, p[-2])
 
     else:
-        print("LA FUNCION NO EXISTE")
+        print("LA FUNCION",p[-2], "NO EXISTE")
+        sys.exit()
 
 def p_fnvn2(p):
     '''
@@ -1105,6 +1123,7 @@ def p_fnvn2(p):
             varfinder=buscador['tvar'].getvar(tempOper)
         if varfinder == None:
             print("Variable Arreglo no existe ",tempOper)
+            sys.exit()
         else:
             if(isGlobal):
                 buscador = proc.getDir(funcionActual[0])
@@ -1133,7 +1152,8 @@ def p_fnvn2(p):
         cuadruplo.append(quad)
         #auxPilaParamCont-=1
     else:
-        print("Error no es el mismo tipo",tempTipo,tempTipoPop)
+        print("Error valor de retorno no es el mismo tipo que la funcion",tempTipo,tempTipoPop)
+        sys.exit()
     
 def p_fnvn3(p):
     '''
@@ -1143,9 +1163,10 @@ def p_fnvn3(p):
     global k
     global proc
     global funcionGuardar
-    print("???????",p[1],p[-1],p[-2],p[-3],p[-4],p[-5],p[-6],p[-7],p[-8],p[-9],p[-10])
+    #print("???????",p[1],p[-1],p[-2],p[-3],p[-4],p[-5],p[-6],p[-7],p[-8],p[-9],p[-10])
     if(proc.getContPilaParam(funcionGuardar) != k ):
-        print("Numero de argumentos no coincide en la funcion 1",p[-6])
+        print("Error en la funcion void",p[-6])
+        sys.exit()
     else:
         #print("SI ENTRE AL FNVN3")
         contLine += 1
@@ -1201,7 +1222,7 @@ def p_leen(p):
         buscador=proc.getDir(funcionActual[0])
         varfinder=buscador['tvar'].getvar(aux)
     if varfinder == None:
-        print("Variable Arreglo no existe ",aux)
+        print("Variable",aux," no existe ")
     else:
         if(isGlobal):
             buscador = proc.getDir(funcionActual[0])
@@ -1261,7 +1282,7 @@ def p_prin1(p):
             buscador=proc.getDir(funcionActual[0])
             varfinder=buscador['tvar'].getvar(test)
         if varfinder == None:
-            print("Variable Arreglo no existe ",test)
+            print("Variable",test," no existe ")
         else:
             if(isGlobal):
                 buscador = proc.getDir(funcionActual[0])
@@ -1292,6 +1313,7 @@ def p_pn1(p):
     contLine += 1
     if(expTipo != "bool"):
         print("Type mismatch")
+        sys.exit()
     else:
         result = PilaO.pop()
        #quad = ("GotoF", result, None, contLine) 
@@ -1345,6 +1367,7 @@ def p_rcn2(p):
     exp_tipo = PTipo.pop()
     if(exp_tipo != "bool"):
         print("Type mismatch")
+        sys.exit()
     else:
         result = PilaO.pop()
         global contLine
@@ -1406,7 +1429,7 @@ def p_repnoconn(p):
             buscador=proc.getDir(funcionActual[0])
             varfinder=buscador['tvar'].getvar(limiteSup)
         if varfinder == None:
-            print("Variable Arreglo no existe ",limiteSup)
+            print("Variable",limiteSup," no existe ")
         else:
             if(isGlobal):
                 buscador = proc.getDir(funcionActual[0])
@@ -1473,7 +1496,7 @@ def p_asignacioncondb(p):
     global PTipo
     global funcionActual
     global PilaO
-    print("CONDICIONAL",p[-1],p[-2])
+    #print("CONDICIONAL",p[-1],p[-2])
     if(p[-1]=='='):
         POper.append('=')
     #print("it this z ? ", p[-2])
@@ -1499,7 +1522,8 @@ def p_asignacioncondb(p):
                 varfinder=buscador['tvar'].getvar(p[-2])
             #EN EL CASO DE VOLVER A SALIR NONE, ESTO QUIERE DECIR QUE NO EXISTE LA VARIABLE DECLARADA EN NINGUNO DE LOS DOS CONTEXTOS
             if varfinder == None:
-                print("Variable Normal asignacionCOND no declarada", p[-2], funcionActual[-1])
+                print("Variable",p[-2],"no declarada en la funcion", funcionActual[-1])
+                sys.exit()
             else:
                 varhelper = varfinder['tipo']
                 PTipo.append(varhelper)
@@ -1553,7 +1577,8 @@ def p_asignacioncondb(p):
                         buscador=proc.getDir(funcionActual[0])
                         varfinder=buscador['tvar'].getvar(aux)
                     if varfinder == None:
-                        print("Variable Arreglo no existe ",aux)
+                        print("Variable" ,aux," no existe ")
+                        sys.exit()
                     else:
                         if(isGlobal):
                             buscador = proc.getDir(funcionActual[0])
@@ -1584,6 +1609,7 @@ def p_asignacioncondb(p):
 
         else:
             print("Type mismatch")
+            sys.exit()
             
 
     ###########################
@@ -1643,7 +1669,8 @@ def p_cte(p):
                 buscador=proc.getDir(funcionActual[0])
                 varfinder=buscador['tvar'].getvar(arrId)
             if varfinder == None:
-                print("Variable Arreglo no existe ",arrId)
+                print("Variable ",arrId," no existe ")
+                sys.exit()
             else:
                 if(isGlobal):
                     buscador = proc.getDir(funcionActual[0])
@@ -1673,7 +1700,8 @@ def p_cte(p):
                 buscador=proc.getDir(funcionActual[0])
                 varfinder=buscador['tvar'].getvar(p[-2])
             if varfinder == None:
-                print("Variable Arreglo no declarada ")
+                print("Variable" ,p[-2]," no declarada ")
+                sys.exit()
             else:
                 varhelper = varfinder['tipo']
                 PTipo.append(varhelper)
@@ -1705,7 +1733,8 @@ def p_cte(p):
                 buscador=proc.getDir(funcionActual[0])
                 varfinder=buscador['tvar'].getvar(p[1])
             if varfinder == None:
-                print("Variable Normal no declarada aki")
+                print("Variable",p[1] ,"no declarada")
+                sys.exit()
             else:
                 varhelper = varfinder['tipo']
                 PTipo.append(varhelper)
@@ -1764,7 +1793,7 @@ def p_exp(p):
         operator      = POper.pop()
         resultType    = sema.getTipo(left_type,right_type,operator)
         if(resultType != 'TypeError'):
-            result = Avail.next()
+            #result = Avail.next()
             global contLine
             global TempIntTable
             contLine += 1
@@ -1794,7 +1823,8 @@ def p_exp(p):
                         buscador=proc.getDir(funcionActual[0])
                         varfinder=buscador['tvar'].getvar(aux)
                     if varfinder == None:
-                        print("Variable Arreglo no existe ",aux)
+                        print("Variable",aux," no existe ")
+                        sys.exit()
                     else:
                         if(isGlobal):
                             buscador = proc.getDir(funcionActual[0])
@@ -1813,6 +1843,7 @@ def p_exp(p):
             #print(operator, left_operand, right_operand, result)
         else:
             print("Type mismatch")
+            sys.exit()
 
 
 def p_expb(p):
@@ -1840,7 +1871,7 @@ def p_expb(p):
         resultType    = sema.getTipo(left_type,right_type,operator)
 
         if(resultType != 'TypeError'):
-            result = Avail.next()
+            #result = Avail.next()
             global contLine
             global TempIntTable
             contLine += 1
@@ -1877,7 +1908,8 @@ def p_expb(p):
                         buscador=proc.getDir(funcionActual[0])
                         varfinder=buscador['tvar'].getvar(aux)
                     if varfinder == None:
-                        print("Variable Arreglo no existe ",aux)
+                        print("Variable",aux,"no existe ")
+                        sys.exit()
                     else:
                         if(isGlobal):
                             buscador = proc.getDir(funcionActual[0])
@@ -1904,6 +1936,7 @@ def p_expb(p):
             #print(operator, left_operand, right_operand,result)
         else:
             print("Type mismatch")
+            sys.exit()
 
 def p_termino(p):
     '''
@@ -1933,7 +1966,7 @@ def p_terminob(p):
         #print("Tipo2 " , left_type, right_type)
         #print("Tipo Res ", resultType)
         if(resultType != 'TypeError'):
-            result = Avail.next()
+            #result = Avail.next()
             global contLine
             global TempIntTable
             contLine += 1
@@ -1969,7 +2002,8 @@ def p_terminob(p):
                         buscador=proc.getDir(funcionActual[0])
                         varfinder=buscador['tvar'].getvar(aux)
                     if varfinder == None:
-                        print("Variable Arreglo no existe ",aux)
+                        print("Variable" ,aux," no existe ")
+                        sys.exit()
                     else:
                         if(isGlobal):
                             buscador = proc.getDir(funcionActual[0])
@@ -1993,10 +2027,10 @@ def p_terminob(p):
             PilaO.append(MemoriaVirtual['t'+resultType])
             PTipo.append(resultType)
             MemoriaVirtual['t'+resultType] += 1
-            #print(operator, left_operand, right_operand,result)
-            
+            #print(operator, left_operand, right_operand,result)   
         else: 
             print("Type mismatch")
+            sys.exit()
 
 def p_factor(p):
     '''
@@ -2087,7 +2121,8 @@ def p_llamadafun2(p):
             buscador=proc.getDir(funcionActual[0])
             varfinder=buscador['tvar'].getvar(tempOper)
         if varfinder == None:
-            print("Variable Arreglo no existe ",tempOper)
+            print("Variable",tempOper," no existe ")
+            sys.exit()
         else:
             if(isGlobal):
                 buscador = proc.getDir(funcionActual[0])
@@ -2126,9 +2161,10 @@ def p_llamadafun3(p):
     global contLine
     global k
     global funcionGuardar2
-    print("!!!!!!!",p[-1],p[-2],p[-3],p[-4],p[-5],p[-6],p[-7],p[-8],p[-9])
+    #print("!!!!!!!",p[-1],p[-2],p[-3],p[-4],p[-5],p[-6],p[-7],p[-8],p[-9])
     if(proc.getContPilaParam(funcionGuardar2) !=k):
-        print("Numero de argumentos no coincide en la funcion2",funcionGuardar2)
+        print("Error en la funcion",funcionGuardar2)
+        sys.exit()
     else:
         contLine += 1
         inicioCuadruplo = proc.getInicioCuadruplo(funcionGuardar2)
@@ -2142,7 +2178,7 @@ def p_llamadafun3(p):
             #print("GUADALUPANO2",aux,auxVarSearch, auxTipoSearch,p[-6])
             contLine += 1
             quad = ('=',auxVarSearch,None,MemoriaVirtual['t'+auxTipoSearch],contLine)
-            print("ESTA ES LA MEMORIA PERDIDA",MemoriaVirtual['t'+auxTipoSearch])
+            #print("ESTA ES LA MEMORIA PERDIDA",MemoriaVirtual['t'+auxTipoSearch])
             TempIntTable.append(MemoriaVirtual['t'+auxTipoSearch])
             PilaO.append(MemoriaVirtual['t'+auxTipoSearch])
             MemoriaVirtual['t'+auxTipoSearch] += 1
@@ -2187,22 +2223,9 @@ def p_agregavar(p):
             proc.agregav(idFun,varId,tipoVar,MemoriaVirtual['l'+tipoVar],None)
             MemoriaVirtual['l'+tipoVar] += 1
 
-            #print("VARIABLES LOCALES ",varId, MemoriaVirtual['l'+tipoVar])          
-            #print("VARIABLE AGREGANDOSE ",varId)
-            #print("TEST", paramType)
-            #paramTable.append(paramType)
-       # if(nuevaFunc):
-
-        #paramTable.append(tipoVar)
-
     else:
         print("La funcion no esta declarada")
     r=0
-    #print(idFun)
-    #print("TABLA DE FUNCION")
-    #print(proc.getDir(funcionActual[-1]))
-    #proc.testerVariable(idFun)
-    #print("PARAM TYPE",*paramTable)
 
 def despliegaQuad():
     print("----Desplegando Cuadruplos----")
@@ -2227,6 +2250,7 @@ def p_error(p):
 	
 
     print(f"Syntax error: Unexpected {token}")
+    sys.exit()
 
 # Build the parser
 parser = yacc.yacc()
@@ -2253,10 +2277,8 @@ operando1   = cuadruplo[i][1]
 operando2   = cuadruplo[i][2]
 resultado   = cuadruplo[i][3]
 
-saltoGoto = 0
 inicioNuevaFuncion = 0
 guardaCuadruplo = 0
-saltoGoSub = 0
 contRecursion = 0
 recursionAux = [None]*100
 pilaRecursion = []
@@ -2268,7 +2290,7 @@ regFlag = True
 while(operador!='END'):
     #print("NEW CUADRUPLO", i, "CUADRUPLO ",operador,operando1,operando2,resultado)
 
-    print("QUAD", operador,operando1,operando2,resultado)
+    #print("QUAD", operador,operando1,operando2,resultado)
     #CADA CUADRUPLO TIENE GUARDADO EL LA 4ta O 5ta POSICION EL NUMERO DE CUADRUPLO A MOVERSE O EL NUMERO DE CUADRUPLO QUE ES RESPECTIVAMENTE
     if(len(cuadruplo[i])>4):
         contadorLineas = cuadruplo[i][4]
@@ -2277,7 +2299,7 @@ while(operador!='END'):
         contadorLineas = resultado
 
     if(operador == '*'):    
-        print("MULTI", Memoria[operando1], Memoria[operando2])
+        #print("MULTI", Memoria[operando1], Memoria[operando2])
         if(Memoria[operando1] == None):
             #SI EN LA MULTIPLICACION LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
@@ -2296,6 +2318,9 @@ while(operador!='END'):
                     break
                 else:
                     Memoria[operando2] = operando2
+        if((  type(Memoria[operando1]).__name__=='str' or type(Memoria[operando1]) == 'str') or (( type(Memoria[operando2]).__name__ =='str')  or type(Memoria[operando2]).__name__ == 'str' )):
+            print("No se permite multiplicar char o strings")
+            sys.exit()
         Memoria[resultado] = Memoria[operando1] * Memoria[operando2]
 
     if(operador == '/'):
@@ -2317,21 +2342,24 @@ while(operador!='END'):
                     break
                 else:
                     Memoria[operando2] = operando2
+        if((  type(Memoria[operando1]).__name__=='str' or type(Memoria[operando1]) == 'str') or (( type(Memoria[operando2]).__name__ =='str')  or type(Memoria[operando2]).__name__ == 'str' )):
+            print("No se permite dividir char o strings")
+            sys.exit()
+        if(Memoria[operando2]==0):
+            print("No se permite dividir entre cero")
+            sys.exit()           
         Memoria[resultado] = Memoria[operando1] / Memoria[operando2]
 
     if(operador == '+'):
-        print("Suma",Memoria[operando1],Memoria[operando2])
         if(Memoria[operando1] == None):
             #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando1:
                     nuevoOperando1 = key
                     Memoria[operando1] = nuevoOperando1
-                    #print("YEET?")
                     break
                 else:
                     Memoria[operando1] = operando1
-                    #print("YEET!")
         if(Memoria[operando2] == None):
             #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
@@ -2342,8 +2370,10 @@ while(operador!='END'):
                 else:
                     Memoria[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
-        #print("NO YEET")
         #print("SUMACION",Memoria[8002],Memoria[operando2])
+        if((  type(Memoria[operando1]).__name__=='str' or type(Memoria[operando1]) == 'str') or (( type(Memoria[operando2]).__name__ =='str')  or type(Memoria[operando2]).__name__ == 'str' )):
+            print("No se permite sumar char o strings")
+            sys.exit()
         Memoria[resultado] = Memoria[operando1] + Memoria[operando2]
 
     if(operador == '-'):
@@ -2367,6 +2397,9 @@ while(operador!='END'):
                     Memoria[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
         #print("RESTA", Memoria[resultado], Memoria[operando1],Memoria[operando2])
+        if((  type(Memoria[operando1]).__name__=='str' or type(Memoria[operando1]) == 'str') or (( type(Memoria[operando2]).__name__ =='str')  or type(Memoria[operando2]).__name__ == 'str' )):
+            print("No se permite restar char o strings")
+            sys.exit()
         Memoria[resultado] = Memoria[operando1] - Memoria[operando2]
   
     if(operador == '='):
@@ -2384,8 +2417,14 @@ while(operador!='END'):
                     Memoria[operando1] = operando1
                     #print("ASIGNACION2",Memoria[operando1],operando1)
         #print("ASIGNACION3",Memoria[operando1],operando1)
-        Memoria[resultado] = Memoria[operando1]
-        #print("ASIGNACION3",Memoria[resultado],Memoria[operando1],operando1)
+        if(resultado>=8000 and resultado<=8999):
+            Memoria[resultado] = int(Memoria[operando1])
+        elif(resultado>=9000 and resultado<=9999):
+            Memoria[resultado] = float(Memoria[operando1])
+        else:
+            Memoria[resultado] = Memoria[operando1]
+
+        #print("ASIGNACION3",Memoria[resultado],Memoria[operando1],operando1,resultado)
     
  
 
@@ -2419,7 +2458,7 @@ while(operador!='END'):
         #ESTO PERMITE QUE SE REGRESEN MAS DE UN PARAMETRO
         numParam  = operando2[4]
         auxParam  = proc.getPilaParam(funcionInvocada)
-        print("PILA",auxParam)
+        #print("PILA",auxParam)
         busqParam = auxParam[int(numParam)-1]
         
         direccionParam = proc.getLocMem(funcionInvocada, busqParam)
@@ -2440,20 +2479,22 @@ while(operador!='END'):
         tes=(funcionInvocada, Memoria[direccionParam],direccionParam)
         pilaParam.append(tes)
 
-        print("PARAM", Memoria[direccionParam],direccionParam)
+        #print("PARAM", Memoria[direccionParam],direccionParam)
 
     if(operador == 'GoSub'):
         
         #pilaRecursion.append(recur)
-        print("TEST",pilaParam)
-        print("PENE",resultado)
+        #print("TEST",pilaParam)
         guardaCuadruplo = i
         i = resultado - 2 
         #print("CONT RECURSION",cuadruplo[i])
-
-        recursionAux[contRecursion] = guardaCuadruplo
-        #print("RECURSION",recursionAux[contRecursion])
-        contRecursion += 1
+        if(contRecursion<=99):
+            recursionAux[contRecursion] = guardaCuadruplo
+            #print("RECURSION",recursionAux[contRecursion])
+            contRecursion += 1
+        else:
+            print("Recursividad infinita")
+            sys.exit()
 
     if(operador == 'Regresa'):
         #print("REGRESA",resultado,funcionInvocada)
@@ -2461,11 +2502,12 @@ while(operador!='END'):
         if(regFlag):
             pilaParam.pop()
             regFlag = False
+            
         if(len(pilaParam)!=0):
 
             helper = pilaParam.pop()
             Memoria[helper[2]] = helper[1]
-            print("REGRESA",helper)
+            #print("REGRESA",helper)
 
         memoriaFuncion = proc.getLocMem("programa",funcionInvocada)
         for key, value in constTable:
@@ -2477,9 +2519,14 @@ while(operador!='END'):
       
         Memoria[memoriaFuncion] = Memoria[resultado]
 
-        print("REGRESA2",Memoria[memoriaFuncion])
+        #print("REGRESA2",Memoria[memoriaFuncion])
+        
         contRecursion -= 1
-        i = recursionAux[contRecursion]
+        if(contRecursion>=0):
+            i = recursionAux[contRecursion]
+        else:
+            print("Recursividad infinita")
+            sys.exit()
 
     if(operador == 'ENDFUNC'):
         regFlag = True
@@ -2604,22 +2651,9 @@ while(operador!='END'):
         if( not(Memoria[operando1])):
             i = resultado -2
     if(operador == 'LEE'):
-
-        """
-        if(Memoria[resultado] == None):
-            #BUSCA LA DIRECCION EN LA TABLA DE CONSTANTE PARA TRAER EL VALOR ORIGINAL
-            for key, value in constTable:
-                if value == resultado:
-                    nuevoOperando1 = key
-                    #print("ASIGNACION1",nuevoOperando1)
-                    Memoria[resultado] = nuevoOperando1
-                    break
-                else: 
-                    #print("ASIGNACION2",operando1)
-                    Memoria[resultado] = operando1
-        """
         inputeado = input("Ingresa tu dato: ")
         Memoria[resultado] = int(inputeado)
+        
     if(operador == 'VER'):
         for key, value in constTable:
             if value == operando1:
