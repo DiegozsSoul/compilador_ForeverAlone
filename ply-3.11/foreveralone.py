@@ -86,7 +86,7 @@ Memoria =[None] * 22000
 
 #Reads the document
  
-Info= open("test5.txt", "r") 
+Info= open("fact_norecu.txt", "r") 
 data=Info.read()
 
 # Reserved words
@@ -294,7 +294,6 @@ def p_id(p):
     global funcionActual
     global arrVarL
     global paramTable
-    print("")
     if(funcionActual[-1]!='principal'):
         contVarL += 1
         if(funcionActual[-1]!='programa'):
@@ -996,6 +995,7 @@ def p_retn(p):
         if(variable in dict(constTable)):
             d = dict(constTable)
             auxMem = d[variable]
+
         elif(variable in TempIntTable):
 
             #print("ENTRE AL ELIF SUMA",aux)
@@ -1019,8 +1019,8 @@ def p_retn(p):
                 buscador=proc.getDir(funcionActual[0])
                 varfinder=buscador['tvar'].getvar(variable)
             if varfinder == None:
-                print("Variable ",variable," no existe ")
-                sys.exit()
+                print("")
+                #sys.exit()
             else:
                 if(isGlobal):
                     buscador = proc.getDir(funcionActual[0])
@@ -1177,7 +1177,7 @@ def p_fnvn3(p):
 
         aux = proc.getDir('programa')
         auxVarSearch = aux['tvar'].getLocacionMemoria(p[-6])
-        print("IS DIS INICIA2?",p[-6])
+        #print("IS DIS INICIA2?",p[-6])
         auxTipoSearch = aux['tvar'].getTipoVar(p[-6])
         #ESTE IF CHECA QUE LA FUNCION NO SEA VOID, SI ES VOID NO REGRESA NADA
         if(auxTipoSearch != None):
@@ -1479,7 +1479,7 @@ def p_repnoconn2(p):
 
     contLine += 1
     quad = ("+",unoMem,contador,contador,contLine)
-    print("QUAD",quad)
+    #print("QUAD",quad)
     cuadruplo.append(quad)
 
     contLine += 1
@@ -1509,7 +1509,7 @@ def p_asignacioncondb(p):
     else:
         #CHECA SI ES UN ARREGLO O SI ES UNA VARIABLE X,Y,Z,ETC. SI P[-2] ES NONE ENTONCES SIGNIFICA QUE ES ARREGLO
         if( p[-2] == None):
-            print("YEEET")
+            print("")
         #COMO NO ES ARREGLO, QUIERE DECIR QUE ES UNA VARIABLE X,Y,Z,ETC.
         else:
             #ESTO BUSCARA LA VARIABLE PRIMERO EN EL CONTEXTO LOCAL
@@ -1528,7 +1528,7 @@ def p_asignacioncondb(p):
                 varhelper = varfinder['tipo']
                 PTipo.append(varhelper)
     
-    print("TIPO DE LA VARIABLE",varhelper)
+    #print("TIPO DE LA VARIABLE",varhelper)
     #AHORA QUE SABEMOS QUE TIPO ES LA VARIABLE LA CUAL SE ASIGNARA UN VALOR, ES HORA DE PREPARAR LAS VARIABLES PARA EL CUADRUPLO 
     if(POper[-1] == '='):
         right_operand = PilaO.pop()
@@ -2067,8 +2067,8 @@ def p_llamadafun(p):
         cuadruplo.append(quad)
         auxTipoParam = proc.getTipoParam(p[-2])
         auxPilaParam = proc.getPilaParam(p[-2])
-        print("AUX TIPO PARAM",auxTipoParam )
-        proc.testerVariable('programa')
+        #print("AUX TIPO PARAM",auxTipoParam )
+        #proc.testerVariable('programa')
 
         if(proc.getTipoFunc(p[-2]) != 'void'): ##########SEAGREGO
             testeruni = proc.getTipoFunc(p[-2])
@@ -2258,14 +2258,14 @@ result = parser.parse(data)
 #print("TABLA DE FUNCION")
 #print("TEST",proc.getDir('fact'))
 #print("TEST",proc.getDir('inicia')) 
-print("TABLA DE POINTER",*pointerTable)
-print("TABLA DE CONST",*constTable)
-print("TABLA DE Funciones")
-proc.arref()
-print("XXXXXXXXXXXXXXXXXXXXX")
-print("TABLA DE VARIABLES1", proc.testerVariable('programa'))
-print("TABLA DE VARIABLES2", proc.testerVariable('fact'))
-print("TABLA DE VARIABLES3", proc.testerVariable('inicia'))
+#print("TABLA DE POINTER",*pointerTable)
+#print("TABLA DE CONST",*constTable)
+#print("TABLA DE Funciones")
+#proc.arref()
+#print("XXXXXXXXXXXXXXXXXXXXX")
+#print("TABLA DE VARIABLES1", proc.testerVariable('programa'))
+#print("TABLA DE VARIABLES2", proc.testerVariable('fact'))
+#print("TABLA DE VARIABLES3", proc.testerVariable('inicia'))
 despliegaQuad()
 print("DONE")
 
@@ -2370,7 +2370,6 @@ while(operador!='END'):
                 else:
                     Memoria[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
-        #print("SUMACION",Memoria[8002],Memoria[operando2])
         if((  type(Memoria[operando1]).__name__=='str' or type(Memoria[operando1]) == 'str') or (( type(Memoria[operando2]).__name__ =='str')  or type(Memoria[operando2]).__name__ == 'str' )):
             print("No se permite sumar char o strings")
             sys.exit()
@@ -2408,15 +2407,10 @@ while(operador!='END'):
             for key, value in constTable:
                 if value == operando1:
                     nuevoOperando1 = key
-                    #print("ASIGNACION1",nuevoOperando1)
                     Memoria[operando1] = nuevoOperando1
-                    #print("ASIGNACION1",Memoria[operando1],operando1)
                     break
                 else: 
-                    #print("ASIGNACION2",operando1)
                     Memoria[operando1] = operando1
-                    #print("ASIGNACION2",Memoria[operando1],operando1)
-        #print("ASIGNACION3",Memoria[operando1],operando1)
         if(resultado>=8000 and resultado<=8999):
             Memoria[resultado] = int(Memoria[operando1])
         elif(resultado>=9000 and resultado<=9999):
@@ -2424,7 +2418,6 @@ while(operador!='END'):
         else:
             Memoria[resultado] = Memoria[operando1]
 
-        #print("ASIGNACION3",Memoria[resultado],Memoria[operando1],operando1,resultado)
     
  
 
@@ -2497,8 +2490,6 @@ while(operador!='END'):
             sys.exit()
 
     if(operador == 'Regresa'):
-        #print("REGRESA",resultado,funcionInvocada)
-        #pilaRecursion.pop()
         if(regFlag):
             pilaParam.pop()
             regFlag = False
@@ -2507,19 +2498,16 @@ while(operador!='END'):
 
             helper = pilaParam.pop()
             Memoria[helper[2]] = helper[1]
-            #print("REGRESA",helper)
 
         memoriaFuncion = proc.getLocMem("programa",funcionInvocada)
         for key, value in constTable:
             if value == resultado:  
                 variableAGuardar = key
                 Memoria[resultado] = variableAGuardar
-                #print("ENTRE TRUE", Memoria[operando1])
                 break
       
         Memoria[memoriaFuncion] = Memoria[resultado]
 
-        #print("REGRESA2",Memoria[memoriaFuncion])
         
         contRecursion -= 1
         if(contRecursion>=0):
