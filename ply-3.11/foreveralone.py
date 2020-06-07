@@ -44,6 +44,12 @@ isArray = False
 dim = 1
 pilaDim = []
 kArr = 0
+#MEMORIA2.0
+MemNew = []
+MemAux = []
+vib = 1
+pilaVG = []
+
 class AVAIL(object):
 
 	def __init__(self):
@@ -86,7 +92,7 @@ Memoria =[None] * 22000
 
 #Reads the document
  
-Info= open("fact_norecu.txt", "r") 
+Info= open("func_ana.txt", "r") 
 data=Info.read()
 
 # Reserved words
@@ -460,7 +466,8 @@ def p_agregafunc(p):
     if(tipoFun!='void'):
         #print("TIPO DE FUN",tipoFun, idFun)
         proc.agregav('programa', idFun, tipoFun, MemoriaVirtual['g'+ tipoFun],None)
-        MemoriaVirtual['g'+tipoFun] += 1    
+        MemoriaVirtual['g'+tipoFun] += 1
+        pilaVG.append(idFun)    
 
 def p_funcionb(p):
     '''
@@ -509,11 +516,33 @@ def p_reinicioMemoriaVariable(p):
     global TempIntTable
     global TempFloatTable
     global proc
+    global vib
     contLine += 1
-
     #print("TEMP",funcionActual[-1],Avail.AvailC)
     proc.agregaContTemp(funcionActual[-1],Avail.AvailC)
     Avail.reset()
+    #print("CAntidad VLI en funcion",funcionActual[-1], MemoriaVirtual['lint']-8000)
+    #print("CAntidad VGI en funcion",funcionActual[-1], MemoriaVirtual['gint'])
+    VGI = MemoriaVirtual['gint']-5000
+    VGF = MemoriaVirtual['gfloat']-6000
+    VGS = MemoriaVirtual['gstring']-7000
+    VGB = MemoriaVirtual['gbool']-7500
+    VLI = MemoriaVirtual['lint']-8000
+    VLF = MemoriaVirtual['lfloat']-9000
+    VLS = MemoriaVirtual['lstring']-10000
+    VLB = MemoriaVirtual['lbool']-11000
+    VTI = MemoriaVirtual['tint']-13000
+    VTF = MemoriaVirtual['tfloat']-13500
+    VTS = MemoriaVirtual['tstring']-13800
+    VTB = MemoriaVirtual['tbool']-14000
+  
+    MemAux.append({vib:{'nombre':funcionActual[-1],'VGI':VGI,'VGF':VGF,'VGS':VGS,'VGB':VGB,'VLI':VLI,'VLF':VLF,'VLS':VLS,'VLB':VLB,'VTI':VTI,'VTF':VTF,'VTS':VTS,'VTB':VTB}})
+    vib +=1
+
+
+
+
+    print("TEMPORAL INT TABLE",*TempIntTable)
     MemoriaVirtual['lint'] = 8000
     MemoriaVirtual['lfloat'] = 9000
     MemoriaVirtual['lstring'] = 10000
@@ -2218,6 +2247,8 @@ def p_agregavar(p):
         if(idFun == "programa"):
 
             proc.agregav(idFun,varId,tipoVar,MemoriaVirtual['g'+tipoVar],None)
+            print("MMEMORIA",MemoriaVirtual['g'+tipoVar],varId)
+            pilaVG.append(varId)
             MemoriaVirtual['g'+tipoVar] += 1
         elif(idFun!='principal'):
             proc.agregav(idFun,varId,tipoVar,MemoriaVirtual['l'+tipoVar],None)
@@ -2252,6 +2283,53 @@ def p_error(p):
     print(f"Syntax error: Unexpected {token}")
     sys.exit()
 
+def asignDirGlobal(nombrefunc,cont,rango,tipo):
+    global MemNew
+    for index in range(len(MemNew)):
+        for key in MemNew[index]:
+            if MemNew[index][key]['nombre'] == nombrefunc:
+                j=0
+                huy=[]
+                while j <=cont:
+                    huy.append({rango+j:None})
+                    j+=1
+                MemNew[index][key][tipo] = huy
+    #print("BLYAT",MemNew[index][key][tipo])
+def agregaConstMemoria(nombrefunc,tipo):
+    global MemNew
+    for index in range(len(MemNew)):
+        for key in MemNew[index]:
+            if MemNew[index][key]['nombre'] == nombrefunc:
+                huy=[]
+                for num, dire in constTable:
+                    print(num,dire)
+                    huy.append({dire:num})
+                MemNew[index][key][tipo] = huy
+def tipoMemoria(direccion):
+
+    if(direccion>=5000 and direccion<=5999):
+        return 'VGI'
+    elif(direccion>=6000 and direccion<=6999):
+        return 'VGF'
+    elif(direccion>=7000 and direccion<=7499):
+        return 'VGS'
+    elif(direccion>=7500 and direccion<=7999):
+        return 'VGB'
+    elif(direccion>=8000 and direccion<=8999):
+        return 'VLI'
+    elif(direccion>=9000 and direccion<=9999):
+        return 'VLF'
+    elif(direccion>=10000 and direccion<=10999):
+        return 'VLS'
+    elif(direccion>=11000 and direccion<=11999):
+        return 'VLB'
+    elif(direccion>=13000 and direccion<=13499):
+        return 'VTI'
+    elif(direccion>=13500 and direccion<=13799):
+        return 'VTS'
+    elif(direccion>=14000 and direccion<=20999):
+        return 'VTB'
+
 # Build the parser
 parser = yacc.yacc()
 result = parser.parse(data)
@@ -2259,15 +2337,27 @@ result = parser.parse(data)
 #print("TEST",proc.getDir('fact'))
 #print("TEST",proc.getDir('inicia')) 
 #print("TABLA DE POINTER",*pointerTable)
-#print("TABLA DE CONST",*constTable)
-#print("TABLA DE Funciones")
-#proc.arref()
+print("TABLA DE CONST",*constTable)
+print("TABLA DE Funciones")
+proc.arref()
 #print("XXXXXXXXXXXXXXXXXXXXX")
-#print("TABLA DE VARIABLES1", proc.testerVariable('programa'))
+print("TABLA DE VARIABLES1", proc.testerVariable('programa'))
 #print("TABLA DE VARIABLES2", proc.testerVariable('fact'))
 #print("TABLA DE VARIABLES3", proc.testerVariable('inicia'))
 despliegaQuad()
 print("DONE")
+
+yeet = proc.getVariable('programa')
+print(yeet)
+#AGARRA LOS VARIABLES DE LA TABLA DE VARIABLES DE LA FUNCION PROGRAMA (AUN NO SE USA)
+for index in range(len(yeet)):
+    if(index < len(pilaVG)):
+        name = (yeet[pilaVG[index]]['nombre'])
+        tipo = (yeet[pilaVG[index]]['tipo'])
+        loc = (yeet[pilaVG[index]]['locmem'])
+       #print("HUUUH",name,tipo,loc)
+
+#MemNew[index][key]['VGI'] =1
 
 print("MAQUINA VIRTUAL")
 #SE METE TODA LA LISTA DE CUADRUPLOS PARA QUE SEAN PROCESADOS
@@ -2286,11 +2376,39 @@ pilaParam = []
 regFlag = True
 #lineaConteo = cuadruplo[0][4]
 
+#Memoria 2.0
+ordenFunc = []
+ordenFunc.append("principal")
+
+#AGARRA LA CANTIDAD DE VARIABLES GLOBALES DE TODOS LOS TIPOS DE UNA FUNCION
+for index in range(len(MemAux)):
+    for key in MemAux[index]:
+        funcname = MemAux[index][key]['nombre']
+if MemAux[index][key]['nombre'] == funcname:
+    vgi = (MemAux[index][key]['VGI'])
+    vgf = (MemAux[index][key]['VGF'])
+    vgs = (MemAux[index][key]['VGS'])
+    vgb = (MemAux[index][key]['VGB'])
+    #print("CHETUMADRE",vgi,vgf,vgs,vgb)
+
+#INICIALIZA LA MEMORIA CON LAS VARIABLES GLOBALES
+MemNew.append({vib:{'nombre':ordenFunc[-1],'VGI':{} ,'VGF':{},'VGS':{},'VGB':{},'VLI':{},'VLF':{},'VLS':{},'VLB':{},'VTI':{},'VTF':{},'VTS':{},'VTB':{},'CONS':{}  } } )
+#ASIGNA A CADA UNAS DE LAS SECCIONES SU DIRECCIONES CORRESPONDIENTES
+asignDirGlobal('principal',vgi,5000,'VGI')
+asignDirGlobal('principal',vgf,6000,'VGF')
+asignDirGlobal('principal',vgs,7000,'VGS')
+asignDirGlobal('principal',vgb,7500,'VGB')
+agregaConstMemoria('principal','CONS')
+
+#print('SHEEt',*MemAux)
+print("CYKA",*MemNew)
+#print("BLYAT",MemNew[index][key]['VGI'])
 #print(operador,operando1,operando2,resultado)
+
 while(operador!='END'):
     #print("NEW CUADRUPLO", i, "CUADRUPLO ",operador,operando1,operando2,resultado)
 
-    #print("QUAD", operador,operando1,operando2,resultado)
+    print("QUAD", operador,operando1,operando2,resultado)
     #CADA CUADRUPLO TIENE GUARDADO EL LA 4ta O 5ta POSICION EL NUMERO DE CUADRUPLO A MOVERSE O EL NUMERO DE CUADRUPLO QUE ES RESPECTIVAMENTE
     if(len(cuadruplo[i])>4):
         contadorLineas = cuadruplo[i][4]
@@ -2299,6 +2417,10 @@ while(operador!='END'):
         contadorLineas = resultado
 
     if(operador == '*'):    
+
+        #if (ordenFunc[-1]=='programa'):
+        
+
         #print("MULTI", Memoria[operando1], Memoria[operando2])
         if(Memoria[operando1] == None):
             #SI EN LA MULTIPLICACION LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
@@ -2402,6 +2524,7 @@ while(operador!='END'):
         Memoria[resultado] = Memoria[operando1] - Memoria[operando2]
   
     if(operador == '='):
+
         if(Memoria[operando1] == None):
             #BUSCA LA DIRECCION EN LA TABLA DE CONSTANTE PARA TRAER EL VALOR ORIGINAL
             for key, value in constTable:
@@ -2411,6 +2534,33 @@ while(operador!='END'):
                     break
                 else: 
                     Memoria[operando1] = operando1
+        #BUSCA SI LA LA DIRECCION TIENE CONSTANTE
+        for index in range(len(MemNew)):
+            for key in MemNew[index]:
+                if MemNew[index][key]['nombre'] == ordenFunc[-1]:
+                    for llave in MemNew[index][key]['CONS']:
+                        try:
+                            if llave[operando1]:
+                                nuevoOperando1 = llave[operando1]
+                                #print("KARCHU",llave[operando1])
+                                #print("PIDARAS",MemNew[index][key]['CONS'])
+                        except KeyError:
+                            pass
+                        
+                    #huy=[]
+                    #huy.append({operando1:nuevoOperando1})
+                    #MemNew[index][key][tipo] = huy
+        tipodato = tipoMemoria(resultado)
+        
+        for index in range(len(MemNew)):
+            for key in MemNew[index]:
+                if MemNew[index][key]['nombre'] == ordenFunc[-1]:
+                    huy=[]                         
+                    huy.append({resultado:nuevoOperando1})
+                    MemNew[index][key][tipodato] = huy
+        print("BLYAT3",*MemNew)
+        
+
         if(resultado>=8000 and resultado<=8999):
             Memoria[resultado] = int(Memoria[operando1])
         elif(resultado>=9000 and resultado<=9999):
@@ -2442,6 +2592,34 @@ while(operador!='END'):
 
     if(operador == 'ERA'):
         funcionInvocada = resultado
+
+
+        #######
+        ordenFunc.append(resultado)
+
+        #AGARRA LA CANTIDAD DE VARIABLES GLOBALES DE TODOS LOS TIPOS DE UNA FUNCION
+        for index in range(len(MemAux)):
+            for key in MemAux[index]:
+                funcname = MemAux[index][key]['nombre']
+        if MemAux[index][key]['nombre'] == funcname:
+            vgi = (MemAux[index][key]['VGI'])
+            vgf = (MemAux[index][key]['VGF'])
+            vgs = (MemAux[index][key]['VGS'])
+            vgb = (MemAux[index][key]['VGB'])
+            print("CHETUMADRE",vgi,vgf,vgs,vgb)
+
+        #INICIALIZA LA MEMORIA CON LAS VARIABLES GLOBALES
+        MemNew.append({vib:{'nombre':ordenFunc[-1],'VGI':{} ,'VGF':{},'VGS':{},'VGB':{},'VLI':{},'VLF':{},'VLS':{},'VLB':{},'VTI':{},'VTF':{},'VTS':{},'VTB':{},'CONS':{}   } } )
+        #ASIGNA A CADA UNAS DE LAS SECCIONES SU DIRECCIONES CORRESPONDIENTES
+        asignDirGlobal(resultado,vgi,5000,'VGI')
+        asignDirGlobal(resultado,vgf,6000,'VGF')
+        asignDirGlobal(resultado,vgs,7000,'VGS')
+        asignDirGlobal(resultado,vgb,7500,'VGB')
+
+        print('SHEEt2',*MemAux)
+        print("CYKA2",*MemNew)
+        #print("BLYAT",MemNew[index][key]['VGI'])
+
         #funcionInvocadaAux = proc.getDir(funcionInvocada)
         # if(funcionInvocadaAux != None):
         #     inicioNuevaFuncion = proc.getInicioCuadruplo(funcionInvocada)
@@ -2472,7 +2650,7 @@ while(operador!='END'):
         tes=(funcionInvocada, Memoria[direccionParam],direccionParam)
         pilaParam.append(tes)
 
-        #print("PARAM", Memoria[direccionParam],direccionParam)
+        print("PARAM", Memoria[direccionParam],direccionParam)
 
     if(operador == 'GoSub'):
         
@@ -2511,6 +2689,7 @@ while(operador!='END'):
         
         contRecursion -= 1
         if(contRecursion>=0):
+            print("Buscando error",recursionAux[contRecursion],contRecursion)
             i = recursionAux[contRecursion]
         else:
             print("Recursividad infinita")

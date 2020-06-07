@@ -1,0 +1,36 @@
+programa foreveralone;
+var int i,n,k,l,j;
+float cont;
+
+funcion void test(int m)
+{
+escribe('HELLO WORLD');
+}
+
+principal(){
+i=1;
+k=0;
+l=10;
+cont=1.0;
+lee(n);
+mientras(n>0) haz
+{
+i = i+n;
+n = n-1;
+}
+escribe('Dato aqui',i);
+desde i=1 hasta 9+l hacer
+{
+k = k + i;
+test(13);
+}
+desde i=1 hasta 5 hacer 
+{
+	desde j=1 hasta 3 hacer
+	{
+	 cont = cont + 1.1;
+	 escribe(cont);
+	} 
+}
+escribe(k);
+}

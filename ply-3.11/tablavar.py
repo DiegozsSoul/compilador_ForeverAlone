@@ -47,5 +47,8 @@ class tablaVariables(object):
     def imprimiArreglo(self):
         print(self.arreglo.items())
 
+    def getArreglo(self):
+        return self.arreglo
+
                 
         

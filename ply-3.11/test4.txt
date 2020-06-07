@@ -6,7 +6,7 @@ funcion int inicia(int y, int n)
 { x = 5;
   z = 1;
   x = x * z + y *n;
-  escribe(x*z);
+  escribe(x*2);
   regresa(x);
 }
 
@@ -15,9 +15,36 @@ principal()
   lee(k);
   i = inicia(j,k);
   p = 1;
- escribe('TEST');
+ escribe('TEST',i);
 
  escribe('Este es p',p);
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

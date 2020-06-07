@@ -2,6 +2,7 @@ programa foreveralone;
 var int i, j;
 
 funcion int fibo(int x)
+var int a,b;
 { 
   si( x < 2) entonces
   {
@@ -10,7 +11,9 @@ funcion int fibo(int x)
   }
   sino
   {
-   regresa(fibo(x-1)+fibo(x-2));
+   a = fibo(x-1);
+   b = fibo(x-2);
+   regresa(a+b);
   }
 }
 

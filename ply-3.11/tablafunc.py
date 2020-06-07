@@ -139,6 +139,11 @@ class tablaFunciones(object):
             testerino = self.arreglo[nombref]
             return testerino['tvar'].imprimiArreglo()
 
+    def getVariable(self, nombref):
+        if nombref in self.arreglo:
+            testerino = self.arreglo[nombref]
+            return testerino['tvar'].getArreglo()
+
     #Se utiliza para mostrar la tabla de funciones
     def getDir(self, query):
         if self.busca(query):

@@ -12,15 +12,15 @@ regresa(a*b);
 }
 
 funcion int test(int l)
-var int i;
+var int k;
 {
-i=1;
+k=1;
  mientras(l > 0) haz
   {
-   escribe(i,l);
-   i = patito(i,l);
+   escribe(k,l);
+   k = patito(k,l);
    l = l - 1;
-  regresa(i);
+  regresa(k);
   }
 
 }
@@ -28,7 +28,7 @@ i=1;
 principal()
 { i = 1;
   lee(n); 
- w = patito(n,n);
+ w = test(n);
  escribe(w);
 }
 
