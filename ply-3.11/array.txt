@@ -1,0 +1,19 @@
+programa foreveralone;
+var int i, n, w;
+int arreglo[10];
+
+principal()
+{ i = 54;
+
+  lee(n);
+  arreglo[n]=i; 
+
+   mientras ( n <= 4) haz 
+  {
+   arreglo[n] = n;
+   n = n+1;
+   escribe(arreglo[n]);
+  }
+
+}
+

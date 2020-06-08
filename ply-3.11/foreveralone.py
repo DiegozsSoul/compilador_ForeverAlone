@@ -44,6 +44,8 @@ isArray = False
 dim = 1
 pilaDim = []
 kArr = 0
+arrCount = 0
+flagGoodArr=False
 #MEMORIA2.0
 MemNew = []
 MemAux = []
@@ -92,7 +94,7 @@ Memoria =[None] * 22000
 TodaMemoria=[]
 #Reads the document
  
-Info= open("func_ana.txt", "r") 
+Info= open("array.txt", "r") 
 data=Info.read()
 
 # Reserved words
@@ -798,7 +800,12 @@ def p_arrn3(p):
     if(-(int(kArr)) in dict(constTable)):
         d = dict(constTable)
         newkArr = d[-(int(kArr))]
-    quad = ("+",valorMem, newkArr, result,contLine)
+
+    if(0 in dict(constTable)):
+        d = dict(constTable)
+        cero = d[0]
+    print("NEW CERO",cero)
+    quad = ("+",valorMem, cero, result,contLine)
     cuadruplo.append(quad)
     contLine += 1
     MemoriaVirtual['tint'] += 1
@@ -1786,6 +1793,11 @@ def p_saveconst(p):
         constante = (-1,MemoriaVirtual['const'])
         constTable.append(constante)
         MemoriaVirtual['const'] += 1
+
+    if(0 not in dict(constTable)):
+        constante = (0,MemoriaVirtual['const'])
+        constTable.append(constante)
+        MemoriaVirtual['const'] += 1
     #print("LISTA DE CONSTANTES",*constTable)
 def p_savestringconst(p):
     '''
@@ -2384,6 +2396,7 @@ ordenFunc = []
 ordenFunc.append("principal")
 
 #AGARRA LA CANTIDAD DE VARIABLES GLOBALES DE TODOS LOS TIPOS DE UNA FUNCION
+"""
 for index in range(len(MemAux)):
     for key in MemAux[index]:
         funcname = MemAux[index][key]['nombre']
@@ -2393,7 +2406,7 @@ if MemAux[index][key]['nombre'] == funcname:
     vgs = (MemAux[index][key]['VGS'])
     vgb = (MemAux[index][key]['VGB'])
     #print("CHETUMADRE",vgi,vgf,vgs,vgb)
-
+"""
 #INICIALIZA LA MEMORIA CON LAS VARIABLES GLOBALES
 MemNew.append({ordenFunc[-1]:{'VGI':{},'VGF':{},'VGS':{},'VGB':{},'VLI':{},'VLF':{},'VLS':{},'VLB':{},'VTI':{},'VTF':{},'VTS':{},'VTB':{},'CONS':{}  } } )
 #ASIGNA A CADA UNAS DE LAS SECCIONES SU DIRECCIONES CORRESPONDIENTES
@@ -2499,7 +2512,21 @@ while(operador!='END'):
         if((  type(blinHelper[operando1]).__name__=='str' or type(blinHelper[operando1]) == 'str') or (( type(blinHelper[operando2]).__name__ =='str')  or type(blinHelper[operando2]).__name__ == 'str' )):
             print("No se permite sumar char o strings")
             sys.exit()
-        blinHelper[resultado] = blinHelper[operando1] + blinHelper[operando2]
+
+        if(flagGoodArr):
+            if(arrCount==2):
+                pointer = blinHelper[operando2]
+                blinHelper[resultado] = operando1 + pointer
+                #print("POINTE",blinHelper[pointer],pointer)
+            if(arrCount==1):
+                blinHelper[resultado] = blinHelper[operando1] + blinHelper[operando2]
+                #print("ALOG",blinHelper[resultado])
+            arrCount -=1
+        else:
+            #print("PAVLOV",blinHelper[resultado], blinHelper[operando1], blinHelper[operando2])
+            blinHelper[resultado] = blinHelper[operando1] + blinHelper[operando2]
+
+        
 
     if(operador == '-'):
         if(blinHelper[operando1] == None):
@@ -2528,20 +2555,20 @@ while(operador!='END'):
         blinHelper[resultado] = blinHelper[operando1] - blinHelper[operando2]
   
     if(operador == '='):
-        print("IGUALIDAD",blinHelper[operando1],operando1)
-        print("LAAAST",blinHelper[5004])
+        #print("IGUALIDAD",blinHelper[operando1],operando1)
+        #print("LAAAST",blinHelper[5004])
         if(blinHelper[operando1] == None):
             #BUSCA LA DIRECCION EN LA TABLA DE CONSTANTE PARA TRAER EL VALOR ORIGINAL
             for key, value in constTable:
                 if value == operando1:
                     nuevoOperando1 = key
                     blinHelper[operando1] = nuevoOperando1
-                    print("IGUALIDAD2",blinHelper[operando1],operando1)
+                    #print("IGUALIDAD2",blinHelper[operando1],operando1)
 
                     break
                 else: 
                     blinHelper[operando1] = operando1
-                    print("IGUALIDAD3",blinHelper[operando1],operando1)
+                    #print("IGUALIDAD3",blinHelper[operando1],operando1)
         #if(operando1>=5000 and operando1 <=5999):
 
         ##############
@@ -2577,8 +2604,13 @@ while(operador!='END'):
 
         """
         ###############
-        
-        if(resultado>=8000 and resultado<=8999):
+        if(flagGoodArr):
+            newPabitooo = blinHelper[resultado]
+            blinHelper[newPabitooo] = blinHelper[operando1] 
+            #print("ALOG",blinHelper[newPabitooo])
+            flagGoodArr=False
+
+        elif(resultado>=8000 and resultado<=8999):
             blinHelper[resultado] = int(blinHelper[operando1])
         elif(resultado>=9000 and resultado<=9999):
             blinHelper[resultado] = float(blinHelper[operando1])
@@ -2600,9 +2632,14 @@ while(operador!='END'):
                     #print("ASIGNACION2",operando1)
                     blinHelper[resultado] = resultado
             print(blinHelper[resultado])
+        elif(resultado >= 21000):
+            chaz = blinHelper[resultado]
+            print("HMMMMMM",blinHelper[chaz])
+            blinHelper[resultado] = blinHelper[chaz]
+            print(blinHelper[resultado])
         else:
             print(blinHelper[resultado])
-        #print("EScritura",blinHelper[resultado],resultado)
+
     if(operador == 'GOTO'):
         i = resultado -2
         #print("GOTO",i)
@@ -2928,18 +2965,27 @@ while(operador!='END'):
             if value == operando1:
                 nuevoOperando1 = key
                 blinHelper[operando1] = nuevoOperando1
+                #print("ACE1",blinHelper[operando1],nuevoOperando1,operando1)
                 break
             else:
-                blinHelper[operando1] = operando1
+                #print("ACE2",blinHelper[operando1],nuevoOperando1,operando1)
+                blinHelper[operando1] = blinHelper[operando1]
+                #print("ACE3",blinHelper[operando1],nuevoOperando1,operando1)
+
+        #print("ACE4",blinHelper[operando1],nuevoOperando1,operando1)
         for key, value in constTable:
             if value == resultado:
                 nuevoResultado = key
                 #Memoria[operando2] = nuevoOperando2
+                #print("ACE5",blinHelper[operando1],nuevoOperando1,value,key,operando1)
                 break
-
-        #print("TESTERU", Memoria[operando1], nuevoResultado)
-        if((blinHelper[operando1]  >= 0) and (blinHelper[operando1]  <= nuevoResultado)):
+        #print("ACE6",nuevoResultado,blinHelper[operando1],nuevoOperando1,operando1,blinHelper[5001])
+        if((blinHelper[operando1]  >= 1) and (blinHelper[operando1]  <= nuevoResultado)):
             flagGoodArr = True
+            arrCount = 2
+        else:
+            print("Error en tamaño de arreglo")
+            sys.exit()
 
 
     #if(operador == '')
