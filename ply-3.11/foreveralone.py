@@ -89,7 +89,7 @@ MemoriaVirtual = {
     'tchar':16000,
 }
 Memoria =[None] * 22000
-
+TodaMemoria=[]
 #Reads the document
  
 Info= open("func_ana.txt", "r") 
@@ -555,7 +555,7 @@ def p_reinicioMemoriaVariable(p):
 
     TempIntTable = []
     TempFloatTable = []
-    quad = ('ENDFUNC',None,None,None,contLine)
+    quad = ('ENDFUNC',funcionActual[-1],None,None,contLine)
     cuadruplo.append(quad)   
     #AQUI VOY
 
@@ -1061,7 +1061,7 @@ def p_retn(p):
         ##########################
         contLine += 1
         #print("NUEVO RETURN ",auxMem)
-        quad = ("Regresa",None,None,auxMem,contLine)
+        quad = ("Regresa",funcionActual[-1],None,auxMem,contLine)
         cuadruplo.append(quad)
         #AQUIESTOY
     else:
@@ -2287,7 +2287,7 @@ def asignDirGlobal(nombrefunc,cont,rango,tipo):
     global MemNew
     for index in range(len(MemNew)):
         for key in MemNew[index]:
-            if MemNew[index][key]['nombre'] == nombrefunc:
+            if(key==nombrefunc):
                 j=0
                 huy=[]
                 while j <=cont:
@@ -2299,12 +2299,13 @@ def agregaConstMemoria(nombrefunc,tipo):
     global MemNew
     for index in range(len(MemNew)):
         for key in MemNew[index]:
-            if MemNew[index][key]['nombre'] == nombrefunc:
+            if(key == nombrefunc):
                 huy=[]
                 for num, dire in constTable:
                     print(num,dire)
                     huy.append({dire:num})
-                MemNew[index][key][tipo] = huy
+                    MemNew[index][key][tipo] = huy
+
 def tipoMemoria(direccion):
 
     if(direccion>=5000 and direccion<=5999):
@@ -2342,13 +2343,14 @@ print("TABLA DE Funciones")
 proc.arref()
 #print("XXXXXXXXXXXXXXXXXXXXX")
 print("TABLA DE VARIABLES1", proc.testerVariable('programa'))
-#print("TABLA DE VARIABLES2", proc.testerVariable('fact'))
-#print("TABLA DE VARIABLES3", proc.testerVariable('inicia'))
+print("TABLA DE VARIABLES2", proc.testerVariable('test'))
+print("TABLA DE VARIABLES3", proc.testerVariable('patito'))
 despliegaQuad()
 print("DONE")
 
 yeet = proc.getVariable('programa')
 print(yeet)
+"""
 #AGARRA LOS VARIABLES DE LA TABLA DE VARIABLES DE LA FUNCION PROGRAMA (AUN NO SE USA)
 for index in range(len(yeet)):
     if(index < len(pilaVG)):
@@ -2356,7 +2358,7 @@ for index in range(len(yeet)):
         tipo = (yeet[pilaVG[index]]['tipo'])
         loc = (yeet[pilaVG[index]]['locmem'])
        #print("HUUUH",name,tipo,loc)
-
+"""
 #MemNew[index][key]['VGI'] =1
 
 print("MAQUINA VIRTUAL")
@@ -2375,7 +2377,8 @@ pilaRecursion = []
 pilaParam = []
 regFlag = True
 #lineaConteo = cuadruplo[0][4]
-
+pilaParamAux =[]
+pilaDirAux=[]
 #Memoria 2.0
 ordenFunc = []
 ordenFunc.append("principal")
@@ -2392,19 +2395,20 @@ if MemAux[index][key]['nombre'] == funcname:
     #print("CHETUMADRE",vgi,vgf,vgs,vgb)
 
 #INICIALIZA LA MEMORIA CON LAS VARIABLES GLOBALES
-MemNew.append({vib:{'nombre':ordenFunc[-1],'VGI':{} ,'VGF':{},'VGS':{},'VGB':{},'VLI':{},'VLF':{},'VLS':{},'VLB':{},'VTI':{},'VTF':{},'VTS':{},'VTB':{},'CONS':{}  } } )
+MemNew.append({ordenFunc[-1]:{'VGI':{},'VGF':{},'VGS':{},'VGB':{},'VLI':{},'VLF':{},'VLS':{},'VLB':{},'VTI':{},'VTF':{},'VTS':{},'VTB':{},'CONS':{}  } } )
 #ASIGNA A CADA UNAS DE LAS SECCIONES SU DIRECCIONES CORRESPONDIENTES
+"""
 asignDirGlobal('principal',vgi,5000,'VGI')
 asignDirGlobal('principal',vgf,6000,'VGF')
 asignDirGlobal('principal',vgs,7000,'VGS')
 asignDirGlobal('principal',vgb,7500,'VGB')
 agregaConstMemoria('principal','CONS')
-
+"""
 #print('SHEEt',*MemAux)
-print("CYKA",*MemNew)
+#print("CYKA",*MemNew)
 #print("BLYAT",MemNew[index][key]['VGI'])
 #print(operador,operando1,operando2,resultado)
-
+TodaMemoria.append(Memoria)
 while(operador!='END'):
     #print("NEW CUADRUPLO", i, "CUADRUPLO ",operador,operando1,operando2,resultado)
 
@@ -2415,129 +2419,137 @@ while(operador!='END'):
         #print(contadorLineas)
     else:
         contadorLineas = resultado
-
+    blinHelper = TodaMemoria[-1]
     if(operador == '*'):    
 
         #if (ordenFunc[-1]=='programa'):
         
-
         #print("MULTI", Memoria[operando1], Memoria[operando2])
-        if(Memoria[operando1] == None):
+
+        if(blinHelper[operando1] == None):
             #SI EN LA MULTIPLICACION LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando1:
                     nuevoOperando1 = key
-                    Memoria[operando1] = nuevoOperando1
+                    blinHelper[operando1] = nuevoOperando1
                     break
                 else:
-                    Memoria[operando1] = operando1
-        if(Memoria[operando2] == None):
+                    blinHelper[operando1] = operando1
+        if(blinHelper[operando2] == None):
             #SI EN LA MULTIPLICACION LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando2:
                     nuevoOperando2 = key
-                    Memoria[operando2] = nuevoOperando2
+                    blinHelper[operando2] = nuevoOperando2
                     break
                 else:
-                    Memoria[operando2] = operando2
-        if((  type(Memoria[operando1]).__name__=='str' or type(Memoria[operando1]) == 'str') or (( type(Memoria[operando2]).__name__ =='str')  or type(Memoria[operando2]).__name__ == 'str' )):
+                    blinHelper[operando2] = operando2
+        if((  type(blinHelper[operando1]).__name__=='str' or type(blinHelper[operando1]) == 'str') or (( type(blinHelper[operando2]).__name__ =='str')  or type(blinHelper[operando2]).__name__ == 'str' )):
             print("No se permite multiplicar char o strings")
             sys.exit()
-        Memoria[resultado] = Memoria[operando1] * Memoria[operando2]
+        blinHelper[resultado] = blinHelper[operando1] * blinHelper[operando2]
 
     if(operador == '/'):
-        if(Memoria[operando1] == None):
+        if(blinHelper[operando1] == None):
             #SI EN LA DIVISION LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando1:
                     nuevoOperando1 = key
-                    Memoria[operando1] = nuevoOperando1
+                    blinHelper[operando1] = nuevoOperando1
                     break
                 else:
-                    Memoria[operando1] = operando1
-        if(Memoria[operando2] == None):
+                    blinHelper[operando1] = operando1
+        if(blinHelper[operando2] == None):
             #SI EN LA DIVISION LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando2:
                     nuevoOperando2 = key
-                    Memoria[operando2] = nuevoOperando2
+                    blinHelper[operando2] = nuevoOperando2
                     break
                 else:
-                    Memoria[operando2] = operando2
-        if((  type(Memoria[operando1]).__name__=='str' or type(Memoria[operando1]) == 'str') or (( type(Memoria[operando2]).__name__ =='str')  or type(Memoria[operando2]).__name__ == 'str' )):
+                    blinHelper[operando2] = operando2
+        if((  type(blinHelper[operando1]).__name__=='str' or type(blinHelper[operando1]) == 'str') or (( type(blinHelper[operando2]).__name__ =='str')  or type(blinHelper[operando2]).__name__ == 'str' )):
             print("No se permite dividir char o strings")
             sys.exit()
-        if(Memoria[operando2]==0):
+        if(blinHelper[operando2]==0):
             print("No se permite dividir entre cero")
             sys.exit()           
-        Memoria[resultado] = Memoria[operando1] / Memoria[operando2]
+        blinHelper[resultado] = blinHelper[operando1] / blinHelper[operando2]
 
     if(operador == '+'):
-        if(Memoria[operando1] == None):
+        if(blinHelper[operando1] == None):
             #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando1:
                     nuevoOperando1 = key
-                    Memoria[operando1] = nuevoOperando1
+                    blinHelper[operando1] = nuevoOperando1
                     break
                 else:
-                    Memoria[operando1] = operando1
-        if(Memoria[operando2] == None):
+                    blinHelper[operando1] = operando1
+        if(blinHelper[operando2] == None):
             #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando2:
                     nuevoOperando2 = key
-                    Memoria[operando2] = nuevoOperando2
+                    blinHelper[operando2] = nuevoOperando2
                     break
                 else:
-                    Memoria[operando2] = operando2
+                    blinHelper[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
-        if((  type(Memoria[operando1]).__name__=='str' or type(Memoria[operando1]) == 'str') or (( type(Memoria[operando2]).__name__ =='str')  or type(Memoria[operando2]).__name__ == 'str' )):
+        if((  type(blinHelper[operando1]).__name__=='str' or type(blinHelper[operando1]) == 'str') or (( type(blinHelper[operando2]).__name__ =='str')  or type(blinHelper[operando2]).__name__ == 'str' )):
             print("No se permite sumar char o strings")
             sys.exit()
-        Memoria[resultado] = Memoria[operando1] + Memoria[operando2]
+        blinHelper[resultado] = blinHelper[operando1] + blinHelper[operando2]
 
     if(operador == '-'):
-        if(Memoria[operando1] == None):
+        if(blinHelper[operando1] == None):
             #SI EN LA RESTA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando1:
                     nuevoOperando1 = key
-                    Memoria[operando1] = nuevoOperando1
+                    blinHelper[operando1] = nuevoOperando1
                     break
                 else:
-                    Memoria[operando1] = operando1
-        if(Memoria[operando2] == None):
+                    blinHelper[operando1] = operando1
+        if(blinHelper[operando2] == None):
             #SI EN LA RESTA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando2:
                     nuevoOperando2 = key
-                    Memoria[operando2] = nuevoOperando2
+                    blinHelper[operando2] = nuevoOperando2
                     break
                 else:
-                    Memoria[operando2] = operando2
+                    blinHelper[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
         #print("RESTA", Memoria[resultado], Memoria[operando1],Memoria[operando2])
-        if((  type(Memoria[operando1]).__name__=='str' or type(Memoria[operando1]) == 'str') or (( type(Memoria[operando2]).__name__ =='str')  or type(Memoria[operando2]).__name__ == 'str' )):
+        if((  type(blinHelper[operando1]).__name__=='str' or type(blinHelper[operando1]) == 'str') or (( type(blinHelper[operando2]).__name__ =='str')  or type(blinHelper[operando2]).__name__ == 'str' )):
             print("No se permite restar char o strings")
             sys.exit()
-        Memoria[resultado] = Memoria[operando1] - Memoria[operando2]
+        blinHelper[resultado] = blinHelper[operando1] - blinHelper[operando2]
   
     if(operador == '='):
-
-        if(Memoria[operando1] == None):
+        print("IGUALIDAD",blinHelper[operando1],operando1)
+        print("LAAAST",blinHelper[5004])
+        if(blinHelper[operando1] == None):
             #BUSCA LA DIRECCION EN LA TABLA DE CONSTANTE PARA TRAER EL VALOR ORIGINAL
             for key, value in constTable:
                 if value == operando1:
                     nuevoOperando1 = key
-                    Memoria[operando1] = nuevoOperando1
+                    blinHelper[operando1] = nuevoOperando1
+                    print("IGUALIDAD2",blinHelper[operando1],operando1)
+
                     break
                 else: 
-                    Memoria[operando1] = operando1
+                    blinHelper[operando1] = operando1
+                    print("IGUALIDAD3",blinHelper[operando1],operando1)
+        #if(operando1>=5000 and operando1 <=5999):
+
+        ##############
+        """
         #BUSCA SI LA LA DIRECCION TIENE CONSTANTE
         for index in range(len(MemNew)):
             for key in MemNew[index]:
-                if MemNew[index][key]['nombre'] == ordenFunc[-1]:
+                if key == ordenFunc[-1]:
                     for llave in MemNew[index][key]['CONS']:
                         try:
                             if llave[operando1]:
@@ -2546,55 +2558,59 @@ while(operador!='END'):
                                 #print("PIDARAS",MemNew[index][key]['CONS'])
                         except KeyError:
                             pass
-                        
-                    #huy=[]
-                    #huy.append({operando1:nuevoOperando1})
-                    #MemNew[index][key][tipo] = huy
         tipodato = tipoMemoria(resultado)
         
         for index in range(len(MemNew)):
             for key in MemNew[index]:
-                if MemNew[index][key]['nombre'] == ordenFunc[-1]:
+                if key == ordenFunc[-1]:
                     huy=[]                         
                     huy.append({resultado:nuevoOperando1})
-                    MemNew[index][key][tipodato] = huy
-        print("BLYAT3",*MemNew)
-        
+                    for llave in MemNew[index][key][tipodato]:
+                        try:
+                            if llave[resultado] or llave[resultado]==None:
+                                print("YES PLS",MemNew[index][key][tipodato],llave)
+                                MemNew[index][key][tipodato][resultado]=(huy) 
+                        except KeyError:
+                            print("NO PLS")
+                            pass
+                print("BLYAT3",*MemNew)
 
+        """
+        ###############
+        
         if(resultado>=8000 and resultado<=8999):
-            Memoria[resultado] = int(Memoria[operando1])
+            blinHelper[resultado] = int(blinHelper[operando1])
         elif(resultado>=9000 and resultado<=9999):
-            Memoria[resultado] = float(Memoria[operando1])
+            blinHelper[resultado] = float(blinHelper[operando1])
         else:
-            Memoria[resultado] = Memoria[operando1]
+            blinHelper[resultado] = blinHelper[operando1]
 
     
  
 
     if(operador == 'Escritura'):
-        if(Memoria[resultado] == None):
+        if(blinHelper[resultado] == None):
             for key, value in constTable:
                 if value == resultado:
                     nuevoResultado = key
                     #print("ASIGNACION1",nuevoOperando1)
-                    Memoria[resultado] = nuevoResultado
+                    blinHelper[resultado] = nuevoResultado
                     break
                 else: 
                     #print("ASIGNACION2",operando1)
-                    Memoria[resultado] = resultado
-            print(Memoria[resultado])
+                    blinHelper[resultado] = resultado
+            print(blinHelper[resultado])
         else:
-            print(Memoria[resultado])
-
+            print(blinHelper[resultado])
+        #print("EScritura",blinHelper[resultado],resultado)
     if(operador == 'GOTO'):
         i = resultado -2
         #print("GOTO",i)
 
     if(operador == 'ERA'):
         funcionInvocada = resultado
-
-
         #######
+        """
         ordenFunc.append(resultado)
 
         #AGARRA LA CANTIDAD DE VARIABLES GLOBALES DE TODOS LOS TIPOS DE UNA FUNCION
@@ -2619,43 +2635,102 @@ while(operador!='END'):
         print('SHEEt2',*MemAux)
         print("CYKA2",*MemNew)
         #print("BLYAT",MemNew[index][key]['VGI'])
-
+        """
         #funcionInvocadaAux = proc.getDir(funcionInvocada)
         # if(funcionInvocadaAux != None):
         #     inicioNuevaFuncion = proc.getInicioCuadruplo(funcionInvocada)
         #print("ERA", inicioNuevaFuncion)
 
     if(operador == 'Param'):
+        #print("PARAMETRO",Memoria[8000], Memoria[8001])
         #ESTO PERMITE QUE SE REGRESEN MAS DE UN PARAMETRO
         numParam  = operando2[4]
         auxParam  = proc.getPilaParam(funcionInvocada)
-        #print("PILA",auxParam)
         busqParam = auxParam[int(numParam)-1]
-        
+        #print("PILA",auxParam, busqParam)
+
+        #print("PARAMETRO1",blinHelper[8000], blinHelper[8001],busqParam)
+
         direccionParam = proc.getLocMem(funcionInvocada, busqParam)
+        
+        #print("DIRECCION PARAM",direccionParam,busqParam)
+        #print("HUUUUH", blinHelper[operando1],operando1)
         #print("DIRECCION PARAM",direccionParam)
         for key, value in constTable:
+            #print("LLAVES",key,value,operando1, Memoria[resultado])
             if value == operando1:  
                 variableAGuardar = key
-                Memoria[operando1] = variableAGuardar
+                #print("LOOKIN RESET",key,operando1,Memoria[operando1])
+                blinHelper[operando1] = variableAGuardar
                 #print("ENTRE TRUE", Memoria[operando1])
+                #print("PARAMETRO2",blinHelper[8000], blinHelper[8001],busqParam)
+
                 break
             else:
-                Memoria[operando1] = Memoria[operando1] #######SE CAMBIO ESTO Memoria[operando1] = operando1
+                #print("LOOKIN RESET",key, value,operando1 ,Memoria[operando1])
+                blinHelper[operando1] = blinHelper[operando1] #######SE CAMBIO ESTO Memoria[operando1] = operando1
                 #print("ENTRE FALSE", Memoria[operando1],operando1)
+                #print("PARAMETRO3",blinHelper[8000], blinHelper[8001],busqParam)
 
+
+        #print("PARAMETRO4",blinHelper[8000], blinHelper[8001],busqParam)
+
+        #####
+        """
+        if(Memoria[resultado] == None):
+            for key, value in constTable:
+                if value == resultado:
+                    nuevoResultado = key
+                    #print("ASIGNACION1",nuevoOperando1)
+                    Memoria[resultado] = nuevoResultado
+                    break
+                else: 
+                    #print("ASIGNACION2",operando1)
+                    Memoria[resultado] = resultado
+            print(Memoria[resultado])
+        else:
+            print(Memoria[resultado])
+        """
+        #####
         #print("SALI DEL FOR",Memoria[operando1])
-        
-        Memoria[direccionParam] = Memoria[operando1]
-        tes=(funcionInvocada, Memoria[direccionParam],direccionParam)
-        pilaParam.append(tes)
+        #print("SOLCUCION",blinHelper[operando1],operando1,blinHelper[direccionParam])
+        #pilaParamAux.append(blinHelper[direccionParam])
+        #print("YEET",*pilaDirAux)
+        #print("CHECKANDO",pilaParamAux[direccionParam])
+        pilaParamAux.append (blinHelper[operando1])
+        pilaDirAux.append(operando1)
+        #print("INDEX",pilaParamAux[direccionParam], direccionParam,blinHelper[direccionParam],blinHelper[operando1])
+        #print("")
 
-        print("PARAM", Memoria[direccionParam],direccionParam)
+
+        #print("DUDA",*pilaParamAux)
+        #for c in range(len(pilaParamAux)):
+        #    print(pilaParamAux[c])
+
+        #blinHelper[direccionParam] = pilaParamAux[-1]
+       # print("INDEX2",pilaParamAux[direccionParam], direccionParam,blinHelper[direccionParam])
+
+
+
+        #print("PARAMETRO5",blinHelper[8000], blinHelper[8001],busqParam)
+        #tes=(funcionInvocada, blinHelper[direccionParam],direccionParam)
+        #pilaParam.append(tes)
+        #print("PARAM", blinHelper[direccionParam],direccionParam)
 
     if(operador == 'GoSub'):
-        
+
+        blinHelper[direccionParam] = pilaParamAux[-1]
+        #print("GODZILLA",*pilaDirAux,*pilaParamAux)
+        for tam in range(len(pilaDirAux)):
+            blinHelper[pilaDirAux[tam]] = pilaParamAux[tam]
+        tes=(funcionInvocada, blinHelper[direccionParam],direccionParam)
+        pilaParam.append(tes)
+
         #pilaRecursion.append(recur)
         #print("TEST",pilaParam)
+        pilaParamAux=[]
+        pilaDirAux=[]
+        TodaMemoria.append(blinHelper.copy())
         guardaCuadruplo = i
         i = resultado - 2 
         #print("CONT RECURSION",cuadruplo[i])
@@ -2675,21 +2750,32 @@ while(operador!='END'):
         if(len(pilaParam)!=0):
 
             helper = pilaParam.pop()
-            Memoria[helper[2]] = helper[1]
+            blinHelper[helper[2]] = helper[1]
 
         memoriaFuncion = proc.getLocMem("programa",funcionInvocada)
         for key, value in constTable:
             if value == resultado:  
                 variableAGuardar = key
-                Memoria[resultado] = variableAGuardar
+                blinHelper[resultado] = variableAGuardar
                 break
-      
-        Memoria[memoriaFuncion] = Memoria[resultado]
+        print("MEMORIA",blinHelper[8002])
+        print("CODIGO",blinHelper[resultado],resultado)
+        print("CODIGO2",Memoria[memoriaFuncion],memoriaFuncion)
+        blinHelper[memoriaFuncion] = blinHelper[resultado] #######Memoria[memoriaFuncion] = blinHelper[resultado]
+        print("CODIGO3",blinHelper[memoriaFuncion],memoriaFuncion)
 
-        
+        ############
+        if(isinstance(operando1,str)):
+            boris = proc.getLocMem('programa',operando1)
+            blinHelper[boris] = blinHelper[resultado]
+
+
+
+        ############
+
         contRecursion -= 1
         if(contRecursion>=0):
-            print("Buscando error",recursionAux[contRecursion],contRecursion)
+            #print("Buscando error",recursionAux[contRecursion],contRecursion)
             i = recursionAux[contRecursion]
         else:
             print("Recursividad infinita")
@@ -2698,137 +2784,153 @@ while(operador!='END'):
     if(operador == 'ENDFUNC'):
         regFlag = True
         if(proc.getTipoFunc(funcionInvocada)=='void'):
-            i = guardaCuadruplo 
+            i = guardaCuadruplo
+        TodaMemoria.pop()
     
     if(operador == '>'):
-        if(Memoria[operando1] == None):
+        if(blinHelper[operando1] == None):
         #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando1:
                     nuevoOperando1 = key
-                    Memoria[operando1] = nuevoOperando1
+                    blinHelper[operando1] = nuevoOperando1
                     break
                 else:
-                    Memoria[operando1] = operando1
-        if(Memoria[operando2] == None):
+                    blinHelper[operando1] = operando1
+        if(blinHelper[operando2] == None):
         #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando2:
                     nuevoOperando2 = key
-                    Memoria[operando2] = nuevoOperando2
+                    blinHelper[operando2] = nuevoOperando2
                     break
                 else:
-                    Memoria[operando2] = operando2
+                    blinHelper[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
-        Memoria[resultado] = Memoria[operando1] > Memoria[operando2]
+        blinHelper[resultado] = blinHelper[operando1] > blinHelper[operando2]
         #print("MAYOR QUE",Memoria[resultado], Memoria[operando1],Memoria[operando2])
 
     if(operador == '<'):
-        if(Memoria[operando1] == None):
+        if(blinHelper[operando1] == None):
         #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando1:
                     nuevoOperando1 = key
-                    Memoria[operando1] = nuevoOperando1
+                    blinHelper[operando1] = nuevoOperando1
                     break
                 else:
-                    Memoria[operando1] = operando1
-        if(Memoria[operando2] == None):
+                    blinHelper[operando1] = operando1
+        if(blinHelper[operando2] == None):
         #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando2:
                     nuevoOperando2 = key
-                    Memoria[operando2] = nuevoOperando2
+                    blinHelper[operando2] = nuevoOperando2
                     break
                 else:
-                    Memoria[operando2] = operando2
+                    blinHelper[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
-        Memoria[resultado] = Memoria[operando1] < Memoria[operando2]
+        blinHelper[resultado] = blinHelper[operando1] < blinHelper[operando2]
         #print("MENOR QUE",Memoria[resultado], Memoria[operando1],Memoria[operando2])
 
     if(operador == '=='):
-        if(Memoria[operando1] == None):
+        if(blinHelper[operando1] == None):
         #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando1:
                     nuevoOperando1 = key
-                    Memoria[operando1] = nuevoOperando1
+                    blinHelper[operando1] = nuevoOperando1
                     break
                 else:
-                    Memoria[operando1] = operando1
-        if(Memoria[operando2] == None):
+                    blinHelper[operando1] = operando1
+        if(blinHelper[operando2] == None):
         #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando2:
                     nuevoOperando2 = key
-                    Memoria[operando2] = nuevoOperando2
+                    blinHelper[operando2] = nuevoOperando2
                     break
                 else:
-                    Memoria[operando2] = operando2
+                    blinHelper[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
-        Memoria[resultado] = Memoria[operando1] == Memoria[operando2]
+        blinHelper[resultado] = blinHelper[operando1] == blinHelper[operando2]
 
     if(operador == '>='):
-        if(Memoria[operando1] == None):
+        if(blinHelper[operando1] == None):
         #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando1:
                     nuevoOperando1 = key
-                    Memoria[operando1] = nuevoOperando1
+                    blinHelper[operando1] = nuevoOperando1
                     break
                 else:
-                    Memoria[operando1] = operando1
-        if(Memoria[operando2] == None):
+                    blinHelper[operando1] = operando1
+        if(blinHelper[operando2] == None):
         #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando2:
                     nuevoOperando2 = key
-                    Memoria[operando2] = nuevoOperando2
+                    blinHelper[operando2] = nuevoOperando2
                     break
                 else:
-                    Memoria[operando2] = operando2
+                    blinHelper[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
-        Memoria[resultado] = Memoria[operando1] >= Memoria[operando2]
+        blinHelper[resultado] = blinHelper[operando1] >= blinHelper[operando2]
         #print("MAYOR O IGUAL QUE ", Memoria[resultado], Memoria[operando1], Memoria[operando2])
 
 
     if(operador == '<='):
-        if(Memoria[operando1] == None):
+        if(blinHelper[operando1] == None):
         #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando1:
                     nuevoOperando1 = key
-                    Memoria[operando1] = nuevoOperando1
+                    blinHelper[operando1] = nuevoOperando1
                     break
                 else:
-                    Memoria[operando1] = operando1
-        if(Memoria[operando2] == None):
+                    blinHelper[operando1] = operando1
+        if(blinHelper[operando2] == None):
         #SI EN LA SUMA LLEGA HABER CONSTANTE, ESTE FOR CAMBIA SU VALOR AL ORIGINAL
             for key, value in constTable:
                 if value == operando2:
                     nuevoOperando2 = key
-                    Memoria[operando2] = nuevoOperando2
+                    blinHelper[operando2] = nuevoOperando2
                     break
                 else:
-                    Memoria[operando2] = operando2
+                    blinHelper[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
-        Memoria[resultado] = Memoria[operando1] <= Memoria[operando2]
+        blinHelper[resultado] = blinHelper[operando1] <= blinHelper[operando2]
 
     if(operador == 'GotoF'):
-        if( not(Memoria[operando1])):
+        if( not(blinHelper[operando1])):
             i = resultado -2
     if(operador == 'LEE'):
         inputeado = input("Ingresa tu dato: ")
-        Memoria[resultado] = int(inputeado)
+        ####
+        """
+        for index in range(len(MemNew)):
+            for key in MemNew[index]:
+                if MemNew[index][key]['nombre'] == ordenFunc[-1]:
+                    huy=[]                         
+                    huy.append({resultado:int(inputeado)})
+                    if(ordenFunc[-1]=='principal'):
+                        MemNew[index][key]['VGI'] = MemNew[index][key]['VGI']+huy
+                    else:
+                        MemNew[index][key]['VLI'] = huy
+
+        print("BLYAT3",*MemNew) 
+        """
+        ####
+        blinHelper[resultado] = int(inputeado)
         
     if(operador == 'VER'):
         for key, value in constTable:
             if value == operando1:
                 nuevoOperando1 = key
-                Memoria[operando1] = nuevoOperando1
+                blinHelper[operando1] = nuevoOperando1
                 break
             else:
-                Memoria[operando1] = operando1
+                blinHelper[operando1] = operando1
         for key, value in constTable:
             if value == resultado:
                 nuevoResultado = key
@@ -2836,12 +2938,18 @@ while(operador!='END'):
                 break
 
         #print("TESTERU", Memoria[operando1], nuevoResultado)
-        if((Memoria[operando1]  >= 0) and (Memoria[operando1]  <= nuevoResultado)):
+        if((blinHelper[operando1]  >= 0) and (blinHelper[operando1]  <= nuevoResultado)):
             flagGoodArr = True
 
 
     #if(operador == '')
+    """
+    print("blinHelper CHECKIN")
+    for z in range(len(blinHelper)):
+        if(blinHelper[z]!=None):
+            print(blinHelper[z],z)
     #print("BEFORE", i)
+    """
     i += 1
     #print("AFTER",i)
     operador    = cuadruplo[i][0]

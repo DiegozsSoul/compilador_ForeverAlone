@@ -6,9 +6,7 @@ var int x;
 x=1;
 escribe('Aqui',a,b);
 x = a*b;
-escribe(x);
-escribe(a*b);
-regresa(a*b);
+regresa(x);
 }
 
 funcion int test(int l)
@@ -17,12 +15,12 @@ var int k;
 k=1;
  mientras(l > 0) haz
   {
-   escribe(k,l);
+   escribe('test',k,l);
    k = patito(k,l);
    l = l - 1;
-  regresa(k);
-  }
 
+  }
+  regresa(k);
 }
 
 principal()
