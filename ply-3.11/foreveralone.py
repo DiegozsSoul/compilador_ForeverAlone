@@ -46,6 +46,7 @@ pilaDim = []
 kArr = 0
 arrCount = 0
 flagGoodArr=False
+flagEndArr=False
 #MEMORIA2.0
 MemNew = []
 MemAux = []
@@ -94,7 +95,7 @@ Memoria =[None] * 22000
 TodaMemoria=[]
 #Reads the document
  
-Info= open("array.txt", "r") 
+Info= open("array2.txt", "r") 
 data=Info.read()
 
 # Reserved words
@@ -336,7 +337,7 @@ def p_arreglo2(p):
         buscador = proc.getDir(funcionActual[0])
         varfinder = buscador['tvar'].getvar(arrId)
     if varfinder == None:
-        print("Variable" ,arrId,"no existe ")
+        print("Variable" ,arrId,"no existe, arreglo2 ")
         sys.exit()
     else:
         if(isGlobal):
@@ -605,7 +606,7 @@ def p_arrn(p):
         buscador=proc.getDir(funcionActual[0])
         varfinder=buscador['tvar'].getvar(p[-2])
     if varfinder == None:
-        print("Variable",arrId, "no existe ")
+        print("Variable",arrId, "no existe, arrn")
         sys.exit()
     else:
         if(isGlobal):
@@ -644,7 +645,7 @@ def p_arrn2(p):
         buscador = proc.getDir(funcionActual[0])
         varfinder = buscador['tvar'].getvar(p[-4])
     if varfinder == None:
-        print("Variable",arrId," no existe ")
+        print("Variable",arrId," no existe,arrn2 1 ")
         sys.exit()
     else:
         if(isGlobal):
@@ -664,6 +665,9 @@ def p_arrn2(p):
             if(PilaO[-1] in dict(constTable)):
                 d = dict(constTable)
                 valorMem = d[PilaO[-1]]
+
+            elif(PilaO[-1] in TempIntTable):
+                valorMem = PilaO[-1]
             else:
                 buscador = proc.getDir(funcionActual[-1])
                 varAux = buscador['tvar'].getvar(PilaO[-1])
@@ -675,7 +679,7 @@ def p_arrn2(p):
                     buscador = proc.getDir(funcionActual[0])
                     varAux = buscador['tvar'].getvar(PilaO[-1])
                 if varAux == None:
-                    print("Variable",varAux, "no existe ")
+                    print("Variable",varAux, "no existe, arrn2 2")
                     sys.exit()
                 else:
                     if(isGlobal2):
@@ -705,6 +709,8 @@ def p_arrn2(p):
             if(PilaO[-1] in dict(constTable)):
                 d = dict(constTable)
                 valorMem = d[PilaO[-1]]
+            elif(PilaO[-1] in TempIntTable):
+                valorMem = PilaO[-1]
             else:
                 buscador = proc.getDir(funcionActual[-1])
                 varAux = buscador['tvar'].getvar(PilaO[-1])
@@ -716,7 +722,7 @@ def p_arrn2(p):
                     buscador = proc.getDir(funcionActual[0])
                     varAux = buscador['tvar'].getvar(PilaO[-1])
                 if varAux == None:
-                    print("Variable" ,varAux," no existe ")
+                    print("Variable" ,varAux," no existe,arrn2 3")
                 else:
                     if(isGlobal2):
                         buscador = proc.getDir(funcionActual[0])
@@ -776,6 +782,8 @@ def p_arrn3(p):
     if(aux1 in dict(constTable)):
         d = dict(constTable)
         valorMem = d[aux1]
+    elif(aux1 in TempIntTable):
+                valorMem = aux1
     else:
         buscador = proc.getDir(funcionActual[-1])
         varAux = buscador['tvar'].getvar(aux1)
@@ -787,7 +795,7 @@ def p_arrn3(p):
             buscador = proc.getDir(funcionActual[0])
             varAux = buscador['tvar'].getvar(aux1)
         if varAux == None:
-            print("Variable",aux1," no existe ")
+            print("Variable",aux1," no existe,arrn3")
             sys.exit()
         else:
             if(isGlobal2):
@@ -939,7 +947,7 @@ def p_asignacionb(p):
                         buscador=proc.getDir(funcionActual[0])
                         varfinder=buscador['tvar'].getvar(aux)
                     if varfinder == None:
-                        print("Variable",aux," no existe ")
+                        print("Variable",aux," no existe,asignacionb ")
                         sys.exit()
                     else:
                         if(isGlobal):
@@ -1258,7 +1266,7 @@ def p_leen(p):
         buscador=proc.getDir(funcionActual[0])
         varfinder=buscador['tvar'].getvar(aux)
     if varfinder == None:
-        print("Variable",aux," no existe ")
+        print("Variable",aux," no existe, lee neural")
     else:
         if(isGlobal):
             buscador = proc.getDir(funcionActual[0])
@@ -1318,7 +1326,7 @@ def p_prin1(p):
             buscador=proc.getDir(funcionActual[0])
             varfinder=buscador['tvar'].getvar(test)
         if varfinder == None:
-            print("Variable",test," no existe ")
+            print("Variable",test," no existe, print neura")
         else:
             if(isGlobal):
                 buscador = proc.getDir(funcionActual[0])
@@ -1465,7 +1473,7 @@ def p_repnoconn(p):
             buscador=proc.getDir(funcionActual[0])
             varfinder=buscador['tvar'].getvar(limiteSup)
         if varfinder == None:
-            print("Variable",limiteSup," no existe ")
+            print("Variable",limiteSup," no existe,rep no cond ")
         else:
             if(isGlobal):
                 buscador = proc.getDir(funcionActual[0])
@@ -1613,7 +1621,7 @@ def p_asignacioncondb(p):
                         buscador=proc.getDir(funcionActual[0])
                         varfinder=buscador['tvar'].getvar(aux)
                     if varfinder == None:
-                        print("Variable" ,aux," no existe ")
+                        print("Variable" ,aux," no existe, igual")
                         sys.exit()
                     else:
                         if(isGlobal):
@@ -1864,7 +1872,7 @@ def p_exp(p):
                         buscador=proc.getDir(funcionActual[0])
                         varfinder=buscador['tvar'].getvar(aux)
                     if varfinder == None:
-                        print("Variable",aux," no existe ")
+                        print("Variable",aux," no existe,exp ")
                         sys.exit()
                     else:
                         if(isGlobal):
@@ -1949,7 +1957,7 @@ def p_expb(p):
                         buscador=proc.getDir(funcionActual[0])
                         varfinder=buscador['tvar'].getvar(aux)
                     if varfinder == None:
-                        print("Variable",aux,"no existe ")
+                        print("Variable",aux,"no existe,expb ")
                         sys.exit()
                     else:
                         if(isGlobal):
@@ -2043,7 +2051,7 @@ def p_terminob(p):
                         buscador=proc.getDir(funcionActual[0])
                         varfinder=buscador['tvar'].getvar(aux)
                     if varfinder == None:
-                        print("Variable" ,aux," no existe ")
+                        print("Variable" ,aux," no existe, terminob")
                         sys.exit()
                     else:
                         if(isGlobal):
@@ -2162,7 +2170,7 @@ def p_llamadafun2(p):
             buscador=proc.getDir(funcionActual[0])
             varfinder=buscador['tvar'].getvar(tempOper)
         if varfinder == None:
-            print("Variable",tempOper," no existe ")
+            print("Variable",tempOper," no existe, llamadafun")
             sys.exit()
         else:
             if(isGlobal):
@@ -2517,10 +2525,29 @@ while(operador!='END'):
             if(arrCount==2):
                 pointer = blinHelper[operando2]
                 blinHelper[resultado] = operando1 + pointer
-                #print("POINTE",blinHelper[pointer],pointer)
+                #print("ARREGLO1 ",blinHelper[resultado],pointer,operando1,resultado)
             if(arrCount==1):
-                blinHelper[resultado] = blinHelper[operando1] + blinHelper[operando2]
-                #print("ALOG",blinHelper[resultado])
+                #print("ARREGLO2 ",operando1,blinHelper[operando1],operando2,blinHelper[operando2],resultado,)
+                if(blinHelper[operando1]>= 12000 and blinHelper[operando1]<=12999):
+                    for key, value in constTable:
+                        if value == blinHelper[operando1]:
+                            #print("IM IN")
+                            nuevoOperando1 = key
+                            blinHelper[operando1] = nuevoOperando1
+                            break         
+                #print("CONS",operando1,blinHelper[operando1],operando2,blinHelper[operando2],resultado)
+                #print("NEWIF",blinHelper[blinHelper[operando1]],blinHelper[blinHelper[operando2]])
+
+                if(blinHelper[operando1]>=5000 and blinHelper[operando1]<=5999):
+                    blinHelper[resultado] = blinHelper[blinHelper[operando1]] + blinHelper[operando2]
+                elif(blinHelper[operando1]>=13000 and blinHelper[operando1]<=13999):
+                    blinHelper[resultado] = blinHelper[blinHelper[operando1]] + blinHelper[operando2]
+                else:    
+                
+                    blinHelper[resultado] = blinHelper[operando1] + blinHelper[operando2]
+                #print("FINAL ",blinHelper[resultado],resultado,blinHelper[operando2],blinHelper[operando1])
+                flagGoodArr = False
+                flagEndArr = True
             arrCount -=1
         else:
             #print("PAVLOV",blinHelper[resultado], blinHelper[operando1], blinHelper[operando2])
@@ -2604,11 +2631,11 @@ while(operador!='END'):
 
         """
         ###############
-        if(flagGoodArr):
+        if(flagEndArr):
             newPabitooo = blinHelper[resultado]
             blinHelper[newPabitooo] = blinHelper[operando1] 
             #print("ALOG",blinHelper[newPabitooo])
-            flagGoodArr=False
+            flagEndArr=False
 
         elif(resultado>=8000 and resultado<=8999):
             blinHelper[resultado] = int(blinHelper[operando1])
@@ -2634,9 +2661,13 @@ while(operador!='END'):
             print(blinHelper[resultado])
         elif(resultado >= 21000):
             chaz = blinHelper[resultado]
-            print("HMMMMMM",blinHelper[chaz])
+            midnight = blinHelper[chaz]
+            #print("ESCRITURA",blinHelper[chaz],chaz,midnight)
             blinHelper[resultado] = blinHelper[chaz]
-            print(blinHelper[resultado])
+            if(blinHelper[resultado]==None):
+                print("No hay valor en ese index")
+            else:
+                print(blinHelper[resultado])
         else:
             print(blinHelper[resultado])
 
@@ -2795,11 +2826,11 @@ while(operador!='END'):
                 variableAGuardar = key
                 blinHelper[resultado] = variableAGuardar
                 break
-        print("MEMORIA",blinHelper[8002])
-        print("CODIGO",blinHelper[resultado],resultado)
-        print("CODIGO2",Memoria[memoriaFuncion],memoriaFuncion)
+        #print("MEMORIA",blinHelper[8002])
+        #print("CODIGO",blinHelper[resultado],resultado)
+        #print("CODIGO2",Memoria[memoriaFuncion],memoriaFuncion)
         blinHelper[memoriaFuncion] = blinHelper[resultado] #######Memoria[memoriaFuncion] = blinHelper[resultado]
-        print("CODIGO3",blinHelper[memoriaFuncion],memoriaFuncion)
+        #print("CODIGO3",blinHelper[memoriaFuncion],memoriaFuncion)
 
         ############
         if(isinstance(operando1,str)):

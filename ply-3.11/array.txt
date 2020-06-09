@@ -3,17 +3,12 @@ var int i, n, w;
 int arreglo[10];
 
 principal()
-{ i = 54;
+{ i = 5;
 
   lee(n);
-  arreglo[n]=i; 
+ arreglo[n] = n+1;
 
-   mientras ( n <= 4) haz 
-  {
-   arreglo[n] = n;
-   n = n+1;
-   escribe(arreglo[n]);
-  }
+escribe(arreglo[5],arreglo[n],arreglo[i]);
 
 }
 
