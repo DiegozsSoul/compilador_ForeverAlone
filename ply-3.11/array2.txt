@@ -2,21 +2,24 @@ programa foreveralone;
 var int i, n, w;
 int arreglo[10];
 
+
+
 principal()
-{ i = 54;
+{
+   i=1;
+   w=1;
+   lee(n); 
+   mientras(i<=5) haz
+   {
 
-  lee(n);
-  arreglo[n]=i; 
+    arreglo[i] = i+1;
+    i=i+1;
+   }
+  mientras(w<=5) haz
+ {
+  escribe(arreglo[w]);
+  w = w+1;
+ }
 
-   mientras ( n <= 4) haz 
-  {
-   arreglo[n] = 1+1;
-   n = n+1;
-
-  }
-escribe(n);
-escribe(arreglo[n-1]);
-escribe(arreglo[4]);
-escribe(arreglo[2+1]);
 }
 

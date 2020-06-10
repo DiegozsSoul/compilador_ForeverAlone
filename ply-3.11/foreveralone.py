@@ -47,6 +47,7 @@ kArr = 0
 arrCount = 0
 flagGoodArr=False
 flagEndArr=False
+normalAsig=False
 #MEMORIA2.0
 MemNew = []
 MemAux = []
@@ -852,12 +853,15 @@ def p_asignacionb(p):
     asignacionb : expresion SEMICOL
     | ID asign SEMICOL
     '''
+    global normalAsig
     if(p[-1]=='='):
         POper.append('=')
     #print("it this z ? ", p[-2])
     #proc.testerVariable('fact')
     if(p[-2]!= None):
         PilaO.append(p[-2])
+        normalAsig=True
+        print("YO YOU ERE",p[-2])
     #print("LOOKIN 4 ERROR ", PilaO[-1])
     if type(p[-2]) is int or type(p[-2]) is float:
         PTipo.append(type(p[-2]))
@@ -933,7 +937,11 @@ def p_asignacionb(p):
                     #auxMem = c[aux] 
                     #print("BUSCANDO POINTER",auxMem)             
                     #arrAuxOp.append(auxMem)
-                    pointerFlag = True
+                    
+                    #print("POINTERTABLE",aux,left_operand,right_operand)
+                    if(not(normalAsig)):
+                        print("SI FUNCIONO")
+                        pointerFlag = True
                     arrAuxOp.append(aux)
 
                 else:
@@ -972,6 +980,7 @@ def p_asignacionb(p):
                 cuadruplo.append(quad)
                 #PilaO.append(result) ESTO RESUELVE ERROR EN TEMPORALES????
                 PTipo.append(resultType)
+                normalAsig=False
             """
             if(resultType == 'int'):
 
@@ -1540,6 +1549,7 @@ def p_asignacioncondb(p):
     global PTipo
     global funcionActual
     global PilaO
+    global normalAsig
     #print("CONDICIONAL",p[-1],p[-2])
     if(p[-1]=='='):
         POper.append('=')
@@ -1547,6 +1557,7 @@ def p_asignacioncondb(p):
     #proc.testerVariable('fact')
     if(p[-2]!= None):
         PilaO.append(p[-2])
+        normalAsig = True
     #CHECA SI P[-2] ES UN NUM ENTERO 1 O FLOTANTE 2.0, NO ENTRA SI ES VARIABLE X,Y,Z,ETC.
     if type(p[-2]) is int or type(p[-2]) is float:
         PTipo.append(type(p[-2]))
@@ -1607,8 +1618,11 @@ def p_asignacioncondb(p):
                     #auxMem = c[aux] 
                     #print("BUSCANDO POINTER",auxMem)             
                     #arrAuxOp.append(auxMem)
-                    pointerFlag = True
+                    if(not(normalAsig)):
+                        print("SI FUNCIONO")
+                        pointerFlag = True
                     arrAuxOp.append(aux)
+
 
                 else:
                     varfinder = buscador['tvar'].getvar(aux)
@@ -1650,6 +1664,7 @@ def p_asignacioncondb(p):
                 PilaO.append(right_operand)
                 #PilaO.append(result) ESTO RESUELVE ERROR EN TEMPORALES????
                 PTipo.append(resultType)
+                normalAsig = False
 
         else:
             print("Type mismatch")
@@ -2540,10 +2555,11 @@ while(operador!='END'):
 
                 if(blinHelper[operando1]>=5000 and blinHelper[operando1]<=5999):
                     blinHelper[resultado] = blinHelper[blinHelper[operando1]] + blinHelper[operando2]
+                    flagEndArr = False
                 elif(blinHelper[operando1]>=13000 and blinHelper[operando1]<=13999):
                     blinHelper[resultado] = blinHelper[blinHelper[operando1]] + blinHelper[operando2]
+                    flagEndArr =False
                 else:    
-                
                     blinHelper[resultado] = blinHelper[operando1] + blinHelper[operando2]
                 #print("FINAL ",blinHelper[resultado],resultado,blinHelper[operando2],blinHelper[operando1])
                 flagGoodArr = False
@@ -2551,7 +2567,10 @@ while(operador!='END'):
             arrCount -=1
         else:
             #print("PAVLOV",blinHelper[resultado], blinHelper[operando1], blinHelper[operando2])
+            print("IM HEEERE", operando1, blinHelper[operando1],operando2,blinHelper[operando2])
             blinHelper[resultado] = blinHelper[operando1] + blinHelper[operando2]
+            #flagEndArr = False
+            print("IM BAACK",blinHelper[resultado])
 
         
 
@@ -2632,9 +2651,22 @@ while(operador!='END'):
         """
         ###############
         if(flagEndArr):
-            newPabitooo = blinHelper[resultado]
-            blinHelper[newPabitooo] = blinHelper[operando1] 
-            #print("ALOG",blinHelper[newPabitooo])
+            if(resultado<=20999):
+                #print("CIAO",blinHelper[operando1],blinHelper[blinHelper[operando1]])
+                print("MISTAH",operando1,blinHelper[operando1])
+                if(resultado>=8000 and resultado <= 8999):
+                    blinHelper[resultado] = int(blinHelper[operando1])
+                elif(resultado>=9000 and resultado<=9999):
+                    blinHelper[resultado] = float(blinHelper[operando1])
+                elif(resultado>=5000 and resultado<=5999):
+                    blinHelper[resultado] = blinHelper[operando1]
+                else:
+                    blinHelper[resultado] = blinHelper[blinHelper[operando1]]
+            else:
+                newPabitooo = blinHelper[resultado]
+                #print("ALOH",blinHelper[operando1],operando1,blinHelper[resultado],resultado,newPabitooo)
+                blinHelper[newPabitooo] = blinHelper[operando1] 
+                #print("ALOG",blinHelper[newPabitooo],blinHelper[blinHelper[operando1]],operando1)
             flagEndArr=False
 
         elif(resultado>=8000 and resultado<=8999):
@@ -2658,17 +2690,19 @@ while(operador!='END'):
                 else: 
                     #print("ASIGNACION2",operando1)
                     blinHelper[resultado] = resultado
+            print("ESCRITURA1")
             print(blinHelper[resultado])
         elif(resultado >= 21000):
             chaz = blinHelper[resultado]
-            midnight = blinHelper[chaz]
-            #print("ESCRITURA",blinHelper[chaz],chaz,midnight)
+            print("ESCRITURA2",blinHelper[chaz],chaz)
             blinHelper[resultado] = blinHelper[chaz]
+            
             if(blinHelper[resultado]==None):
                 print("No hay valor en ese index")
             else:
                 print(blinHelper[resultado])
         else:
+            print("ESCRITURA3",resultado)
             print(blinHelper[resultado])
 
     if(operador == 'GOTO'):
