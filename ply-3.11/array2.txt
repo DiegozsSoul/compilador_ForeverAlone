@@ -1,25 +1,35 @@
 programa foreveralone;
-var int i, n, w;
+var int i, n, w,f;
 int arreglo[10];
 
-
+funcion int find(int b)
+var int i;
+{
+i=1;
+	mientras(i<=n) haz
+	{
+	   si(arreglo[i] == b) entonces
+	   {
+	    regresa(arreglo[i]);
+	   }
+ 	i=i+1;
+	}
+ regresa(777);
+}
 
 principal()
 {
    i=1;
-   w=1;
-   lee(n); 
-   mientras(i<=5) haz
+   lee(n);
+   lee(f);
+   mientras(i<=n) haz
    {
-
-    arreglo[i] = i+1;
+    arreglo[i] = 1;
     i=i+1;
    }
-  mientras(w<=5) haz
- {
-  escribe(arreglo[w]);
-  w = w+1;
- }
+   
+w=find(f);
+ escribe('Se encontro tu numero', w);
 
 }
 

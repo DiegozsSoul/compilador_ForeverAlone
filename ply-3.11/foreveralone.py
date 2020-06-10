@@ -96,7 +96,7 @@ Memoria =[None] * 22000
 TodaMemoria=[]
 #Reads the document
  
-Info= open("array2.txt", "r") 
+Info= open("func_ana.txt", "r") 
 data=Info.read()
 
 # Reserved words
@@ -1039,6 +1039,8 @@ def p_retn(p):
         #Const
         elif(variable >= 12000 and variable <=12999):
             validaTipoV = 'int'
+        elif(variable >= 21000 and variable <=21999):
+            validaTipoV = 'int'
 
 
 
@@ -1060,6 +1062,16 @@ def p_retn(p):
             #auxMem = c[aux]                    
             #arrAuxOp.append(auxMem)
             auxMem = variable
+        elif(variable in pointerTable):
+            #print("ENTRE AL ELIF ASIGNACION",aux)
+            #c = dict(pointerTable)
+            #auxMem = c[aux] 
+            #print("BUSCANDO POINTER",auxMem)             
+            #arrAuxOp.append(auxMem)
+            if(not(normalAsig)):
+                print("SI FUNCIONO")
+                pointerFlag = True
+            auxMem.append(variable)
         else:
             buscador = proc.getDir(funcionActual[-1])
             varfinder = buscador['tvar'].getvar(variable)
@@ -1876,6 +1888,16 @@ def p_exp(p):
                 elif(aux in TempIntTable):
                    #print("ENTRE AL ELIF",aux)
                     arrAuxOp.append(aux)
+                elif(aux in pointerTable):
+                    #print("ENTRE AL ELIF ASIGNACION",aux)
+                    #c = dict(pointerTable)
+                    #auxMem = c[aux] 
+                    #print("BUSCANDO POINTER",auxMem)             
+                    #arrAuxOp.append(auxMem)
+                    if(not(normalAsig)):
+                        print("SI FUNCIONO")
+                        pointerFlag = True
+                    arrAuxOp.append(aux)
                 else:
                     varfinder = buscador['tvar'].getvar(aux)
                     isGlobal = False
@@ -2448,7 +2470,7 @@ TodaMemoria.append(Memoria)
 while(operador!='END'):
     #print("NEW CUADRUPLO", i, "CUADRUPLO ",operador,operando1,operando2,resultado)
 
-    print("QUAD", operador,operando1,operando2,resultado)
+    #print("QUAD", operador,operando1,operando2,resultado)
     #CADA CUADRUPLO TIENE GUARDADO EL LA 4ta O 5ta POSICION EL NUMERO DE CUADRUPLO A MOVERSE O EL NUMERO DE CUADRUPLO QUE ES RESPECTIVAMENTE
     if(len(cuadruplo[i])>4):
         contadorLineas = cuadruplo[i][4]
@@ -2567,10 +2589,10 @@ while(operador!='END'):
             arrCount -=1
         else:
             #print("PAVLOV",blinHelper[resultado], blinHelper[operando1], blinHelper[operando2])
-            print("IM HEEERE", operando1, blinHelper[operando1],operando2,blinHelper[operando2])
+            #print("IM HEEERE", operando1, blinHelper[operando1],operando2,blinHelper[operando2])
             blinHelper[resultado] = blinHelper[operando1] + blinHelper[operando2]
             #flagEndArr = False
-            print("IM BAACK",blinHelper[resultado])
+            #print("IM BAACK",blinHelper[resultado])
 
         
 
@@ -2653,7 +2675,7 @@ while(operador!='END'):
         if(flagEndArr):
             if(resultado<=20999):
                 #print("CIAO",blinHelper[operando1],blinHelper[blinHelper[operando1]])
-                print("MISTAH",operando1,blinHelper[operando1])
+                #print("MISTAH",operando1,blinHelper[operando1])
                 if(resultado>=8000 and resultado <= 8999):
                     blinHelper[resultado] = int(blinHelper[operando1])
                 elif(resultado>=9000 and resultado<=9999):
@@ -2690,11 +2712,11 @@ while(operador!='END'):
                 else: 
                     #print("ASIGNACION2",operando1)
                     blinHelper[resultado] = resultado
-            print("ESCRITURA1")
+            #print("ESCRITURA1")
             print(blinHelper[resultado])
         elif(resultado >= 21000):
             chaz = blinHelper[resultado]
-            print("ESCRITURA2",blinHelper[chaz],chaz)
+            #print("ESCRITURA2",blinHelper[chaz],chaz)
             blinHelper[resultado] = blinHelper[chaz]
             
             if(blinHelper[resultado]==None):
@@ -2702,7 +2724,7 @@ while(operador!='END'):
             else:
                 print(blinHelper[resultado])
         else:
-            print("ESCRITURA3",resultado)
+            #print("ESCRITURA3",resultado)
             print(blinHelper[resultado])
 
     if(operador == 'GOTO'):
@@ -2909,7 +2931,12 @@ while(operador!='END'):
                 else:
                     blinHelper[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
-        blinHelper[resultado] = blinHelper[operando1] > blinHelper[operando2]
+        if(operando1>=21000 and operando1<=21999):
+            blinHelper[resultado] = blinHelper[blinHelper[operando1]] > blinHelper[operando2]
+        elif(operando2>=21000 and operando2<=21999):
+            blinHelper[resultado] = blinHelper[operando1] > blinHelper[blinHelper[operando2]]
+        else:
+            blinHelper[resultado] = blinHelper[operando1] > blinHelper[operando2]
         #print("MAYOR QUE",Memoria[resultado], Memoria[operando1],Memoria[operando2])
 
     if(operador == '<'):
@@ -2932,7 +2959,12 @@ while(operador!='END'):
                 else:
                     blinHelper[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
-        blinHelper[resultado] = blinHelper[operando1] < blinHelper[operando2]
+        if(operando1>=21000 and operando1<=21999):
+            blinHelper[resultado] = blinHelper[blinHelper[operando1]] < blinHelper[operando2]
+        elif(operando2>=21000 and operando2<=21999):
+            blinHelper[resultado] = blinHelper[operando1] < blinHelper[blinHelper[operando2]]
+        else:
+            blinHelper[resultado] = blinHelper[operando1] < blinHelper[operando2]
         #print("MENOR QUE",Memoria[resultado], Memoria[operando1],Memoria[operando2])
 
     if(operador == '=='):
@@ -2955,7 +2987,16 @@ while(operador!='END'):
                 else:
                     blinHelper[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
-        blinHelper[resultado] = blinHelper[operando1] == blinHelper[operando2]
+        #########
+
+        if(operando1>=21000 and operando1<=21999):
+            blinHelper[resultado] = blinHelper[blinHelper[operando1]] == blinHelper[operando2]
+        elif(operando2>=21000 and operando2<=21999):
+            blinHelper[resultado] = blinHelper[operando1] == blinHelper[blinHelper[operando2]]
+        else:
+        ##########
+            #print("EQUAL",operando1,blinHelper[operando1],operando2,blinHelper[operando2])
+            blinHelper[resultado] = blinHelper[operando1] == blinHelper[operando2]
 
     if(operador == '>='):
         if(blinHelper[operando1] == None):
@@ -2977,7 +3018,12 @@ while(operador!='END'):
                 else:
                     blinHelper[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
-        blinHelper[resultado] = blinHelper[operando1] >= blinHelper[operando2]
+        if(operando1>=21000 and operando1<=21999):
+            blinHelper[resultado] = blinHelper[blinHelper[operando1]] >= blinHelper[operando2]
+        elif(operando2>=21000 and operando2<=21999):
+            blinHelper[resultado] = blinHelper[operando1] >= blinHelper[blinHelper[operando2]]
+        else:
+            blinHelper[resultado] = blinHelper[operando1] >= blinHelper[operando2]
         #print("MAYOR O IGUAL QUE ", Memoria[resultado], Memoria[operando1], Memoria[operando2])
 
 
@@ -3001,7 +3047,12 @@ while(operador!='END'):
                 else:
                     blinHelper[operando2] = operando2
         #REALIZA LA OPERACION CON LOS VALORES NORMALES
-        blinHelper[resultado] = blinHelper[operando1] <= blinHelper[operando2]
+        if(operando1>=21000 and operando1<=21999):
+            blinHelper[resultado] = blinHelper[blinHelper[operando1]] <= blinHelper[operando2]
+        elif(operando2>=21000 and operando2<=21999):
+            blinHelper[resultado] = blinHelper[operando1] <= blinHelper[blinHelper[operando2]]
+        else:
+            blinHelper[resultado] = blinHelper[operando1] <= blinHelper[operando2]
 
     if(operador == 'GotoF'):
         if( not(blinHelper[operando1])):
