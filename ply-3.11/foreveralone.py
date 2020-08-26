@@ -96,7 +96,7 @@ Memoria =[None] * 22000
 TodaMemoria=[]
 #Reads the document
  
-Info= open("func_ana.txt", "r") 
+Info= open("array2.txt", "r") 
 data=Info.read()
 
 # Reserved words
@@ -2395,18 +2395,18 @@ result = parser.parse(data)
 #print("TEST",proc.getDir('fact'))
 #print("TEST",proc.getDir('inicia')) 
 #print("TABLA DE POINTER",*pointerTable)
-print("TABLA DE CONST",*constTable)
-print("TABLA DE Funciones")
-proc.arref()
+#print("TABLA DE CONST",*constTable)
+#print("TABLA DE Funciones")
+#proc.arref()
 #print("XXXXXXXXXXXXXXXXXXXXX")
-print("TABLA DE VARIABLES1", proc.testerVariable('programa'))
-print("TABLA DE VARIABLES2", proc.testerVariable('test'))
-print("TABLA DE VARIABLES3", proc.testerVariable('patito'))
+#print("TABLA DE VARIABLES1", proc.testerVariable('programa'))
+#print("TABLA DE VARIABLES2", proc.testerVariable('test'))
+#print("TABLA DE VARIABLES3", proc.testerVariable('patito'))
 despliegaQuad()
 print("DONE")
 
-yeet = proc.getVariable('programa')
-print(yeet)
+#yeet = proc.getVariable('programa')
+#print(yeet)
 """
 #AGARRA LOS VARIABLES DE LA TABLA DE VARIABLES DE LA FUNCION PROGRAMA (AUN NO SE USA)
 for index in range(len(yeet)):
